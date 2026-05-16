@@ -968,11 +968,14 @@ setOracleHistory(updatedHistory);
 
         <div
   className={`relative w-full max-w-2xl bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[50px] p-7 md:p-10 shadow-2xl md:-translate-x-12 transition-all duration-700 animate-[float_6s_ease-in-out_infinite] hover:-translate-y-4 hover:scale-[1.02] hover:border-blue-500/40 hover:shadow-[0_0_80px_rgba(37,99,235,0.35)] ${
-  isAnimating
-    ? "scale-95 border-blue-500/40 shadow-[0_0_50px_rgba(37,99,235,0.18)]"
-    : ""
-}`}
+    isAnimating
+      ? "scale-95 border-blue-500/40 shadow-[0_0_50px_rgba(37,99,235,0.18)]"
+      : ""
+  }`}
 >
+  <div className="absolute inset-0 rounded-[50px] bg-blue-500/10 blur-3xl animate-pulse pointer-events-none" />
+
+
           <div className="absolute top-10 left-12 w-10 h-[2px] bg-blue-600 shadow-[0_0_15px_rgba(37,99,235,1)]"></div>
 
           <div className="min-h-[220px] flex flex-col items-center justify-center text-center">
