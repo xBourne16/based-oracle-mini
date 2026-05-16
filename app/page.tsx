@@ -989,7 +989,7 @@ setOracleHistory(updatedHistory);
             {/* QUOTE */}
           <p
   key={quote || isAnimating ? "active" : "empty"}
-  className={`text-3xl md:text-5xl text-white italic text-center leading-[1.1] font-medium transition-all duration-700 ${
+  className={`text-2xl sm:text-3xl md:text-5xl text-white italic text-center leading-[1.1] font-medium transition-all duration-700 ${
     quote
       ? "opacity-100 translate-y-0"
       : "opacity-80 translate-y-2"
@@ -1137,7 +1137,7 @@ setOracleHistory(updatedHistory);
       </div>
 
       {/* FOOTER */}
-<footer className="flex justify-center mt-10">
+<footer className="flex justify-center mt-14 md:mt-10">
 
   
     {/* BASE STATUS */}
