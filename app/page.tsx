@@ -342,7 +342,9 @@ useEffect(() => {
     if (typeof window === "undefined")
       return;
 
-    const eth = (window as any).ethereum;
+   const eth =
+  (window as any).ethereum ||
+  sdk.wallet.ethProvider;
 
 if (!eth) {
   const currentUrl = window.location.href;
