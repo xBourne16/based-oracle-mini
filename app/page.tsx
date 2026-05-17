@@ -884,13 +884,12 @@ setOracleHistory(updatedHistory);
         </div>
 
         <div className="relative z-[9999] pointer-events-auto">
-          <button
-  onTouchStart={() => {
-    if (!address) {
-      setIsModalOpen(true);
-    }
-  }}
-  onClick={() => {
+<button
+  type="button"
+  onPointerUp={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
     if (address) {
       setIsDropdownOpen(
         !isDropdownOpen
