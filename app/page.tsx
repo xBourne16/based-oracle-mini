@@ -754,21 +754,7 @@ setOracleHistory(updatedHistory);
 
   return (
 <main className="relative flex min-h-screen overflow-hidden flex-col items-center justify-start pt-24 p-4 bg-[#020204] overflow-y-auto overflow-x-hidden selection:bg-blue-600/40">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-  {[...Array(18)].map((_, i) => (
-    <div
-      key={i}
-      className="absolute rounded-full bg-blue-400/30 animate-pulse shadow-[0_0_12px_rgba(59,130,246,0.6)]"
-      style={{
-        width: `${Math.random() * 4 + 2}px`,
-        height: `${Math.random() * 4 + 2}px`,
-        left: `${Math.random() * 100}%`,
-        top: `${Math.random() * 100}%`,
-        animationDuration: `${Math.random() * 4 + 2}s`,
-      }}
-    />
-  ))}
-</div>
+    
       {/* WALLET MODAL */}
       {isModalOpen && (
         <div className="fixed inset-0 z-[9999999] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl">
