@@ -15,6 +15,19 @@ import {
 export default function Home() {
   useEffect(() => {
   sdk.actions.ready();
+  useEffect(() => {
+  const open = () => {
+    setIsModalOpen(true);
+  };
+
+  document.addEventListener("touchstart", open, true);
+  document.addEventListener("click", open, true);
+
+  return () => {
+    document.removeEventListener("touchstart", open, true);
+    document.removeEventListener("click", open, true);
+  };
+}, []);
 }, []);
   const [quote, setQuote] = useState("");
   const [displayedQuote, setDisplayedQuote] = useState("");
