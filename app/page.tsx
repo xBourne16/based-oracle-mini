@@ -523,11 +523,15 @@ setLuckyNumber(null);
   Math.random() * 4
 );
 
+const todaySeed = new Date()
+  .toISOString()
+  .slice(0, 10);
+
 const prophecyQuote =
   quotes[
     getUniqueQuoteIndex(
       walletAddress,
-      tx.hash
+      todaySeed
     )
   ];
 
