@@ -31,7 +31,7 @@ export default function Home() {
   const { address, isConnected } =
   useAccount();
 
-const { connect, connectors } =
+const { connectAsync, connectors } =
   useConnect();
 
 const { disconnect } =
@@ -404,15 +404,26 @@ if (!eth) {
 
     if (provider) {
       try {
-        const accounts =
-          await provider.request({
-            method:
-              "eth_requestAccounts",
-          });
+     await provider.request({
+  method: "eth_requestAccounts",
+});
 
-        
-      setActiveProvider(provider);
-        setIsModalOpen(false);
+setActiveProvider(provider);
+
+const injectedConnector =
+  connectors.find(
+    (c) => c.type === "injected"
+  );
+
+if (injectedConnector) {
+  await connectAsync({
+    connector: injectedConnector,
+  });
+}
+
+setIsModalOpen(false);
+
+setIsModalOpen(false);
       } catch (err) {
         console.error(
           "Connection rejected"
@@ -421,14 +432,16 @@ if (!eth) {
     }
   };
 
-  const disconnectWallet = () => {  
-   setActiveProvider(null);
-    setTxHash(null);
-    setQuote("");
-    setCooldown(0);
-    setLuckyNumber(null);
-    setIsDropdownOpen(false);
-  };
+ const disconnectWallet = () => {
+  disconnect();
+
+  setActiveProvider(null);
+  setTxHash(null);
+  setQuote("");
+  setCooldown(0);
+  setLuckyNumber(null);
+  setIsDropdownOpen(false);
+};
 
   const handleAction = async () => {
     if (isAnimating) return;
