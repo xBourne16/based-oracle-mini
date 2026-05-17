@@ -747,17 +747,7 @@ setOracleHistory(updatedHistory);
   };
 
   return (
-    <main className="relative flex min-h-screen overflow-hidden flex-col items-center justify-start pt-24 p-4 bg-[#020204] overflow-y-auto overflow-x-hidden selection:bg-blue-600/40">
-      <button
-  type="button"
-  onClick={() => {
-    alert("clicked");
-    setIsModalOpen(true);
-  }}
-  className="fixed top-4 right-4 z-[999999999] bg-white text-black px-5 py-3 rounded-full font-black text-xs"
->
-  CONNECT
-</button>
+<main className="relative flex min-h-screen overflow-hidden flex-col items-center justify-start pt-24 p-4 bg-[#020204] overflow-y-auto overflow-x-hidden selection:bg-blue-600/40">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
   {[...Array(18)].map((_, i) => (
     <div
@@ -895,9 +885,8 @@ setOracleHistory(updatedHistory);
 
         <div className="relative z-[999999] pointer-events-auto">
 <button
-  type="button"
   onClick={() => {
-    alert("button clicked");
+    alert("clicked");
 
     if (address) {
       setIsDropdownOpen(true);
