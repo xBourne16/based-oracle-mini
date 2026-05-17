@@ -862,7 +862,7 @@ setOracleHistory(updatedHistory);
       )}
 
       {/* NAV */}
-     <nav className="fixed top-0 w-full p-8 flex justify-between items-start z-[9999] pointer-events-auto">
+     <nav className="fixed top-0 left-0 w-full p-8 flex justify-between items-start z-[999999] pointer-events-none">
         <div className="flex flex-col group text-left">
           <div className="text-[11px] text-blue-500 tracking-[0.5em] font-black uppercase italic transition-all group-hover:tracking-[0.6em]">
             {txHash
@@ -883,7 +883,7 @@ setOracleHistory(updatedHistory);
           </div>
         </div>
 
-        <div className="relative z-[9999] pointer-events-auto">
+        <div className="relative z-[999999] pointer-events-auto">
 <button
   type="button"
   onClick={() => {
