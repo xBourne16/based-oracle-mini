@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { ethers } from "ethers";
 import { quotes } from "./quotes";
+import { sdk } from "@farcaster/miniapp-sdk";
 import "./globals.css";
 import {
   useAccount,
@@ -12,6 +13,9 @@ import {
 } from "wagmi";
 
 export default function Home() {
+  useEffect(() => {
+  sdk.actions.ready();
+}, []);
   const [quote, setQuote] = useState("");
   const [displayedQuote, setDisplayedQuote] = useState("");
   const [isAnimating, setIsAnimating] = useState(false);
