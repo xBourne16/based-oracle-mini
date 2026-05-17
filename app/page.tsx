@@ -20,6 +20,14 @@ export default function Home() {
     "opacity-20 scale-100"
   );
 
+  const openWalletModal = () => {
+  if (address) {
+    setIsDropdownOpen(!isDropdownOpen);
+  } else {
+    setIsModalOpen(true);
+  }
+};
+
   const { address, isConnected } =
   useAccount();
 
@@ -878,8 +886,9 @@ setOracleHistory(updatedHistory);
       setIsModalOpen(true);
     }
   }}
-  className="group relative flex items-center gap-3 px-7 py-3 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full transition-all duration-500 hover:border-blue-500/60 hover:bg-white/[0.1] active:scale-95 z-[110] pointer-events-auto touch-manipulation cursor-pointer"
 >
+  className="group relative flex items-center gap-3 px-7 py-3 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full transition-all duration-500 hover:border-blue-500/60 hover:bg-white/[0.1] active:scale-95 z-[110] pointer-events-auto touch-manipulation cursor-pointer"
+
             <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)] animate-pulse"></div>
 
             <span className="text-[11px] font-black text-white uppercase tracking-[0.25em]">
