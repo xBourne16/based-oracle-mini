@@ -1,30 +1,37 @@
 "use client";
-import { ReactNode } from "react";
+
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { WagmiProvider, createConfig, http } from "wagmi";
 import { base } from "wagmi/chains";
-import { OnchainKitProvider } from "@coinbase/onchainkit";
+import { coinbaseWallet } from "wagmi/connectors";
+import { useState } from "react";
 
+const config = createConfig({
+  chains: [base],
+  connectors: [
+    coinbaseWallet({
+      appName: "Based Oracle",
+    }),
+  ],
+  transports: {
+    [base.id]: http(),
+  },
+});
 
-export function RootProvider({ children }: { children: ReactNode }) {
+export function RootProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [queryClient] = useState(
+    () => new QueryClient()
+  );
+
   return (
-    <OnchainKitProvider
-      apiKey={process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY}
-      chain={base}
-      config={{
-        appearance: {
-          mode: "auto",
-        },
-        wallet: {
-          display: "modal",
-          preference: "all",
-        },
-      }}
-      miniKit={{
-        enabled: true,
-        autoConnect: true,
-        notificationProxyUrl: undefined,
-      }}
-    >
-      {children}
-    </OnchainKitProvider>
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>
+        {children}
+      </QueryClientProvider>
+    </WagmiProvider>
   );
 }

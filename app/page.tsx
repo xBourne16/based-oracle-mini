@@ -5,6 +5,11 @@ import Image from "next/image";
 import { ethers } from "ethers";
 import { quotes } from "./quotes";
 import "./globals.css";
+import {
+  useAccount,
+  useConnect,
+  useDisconnect,
+} from "wagmi";
 
 export default function Home() {
   const [quote, setQuote] = useState("");
@@ -15,9 +20,16 @@ export default function Home() {
     "opacity-20 scale-100"
   );
 
+  const { address, isConnected } =
+  useAccount();
 
-  const [walletAddress, setWalletAddress] =
-    useState<string | null>(null);
+const { connect, connectors } =
+  useConnect();
+
+const { disconnect } =
+  useDisconnect();
+
+
     const [baseName, setBaseName] =
   useState<string | null>(null);
 
@@ -50,18 +62,18 @@ export default function Home() {
     const [shareUrl, setShareUrl] =
   useState("");
   useEffect(() => {
-  if (!walletAddress) return;
+  
 
   const today = new Date().toISOString().split("T")[0];
 
   const savedShare = localStorage.getItem(
-    `oracle_share_${walletAddress}_${today}`
+    `oracle_share_${address}_${today}`
   );
 
   if (savedShare) {
     setShareUrl(savedShare);
   }
-}, [walletAddress]);
+}, [address]);
   const [streak, setStreak] =
   useState<number>(0);
   const [oracleHistory, setOracleHistory] = useState<
@@ -112,7 +124,7 @@ export default function Home() {
 
   // SHARE URL RESTORE
 useEffect(() => {
-  if (!walletAddress) return;
+  if (!address) return;
 
   const today =
     new Date()
@@ -120,13 +132,13 @@ useEffect(() => {
       .split("T")[0];
 
   const savedShare = localStorage.getItem(
-    `oracle_share_${walletAddress}_${today}`
+    `oracle_share_${address}_${today}`
   );
 
   if (savedShare) {
     setShareUrl(savedShare);
   }
-}, [walletAddress]);
+}, [address]);
 
   // Ses Durumu Değiştiğinde Elementi Güncelle
   useEffect(() => {
@@ -137,23 +149,23 @@ useEffect(() => {
 
   // DAILY DATA LOAD
   useEffect(() => {
-  if (!walletAddress) return;
+  if (!address) return;
 
     const today =
       new Date().toISOString().split("T")[0];
 
     const savedQuote =
       localStorage.getItem(
-        `oracle_quote_${walletAddress}_${today}`
+        `oracle_quote_${address}_${today}`
       );
 
     const savedLucky =
       localStorage.getItem(
-        `oracle_lucky_${walletAddress}_${today}`
+        `oracle_lucky_${address}_${today}`
       );
       const savedShareUrl =
   localStorage.getItem(
-    `oracle_share_${walletAddress}_${today}`
+    `oracle_share_${address}_${today}`
   );
 
     if (savedQuote) {
@@ -166,22 +178,22 @@ useEffect(() => {
     if (savedShareUrl) {
   setShareUrl(savedShareUrl);
 }
-  }, [walletAddress]);
+  }, [address]);
   // ORACLE HISTORY LOAD
 useEffect(() => {
-  if (!walletAddress) return;
+  if (!address) return;
 
   const history = JSON.parse(
     localStorage.getItem(
-      `oracle_history_${walletAddress}`
+      `oracle_history_${address}`
     ) || "[]"
   );
 
   setOracleHistory(history);
-}, [walletAddress]);
+}, [address]);
 // BASENAME RESOLVE
 useEffect(() => {
-  if (!walletAddress) return;
+  if (!address) return;
 
   const fetchBasename = async () => {
     try {
@@ -192,7 +204,7 @@ useEffect(() => {
 
       const name =
         await provider.lookupAddress(
-          walletAddress
+          address
         );
 
       if (name) {
@@ -208,10 +220,10 @@ useEffect(() => {
   };
 
   fetchBasename();
-}, [walletAddress]);
+}, [address]);
   // LIVE BLOCKCHAIN COOLDOWN TIMER
   useEffect(() => {
-    if (!walletAddress) return;
+    if (!address) return;
 
     const fetchCooldown = async () => {
       try {
@@ -235,7 +247,7 @@ useEffect(() => {
 
         const remaining =
           await contract.getRemainingTime(
-            walletAddress
+            address
           );
 
         setCooldown(
@@ -257,7 +269,7 @@ useEffect(() => {
     );
 
     return () => clearInterval(interval);
-  }, [walletAddress, activeProvider]);
+  }, [address, activeProvider]);
 
   const getUniqueQuoteIndex = (
     address: string,
@@ -390,8 +402,8 @@ useEffect(() => {
               "eth_requestAccounts",
           });
 
-        setWalletAddress(accounts[0]);
-        setActiveProvider(provider);
+        
+      setActiveProvider(provider);
         setIsModalOpen(false);
       } catch (err) {
         console.error(
@@ -401,9 +413,8 @@ useEffect(() => {
     }
   };
 
-  const disconnectWallet = () => {
-    setWalletAddress(null);
-    setActiveProvider(null);
+  const disconnectWallet = () => {  
+   setActiveProvider(null);
     setTxHash(null);
     setQuote("");
     setCooldown(0);
@@ -419,7 +430,7 @@ useEffect(() => {
       audioRef.current.play().catch(() => console.log("Audio play blocked"));
     }
 
-    if (!walletAddress) {
+    if (!address) {
       setIsModalOpen(true);
       return;
     }
@@ -530,13 +541,13 @@ const todaySeed = new Date()
 const prophecyQuote =
   quotes[
     getUniqueQuoteIndex(
-      walletAddress,
+      address,
       todaySeed
     )
   ];
 
 const prophecyNumber =
-  generateLuckyNumber(walletAddress);
+  generateLuckyNumber(address);
 
 const tweet = encodeURIComponent(
   `🔮 BASED ORACLE PROPHECY 🔮\n\n` +
@@ -561,7 +572,7 @@ const today =
     .split("T")[0];
 
 localStorage.setItem(
-  `oracle_share_${walletAddress}_${today}`,
+  `oracle_share_${address}_${today}`,
   finalShareUrl
 );
 
@@ -569,7 +580,7 @@ localStorage.setItem(
       const dailyQuote =
         quotes[
           getUniqueQuoteIndex(
-            walletAddress,
+            address,
             tx.hash
           )
         ];
@@ -579,7 +590,7 @@ localStorage.setItem(
       // DAILY LUCKY NUMBER
       const number =
         generateLuckyNumber(
-          walletAddress
+          address
         );
 
       setLuckyNumber(number);
@@ -594,7 +605,7 @@ const yesterdayKey =
 
 const lastConsult =
   localStorage.getItem(
-    `oracle_last_consult_${walletAddress}`
+    `oracle_last_consult_${address}`
   );
 
 let newStreak = streak;
@@ -608,12 +619,12 @@ if (lastConsult === todayKey) {
 }
 
 localStorage.setItem(
-  `oracle_last_consult_${walletAddress}`,
+  `oracle_last_consult_${address}`,
   todayKey
 );
 
 localStorage.setItem(
-  `oracle_streak_${walletAddress}`,
+  `oracle_streak_${address}`,
   newStreak.toString()
 );
 
@@ -628,7 +639,7 @@ const historyItem = {
 
 const existingHistory = JSON.parse(
   localStorage.getItem(
-    `oracle_history_${walletAddress}`
+    `oracle_history_${address}`
   ) || "[]"
 );
 
@@ -638,7 +649,7 @@ const updatedHistory = [
 ].slice(0, 10);
 
 localStorage.setItem(
-  `oracle_history_${walletAddress}`,
+  `oracle_history_${address}`,
   JSON.stringify(updatedHistory)
 );
 
@@ -647,12 +658,12 @@ setOracleHistory(updatedHistory);
       // SAVE DAILY DATA
      
       localStorage.setItem(
-        `oracle_quote_${walletAddress}_${today}`,
+        `oracle_quote_${address}_${today}`,
         dailyQuote
       );
 
       localStorage.setItem(
-        `oracle_lucky_${walletAddress}_${today}`,
+        `oracle_lucky_${address}_${today}`,
         number.toString()
       );
 
@@ -661,7 +672,7 @@ setOracleHistory(updatedHistory);
       // REFRESH COOLDOWN
       const remaining =
         await contract.getRemainingTime(
-          walletAddress
+          address
         );
 
       setCooldown(
@@ -845,7 +856,7 @@ setOracleHistory(updatedHistory);
               <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-blue-500"></span>
             </span>
 
-            {walletAddress
+            {address
               ? "Timeline Encrypted"
               : "Scanning Souls..."}
           </div>
@@ -854,7 +865,7 @@ setOracleHistory(updatedHistory);
         <div className="relative z-[120]">
           <button
             onClick={() => {
-              if (walletAddress) {
+              if (address) {
                 setIsDropdownOpen(
                   !isDropdownOpen
                 );
@@ -867,12 +878,12 @@ setOracleHistory(updatedHistory);
             <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)] animate-pulse"></div>
 
             <span className="text-[11px] font-black text-white uppercase tracking-[0.25em]">
-{walletAddress
+{address
   ? baseName ||
-    `${walletAddress.substring(
+    `${address.substring(
       0,
       6
-    )}...${walletAddress.slice(
+    )}...${address.slice(
       -4
     )}`
   : "Connect Wallet"}
@@ -880,20 +891,20 @@ setOracleHistory(updatedHistory);
           </button>
 
           {/* NEW DROPDOWN DESIGN */}
-          {walletAddress && isDropdownOpen && (
+          {address && isDropdownOpen && (
             <div className="absolute right-0 mt-4 w-[280px] rounded-3xl p-[1px] bg-gradient-to-r from-blue-500/40 via-white/10 to-blue-500/20 shadow-2xl animate-in fade-in zoom-in duration-200 origin-top-right">
               <div className="bg-[#0a0a0c]/95 backdrop-blur-2xl rounded-3xl p-5 border border-white/10 text-left">
                 
                 {/* HEADER */}
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-white/20 flex items-center justify-center font-bold text-black text-xs">
-                    {walletAddress.slice(2, 4).toUpperCase()}
+                    {address.slice(2, 4).toUpperCase()}
                   </div>
                   <div className="flex flex-col">
                     <span className="text-[9px] text-white/40 uppercase tracking-[0.2em]">Connected Wallet</span>
                     <span className="text-[12px] text-white font-mono">
                       {baseName ||
-  `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`}
+  `${address.slice(0, 6)}...${address.slice(-4)}`}
                     </span>
                   </div>
                 </div>
@@ -911,7 +922,7 @@ setOracleHistory(updatedHistory);
                 <div className="flex flex-col gap-2">
                   <button
                     onClick={() => {
-                      navigator.clipboard.writeText(walletAddress);
+                      navigator.clipboard.writeText(address);
                       setIsDropdownOpen(false);
                     }}
                     className="w-full px-4 py-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/5 transition-all text-[10px] uppercase tracking-[0.2em] text-white/70 hover:text-white text-center"
