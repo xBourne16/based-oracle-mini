@@ -765,7 +765,7 @@ setOracleHistory(updatedHistory);
 </div>
       {/* WALLET MODAL */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl">
+        <div className="fixed inset-0 z-[9999999] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl">
           <div className="w-full max-w-sm bg-[#0a0a0c] border border-white/10 rounded-[32px] p-8 shadow-2xl relative transition-all duration-500 hover:-translate-y-4 hover:scale-[1.03] hover:border-blue-500/40 hover:shadow-[0_0_80px_rgba(37,99,235,0.35)]">
             <button
               onClick={() =>
@@ -862,7 +862,7 @@ setOracleHistory(updatedHistory);
       )}
 
       {/* NAV */}
-     <nav className="fixed top-0 left-0 w-full p-8 flex justify-between items-start z-[999999] pointer-events-none">
+     <nav className="fixed top-0 left-0 w-full p-8 flex justify-between items-start z-[999999] pointer-events-auto">
         <div className="flex flex-col group text-left">
           <div className="text-[11px] text-blue-500 tracking-[0.5em] font-black uppercase italic transition-all group-hover:tracking-[0.6em]">
             {txHash
@@ -885,9 +885,8 @@ setOracleHistory(updatedHistory);
 
         <div className="relative z-[999999] pointer-events-auto">
 <button
+  type="button"
   onClick={() => {
-    alert("clicked");
-
     if (address) {
       setIsDropdownOpen(true);
     } else {
