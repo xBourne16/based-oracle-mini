@@ -841,7 +841,7 @@ setOracleHistory(updatedHistory);
       )}
 
       {/* NAV */}
-      <nav className="fixed top-0 w-full p-8 flex justify-between items-start z-[100]">
+     <nav className="fixed top-0 w-full p-8 flex justify-between items-start z-[9999] pointer-events-auto">
         <div className="flex flex-col group text-left">
           <div className="text-[11px] text-blue-500 tracking-[0.5em] font-black uppercase italic transition-all group-hover:tracking-[0.6em]">
             {txHash
@@ -862,7 +862,7 @@ setOracleHistory(updatedHistory);
           </div>
         </div>
 
-        <div className="relative z-[120]">
+        <div className="relative z-[9999] pointer-events-auto">
           <button
             onClick={() => {
               if (address) {
@@ -873,7 +873,7 @@ setOracleHistory(updatedHistory);
                 setIsModalOpen(true);
               }
             }}
-            className="group relative flex items-center gap-3 px-7 py-3 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full transition-all duration-500 hover:border-blue-500/60 hover:bg-white/[0.1] active:scale-95 z-[110]"
+            className="group relative flex items-center gap-3 px-7 py-3 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full transition-all duration-500 hover:border-blue-500/60 hover:bg-white/[0.1] active:scale-95 z-[110] pointer-events-auto"
           >
             <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)] animate-pulse"></div>
 
