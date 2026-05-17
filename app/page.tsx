@@ -332,7 +332,7 @@ useEffect(() => {
 
     const eth = (window as any).ethereum;
 
-    if (!eth) {
+if (!eth) {
   const currentUrl = window.location.href;
 
   if (walletType === "metamask") {
