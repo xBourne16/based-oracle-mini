@@ -968,11 +968,27 @@ setOracleHistory(updatedHistory);
           )}
         </div>
       </nav>
-      {!address && (
+{!address && (
   <button
     type="button"
-    onClick={() => setIsModalOpen(true)}
-    className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[99999999] bg-white text-black px-8 py-4 rounded-full font-black text-xs uppercase tracking-[0.25em]"
+    onTouchStart={(e) => {
+      e.preventDefault();
+      setIsModalOpen(true);
+    }}
+    onPointerDown={(e) => {
+      e.preventDefault();
+      setIsModalOpen(true);
+    }}
+    style={{
+      position: "fixed",
+      bottom: "24px",
+      left: "50%",
+      transform: "translateX(-50%)",
+      zIndex: 2147483647,
+      pointerEvents: "auto",
+      touchAction: "none",
+    }}
+    className="bg-white text-black px-8 py-4 rounded-full font-black text-xs uppercase tracking-[0.25em]"
   >
     Connect Wallet
   </button>
