@@ -968,6 +968,15 @@ setOracleHistory(updatedHistory);
           )}
         </div>
       </nav>
+      {!address && (
+  <button
+    type="button"
+    onClick={() => setIsModalOpen(true)}
+    className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[99999999] bg-white text-black px-8 py-4 rounded-full font-black text-xs uppercase tracking-[0.25em]"
+  >
+    Connect Wallet
+  </button>
+)}
 
       {/* BG */}
       <div className="absolute inset-0 z-0 opacity-[0.06] pointer-events-none select-none">
