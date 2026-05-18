@@ -1183,23 +1183,6 @@ onClick={() => {
     </div>
 
 </footer>
-<a
-  href="https://go.cb-w.com/dapp?cb_url=https%3A%2F%2Fmini.basedoracle.space"
-  style={{
-    position: "fixed",
-    left: "20px",
-    bottom: "90px",
-    zIndex: 2147483647,
-    background: "white",
-    color: "black",
-    padding: "18px 28px",
-    borderRadius: "999px",
-    fontWeight: 900,
-    textDecoration: "none",
-  }}
->
-  CONNECT TEST
-</a>
     </main>
   );
 }
