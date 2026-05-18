@@ -878,22 +878,14 @@ setOracleHistory(updatedHistory);
         <div className="relative z-[999999] pointer-events-auto">
 <button
   type="button"
-  onClick={() => {
-    console.log("BUTTON CLICKED");
-    alert("clicked");
+onClick={() => {
 
-if (address) {
-  setIsDropdownOpen(true);
-} else {
-  connectWallet("coinbase");
-}
-  }}
-style={{
-  position: "fixed",
-  top: "28px",
-  right: "28px",
-  zIndex: 999999999,
-  pointerEvents: "auto",
+  if (address) {
+    setIsDropdownOpen(true);
+  } else {
+    setIsModalOpen(true);
+  }
+
 }}
   className="group flex items-center gap-3 px-7 py-3 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full active:scale-95 cursor-pointer"
 >
@@ -964,31 +956,8 @@ style={{
           )}
         </div>
       </nav>
-{!address && (
-  <button
-    type="button"
-    onTouchStart={(e) => {
-      e.preventDefault();
-      setIsModalOpen(true);
-    }}
-    onPointerDown={(e) => {
-      e.preventDefault();
-      setIsModalOpen(true);
-    }}
-    style={{
-      position: "fixed",
-      bottom: "24px",
-      left: "50%",
-      transform: "translateX(-50%)",
-      zIndex: 2147483647,
-      pointerEvents: "auto",
-      touchAction: "none",
-    }}
-    className="bg-white text-black px-8 py-4 rounded-full font-black text-xs uppercase tracking-[0.25em]"
-  >
+
     Connect Wallet
-  </button>
-)}
 
       {/* BG */}
       <div className="absolute inset-0 z-0 opacity-[0.06] select-none">
