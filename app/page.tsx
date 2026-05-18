@@ -755,14 +755,13 @@ setOracleHistory(updatedHistory);
   className="fixed inset-0 z-[9999999] hidden items-center justify-center p-4 bg-black/90 backdrop-blur-xl target:flex"
 >
   <div className="w-full max-w-sm bg-[#0a0a0c] border border-white/10 rounded-[32px] p-8 shadow-2xl relative transition-all duration-500 hover:-translate-y-4 hover:scale-[1.03] hover:border-blue-500/40 hover:shadow-[0_0_80px_rgba(37,99,235,0.35)]">
-            <button
-              onClick={() =>
-                setIsModalOpen(false)
-              }
-              className="absolute top-6 right-6 text-white/40 hover:text-white transition-colors"
-            >
-              ✕
-            </button>
+            
+              <a
+  href="#"
+  className="absolute top-6 right-6 text-white/40 hover:text-white transition-colors z-[99999999]"
+>
+  ✕
+</a>
 
             <h2 className="text-[12px] font-black text-white uppercase tracking-[0.4em] mb-10 text-center italic">
               Connect Soul
