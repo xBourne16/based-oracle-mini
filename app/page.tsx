@@ -783,16 +783,9 @@ setOracleHistory(updatedHistory);
           </div>
         </div>
 
-<div
-  style={{
-    position: "relative",
-    zIndex: 2147483647,
-    pointerEvents: "auto",
-    touchAction: "manipulation",
-  }}
-><ConnectButton />
+<div className="fixed top-5 right-3 z-[999999999] pointer-events-auto scale-75 origin-top-right">
+  <ConnectButton />
 </div>
-
           {/* NEW DROPDOWN DESIGN */}
           {address && isDropdownOpen && (
             <div className="absolute right-0 mt-4 w-[280px] rounded-3xl p-[1px] bg-gradient-to-r from-blue-500/40 via-white/10 to-blue-500/20 shadow-2xl animate-in fade-in zoom-in duration-200 origin-top-right">
