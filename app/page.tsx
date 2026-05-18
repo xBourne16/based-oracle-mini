@@ -794,37 +794,6 @@ setOracleHistory(updatedHistory);
                 </span>
               </a>
 
-              {/* RABBY */}
-<a
-  href={
-    typeof window !== "undefined" &&
-    /Mobi|Android|iPhone/i.test(navigator.userAgent)
-      ? "https://mini.basedoracle.space"
-      : "#"
-  }
-  onClick={() => {
-    if (
-      !/Mobi|Android|iPhone/i.test(navigator.userAgent)
-    ) {
-      connectWallet("rabby");
-    }
-  }}
-  className="flex items-center justify-between px-6 py-5 bg-white/[0.03] border border-white/5 rounded-2xl hover:bg-white/10 transition-all group active:scale-95"
->
-                <span className="text-[11px] font-bold text-white/70 group-hover:text-white uppercase tracking-widest">
-                  Rabby Wallet
-                </span>
-
-                <div className="relative w-6 h-6">
-                  <Image
-                    src="/rabby_logo.png"
-                    alt="Rabby"
-                    fill
-                    className="object-contain"
-                  />
-                </div>
-              </a>
-
               {/* COINBASE */}
 <a
   href={
