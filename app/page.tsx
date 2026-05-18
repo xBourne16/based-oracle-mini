@@ -749,7 +749,12 @@ setOracleHistory(updatedHistory);
   };
 
   return (
-<main className="relative flex min-h-screen overflow-hidden flex-col items-center justify-start pt-24 p-4 bg-[#020204] overflow-y-auto overflow-x-hidden selection:bg-blue-600/40">
+<main
+  className="relative flex min-h-screen flex-col items-center justify-start pt-24 p-4 bg-[#020204] overflow-y-auto overflow-x-hidden"
+  style={{
+    pointerEvents: "none",
+  }}
+>
     
       {/* NAV */}
      <nav className="fixed top-0 left-0 w-full p-8 flex justify-between items-start z-[999999] pointer-events-auto">
