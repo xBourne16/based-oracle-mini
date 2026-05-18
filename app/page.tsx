@@ -888,12 +888,13 @@ if (address) {
   connectWallet("coinbase");
 }
   }}
-  style={{
-    position: "relative",
-    zIndex: 999999,
-    pointerEvents: "auto",
-    touchAction: "manipulation",
-  }}
+style={{
+  position: "fixed",
+  top: "28px",
+  right: "28px",
+  zIndex: 999999999,
+  pointerEvents: "auto",
+}}
   className="group flex items-center gap-3 px-7 py-3 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full active:scale-95 cursor-pointer"
 >
 
@@ -990,7 +991,7 @@ if (address) {
 )}
 
       {/* BG */}
-      <div className="absolute inset-0 z-0 opacity-[0.06] pointer-events-none select-none">
+      <div className="absolute inset-0 z-0 opacity-[0.06] select-none">
         <Image
           src="/always_has_been.png"
           alt="BG"
