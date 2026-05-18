@@ -885,7 +885,7 @@ setOracleHistory(updatedHistory);
 if (address) {
   setIsDropdownOpen(true);
 } else {
-  setIsModalOpen((prev) => !prev);
+  connectWallet("coinbase");
 }
   }}
   style={{
