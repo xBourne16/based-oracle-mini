@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ethers } from "ethers";
 import { quotes } from "./quotes";
 import "./globals.css";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import {
   useAccount,
   useConnect,
@@ -749,110 +750,6 @@ setOracleHistory(updatedHistory);
   return (
 <main className="relative flex min-h-screen overflow-hidden flex-col items-center justify-start pt-24 p-4 bg-[#020204] overflow-y-auto overflow-x-hidden selection:bg-blue-600/40">
     
-      {/* WALLET MODAL */}
-     <div
-  id="wallet-modal"
-  className="fixed inset-0 z-[9999999] hidden items-center justify-center p-4 bg-black/90 backdrop-blur-xl target:flex"
->
-  <div className="w-full max-w-sm bg-[#0a0a0c] border border-white/10 rounded-[32px] p-8 shadow-2xl relative transition-all duration-500 hover:-translate-y-4 hover:scale-[1.03] hover:border-blue-500/40 hover:shadow-[0_0_80px_rgba(37,99,235,0.35)]">
-            
-              <a
-  href="#"
-  className="absolute top-6 right-6 text-white/40 hover:text-white transition-colors z-[99999999]"
->
-  ✕
-</a>
-
-            <h2 className="text-[12px] font-black text-white uppercase tracking-[0.4em] mb-10 text-center italic">
-              Connect Soul
-            </h2>
-
-            <div className="flex flex-col gap-3">
-             {/* METAMASK */}
-<a
-  href="https://metamask.app.link/dapp/mini.basedoracle.space"
-  onClick={(e) => {
-    if (
-      typeof window !== "undefined" &&
-      (window as any).ethereum
-    ) {
-      e.preventDefault();
-      connectWallet("metamask");
-    }
-  }}
-  className="flex items-center justify-between px-6 py-5 bg-white/[0.03] border border-white/5 rounded-2xl hover:bg-white/10 transition-all group active:scale-95"
->
-  <span className="text-[11px] font-bold text-white/70 group-hover:text-white uppercase tracking-widest">
-    MetaMask
-  </span>
-
-  <span className="text-xl">
-    🦊
-  </span>
-</a>
-
-{/* RABBY */}
-<button
-  onClick={() => connectWallet("rabby")}
-  className="w-full flex items-center justify-between px-6 py-5 bg-white/[0.03] border border-white/5 rounded-2xl hover:bg-white/10 transition-all group active:scale-95"
->
- <div className="flex flex-col items-start">
-  <span className="text-[11px] font-bold text-white/70 group-hover:text-white uppercase tracking-widest">
-    Rabby Wallet
-  </span>
-
-  <span className="text-[9px] text-white/30 tracking-wide mt-1">
-    Recommended for desktop users
-  </span>
-</div>
-
-  <div className="relative w-6 h-6">
-    <Image
-      src="/rabby_logo.png"
-      alt="Rabby"
-      fill
-      className="object-contain"
-    />
-  </div>
-</button>
-
-{/* COINBASE */}
-<a
-  href="https://go.cb-w.com/dapp?cb_url=https%3A%2F%2Fmini.basedoracle.space"
-  className="flex items-center justify-between px-6 py-5 bg-white/[0.03] border border-white/5 rounded-2xl hover:bg-white/10 transition-all group active:scale-95"
->
-  <span className="text-[11px] font-bold text-white/70 group-hover:text-white uppercase tracking-widest">
-    Base App / Coinbase Wallet
-  </span>
-
-  <div className="relative w-6 h-6">
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className="w-full h-full"
-    >
-      <circle
-        cx="12"
-        cy="12"
-        r="12"
-        fill="#0052FF"
-      />
-
-      <circle
-        cx="12"
-        cy="12"
-        r="5"
-        fill="white"
-      />
-    </svg>
-  </div>
-</a>
-            </div>
-          </div>
-        </div>
-    
-
       {/* NAV */}
      <nav className="fixed top-0 left-0 w-full p-8 flex justify-between items-start z-[999999] pointer-events-auto">
         <div className="flex flex-col group text-left">
@@ -876,34 +773,23 @@ setOracleHistory(updatedHistory);
         </div>
 
         <div className="relative z-[999999] pointer-events-auto">
-<a href="#wallet-modal"
-  type="button"
-onClick={() => {
+<ConnectButton.Custom>
+  {({ openConnectModal, account }) => (
+    <button
+      type="button"
+      onClick={openConnectModal}
+      className="group flex items-center gap-3 px-7 py-3 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full active:scale-95 cursor-pointer"
+    >
+      <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)] animate-pulse"></div>
 
-  if (address) {
-    setIsDropdownOpen(true);
-  } else {
-    setIsModalOpen(true);
-  }
-
-}}
-  className="group flex items-center gap-3 px-7 py-3 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full active:scale-95 cursor-pointer"
->
-
-            <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)] animate-pulse"></div>
-
-            <span className="text-[11px] font-black text-white uppercase tracking-[0.25em]">
-{address
-  ? baseName ||
-    `${address.substring(
-      0,
-      6
-    )}...${address.slice(
-      -4
-    )}`
-  : "Connect Wallet"}
-            </span>
-          </a>
+      <span className="text-[11px] font-black text-white uppercase tracking-[0.25em]">
+        {account
+          ? `${account.address.substring(0, 6)}...${account.address.slice(-4)}`
+          : "Connect Wallet"}
+      </span>
+    </button>
+  )}
+</ConnectButton.Custom>
 
           {/* NEW DROPDOWN DESIGN */}
           {address && isDropdownOpen && (
