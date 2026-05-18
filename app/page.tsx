@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { ethers } from "ethers";
 import { quotes } from "./quotes";
-import { sdk } from "@farcaster/miniapp-sdk";
 import "./globals.css";
 import {
   useAccount,
@@ -339,9 +338,7 @@ useEffect(() => {
     if (typeof window === "undefined")
       return;
 
-   const eth =
-  (window as any).ethereum ||
-  sdk.wallet.ethProvider;
+   const eth = (window as any).ethereum;
 
 if (!eth) {
   const currentUrl = window.location.href;
@@ -1186,12 +1183,8 @@ onClick={() => {
     </div>
 
 </footer>
-<button
-  type="button"
-  onClick={() => {
-    alert("clicked");
-    setIsModalOpen(true);
-  }}
+<a
+  href="https://go.cb-w.com/dapp?cb_url=https%3A%2F%2Fmini.basedoracle.space"
   style={{
     position: "fixed",
     left: "20px",
@@ -1202,11 +1195,11 @@ onClick={() => {
     padding: "18px 28px",
     borderRadius: "999px",
     fontWeight: 900,
-    pointerEvents: "auto",
+    textDecoration: "none",
   }}
 >
   CONNECT TEST
-</button>
+</a>
     </main>
   );
 }
