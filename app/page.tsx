@@ -751,7 +751,7 @@ setOracleHistory(updatedHistory);
     
       {/* WALLET MODAL */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-[9999999] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl">
+        <div id="wallet-modal" className="fixed inset-0-4 bg-black/90 backdrop-blur-xl">
           <div className="w-full max-w-sm bg-[#0a0a0c] border border-white/10 rounded-[32px] p-8 shadow-2xl relative transition-all duration-500 hover:-translate-y-4 hover:scale-[1.03] hover:border-blue-500/40 hover:shadow-[0_0_80px_rgba(37,99,235,0.35)]">
             <button
               onClick={() =>
@@ -870,7 +870,7 @@ setOracleHistory(updatedHistory);
         </div>
 
         <div className="relative z-[999999] pointer-events-auto">
-<button
+<a href="#wallet-modal"
   type="button"
 onClick={() => {
 
@@ -897,7 +897,7 @@ onClick={() => {
     )}`
   : "Connect Wallet"}
             </span>
-          </button>
+          </a>
 
           {/* NEW DROPDOWN DESIGN */}
           {address && isDropdownOpen && (
