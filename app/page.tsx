@@ -768,9 +768,18 @@ setOracleHistory(updatedHistory);
             </h2>
 
             <div className="flex flex-col gap-3">
-              {/* METAMASK */}
+             {/* METAMASK */}
 <a
   href="https://metamask.app.link/dapp/mini.basedoracle.space"
+  onClick={(e) => {
+    if (
+      typeof window !== "undefined" &&
+      (window as any).ethereum
+    ) {
+      e.preventDefault();
+      connectWallet("metamask");
+    }
+  }}
   className="flex items-center justify-between px-6 py-5 bg-white/[0.03] border border-white/5 rounded-2xl hover:bg-white/10 transition-all group active:scale-95"
 >
   <span className="text-[11px] font-bold text-white/70 group-hover:text-white uppercase tracking-widest">
