@@ -1153,7 +1153,7 @@ onClick={() => {
             </div>
           )}
 
-          <div className="mt-6 flex justify-end relative z-[60]">
+          <div className="mt-6 flex flex-col items-center gap-5 relative z-[60] w-full">
             <button
               onClick={handleAction}
               disabled={
