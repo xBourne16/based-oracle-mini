@@ -879,6 +879,9 @@ setOracleHistory(updatedHistory);
 <button
   type="button"
   onClick={() => {
+    console.log("BUTTON CLICKED");
+    alert("clicked");
+
     if (address) {
       setIsDropdownOpen(true);
     } else {
