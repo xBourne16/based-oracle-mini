@@ -749,12 +749,7 @@ setOracleHistory(updatedHistory);
   };
 
   return (
-<main
-  className="relative flex min-h-screen flex-col items-center justify-start pt-24 p-4 bg-[#020204] overflow-y-auto overflow-x-hidden"
-  style={{
-    pointerEvents: "none",
-  }}
->
+<main className="relative flex min-h-screen overflow-hidden flex-col items-center justify-start pt-24 p-4 bg-[#020204] overflow-y-auto overflow-x-hidden selection:bg-blue-600/40">
     
       {/* NAV */}
      <nav className="fixed top-0 left-0 w-full p-8 flex justify-between items-start z-[999999] pointer-events-auto">
@@ -790,15 +785,11 @@ setOracleHistory(updatedHistory);
   {({ account, openAccountModal, openConnectModal }) => (
 <button
   type="button"
-  onTouchStart={(e) => {
-    e.preventDefault();
 
-    if (account) {
-      openAccountModal?.();
-    } else {
-      openConnectModal?.();
-    }
+  onTouchStart={() => {
+    alert("touch çalışıyor");
   }}
+
   onClick={() => {
     if (account) {
       openAccountModal?.();
@@ -806,12 +797,14 @@ setOracleHistory(updatedHistory);
       openConnectModal?.();
     }
   }}
+
   style={{
     position: "relative",
     zIndex: 2147483647,
     pointerEvents: "auto",
     touchAction: "manipulation",
   }}
+
   className="group flex items-center gap-3 px-7 py-3 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full active:scale-95 cursor-pointer"
 >
       <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)] animate-pulse"></div>
