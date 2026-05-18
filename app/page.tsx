@@ -13,9 +13,6 @@ import {
 } from "wagmi";
 
 export default function Home() {
-  useEffect(() => {
-  sdk.actions.ready();
-}, []);
   const [quote, setQuote] = useState("");
   const [displayedQuote, setDisplayedQuote] = useState("");
   const [isAnimating, setIsAnimating] = useState(false);
