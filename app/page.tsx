@@ -783,8 +783,10 @@ setOracleHistory(updatedHistory);
           </div>
         </div>
 
-<div className="fixed top-[150px] right-4 z-[999999999] pointer-events-auto scale-90 origin-top-right">
-  <ConnectButton />
+<div className="fixed top-24 right-4 z-[999999999] pointer-events-auto">
+  <div className="scale-90 origin-top-right">
+    <ConnectButton />
+  </div>
 </div>
           {/* NEW DROPDOWN DESIGN */}
           {address && isDropdownOpen && (
