@@ -1070,25 +1070,8 @@ onClick={() => {
         ✦ {streak} Day — {getStreakBadge(streak)}
       </span>
     </div>
-    <div className="absolute left-1/2 -translate-x-1/2 -bottom-8 z-50 animate-float">
-
-  <div className="flex items-center gap-1 bg-white/[0.05] px-5 py-3.5 rounded-full border border-white/10 backdrop-blur-xl shadow-xl">
-    <span className="text-[11px] text-blue-500 font-black tracking-widest uppercase italic leading-none">
-      You&apos;re now based
-    </span>
-
-    <div className="relative w-5 h-4 flex items-center">
-      <Image
-        src="/base_logo.png"
-        alt="Base Logo"
-        fill
-        className="object-contain brightness-200"
-      />
-    </div>
-  </div>
 
 </div>
-  </div>
 )}
             {/* SHARE PROPHECY */}
 {quote && (shareUrl || oracleHistory[0]?.txHash) && (
@@ -1203,6 +1186,22 @@ onClick={() => {
     : "Consult Fate"}
 </span>
             </button>
+            <div className="mt-6 flex justify-center animate-float">
+  <div className="flex items-center gap-1 bg-white/[0.05] px-5 py-3.5 rounded-full border border-white/10 backdrop-blur-xl shadow-xl">
+    <span className="text-[11px] text-blue-500 font-black tracking-widest uppercase italic leading-none">
+      You&apos;re now based
+    </span>
+
+    <div className="relative w-5 h-4 flex items-center">
+      <Image
+        src="/base_logo.png"
+        alt="Base Logo"
+        fill
+        className="object-contain brightness-200"
+      />
+    </div>
+  </div>
+</div>
           </div>
         </div>
       </div>
