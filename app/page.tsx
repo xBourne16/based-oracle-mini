@@ -773,7 +773,14 @@ setOracleHistory(updatedHistory);
           </div>
         </div>
 
-        <div className="relative z-[999999] pointer-events-auto">
+        <div
+  style={{
+    position: "relative",
+    zIndex: 2147483647,
+    pointerEvents: "auto",
+    touchAction: "manipulation",
+  }}
+>
 <ConnectButton.Custom>
   {({ account, openAccountModal, openConnectModal }) => (
     <button
@@ -785,6 +792,12 @@ setOracleHistory(updatedHistory);
           openConnectModal?.();
         }
       }}
+      style={{
+  position: "relative",
+  zIndex: 2147483647,
+  pointerEvents: "auto",
+  touchAction: "manipulation",
+}}
       className="group flex items-center gap-3 px-7 py-3 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full active:scale-95 cursor-pointer"
     >
       <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)] animate-pulse"></div>
