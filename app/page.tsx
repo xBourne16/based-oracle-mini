@@ -882,11 +882,11 @@ setOracleHistory(updatedHistory);
     console.log("BUTTON CLICKED");
     alert("clicked");
 
-    if (address) {
-      setIsDropdownOpen(true);
-    } else {
-      setIsModalOpen(true);
-    }
+if (address) {
+  setIsDropdownOpen(true);
+} else {
+  setIsModalOpen((prev) => !prev);
+}
   }}
   style={{
     position: "relative",
