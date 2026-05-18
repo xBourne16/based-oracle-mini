@@ -770,74 +770,50 @@ setOracleHistory(updatedHistory);
             <div className="flex flex-col gap-3">
               {/* METAMASK */}
 <a
-  href={
-    typeof window !== "undefined" &&
-    /Mobi|Android|iPhone/i.test(navigator.userAgent)
-      ? "https://metamask.app.link/dapp/mini.basedoracle.space"
-      : "#"
-  }
-  onClick={() => {
-    if (
-      !/Mobi|Android|iPhone/i.test(navigator.userAgent)
-    ) {
-      connectWallet("metamask");
-    }
-  }}
+  href="https://metamask.app.link/dapp/mini.basedoracle.space"
   className="flex items-center justify-between px-6 py-5 bg-white/[0.03] border border-white/5 rounded-2xl hover:bg-white/10 transition-all group active:scale-95"
 >
-                <span className="text-[11px] font-bold text-white/70 group-hover:text-white uppercase tracking-widest">
-                  MetaMask
-                </span>
+  <span className="text-[11px] font-bold text-white/70 group-hover:text-white uppercase tracking-widest">
+    MetaMask
+  </span>
 
-                <span className="text-xl">
-                  🦊
-                </span>
-              </a>
+  <span className="text-xl">
+    🦊
+  </span>
+</a>
 
-              {/* COINBASE */}
+{/* COINBASE */}
 <a
-  href={
-    typeof window !== "undefined" &&
-    /Mobi|Android|iPhone/i.test(navigator.userAgent)
-      ? "https://go.cb-w.com/dapp?cb_url=https%3A%2F%2Fmini.basedoracle.space"
-      : "#"
-  }
-  onClick={() => {
-    if (
-      !/Mobi|Android|iPhone/i.test(navigator.userAgent)
-    ) {
-      connectWallet("coinbase");
-    }
-  }}
+  href="https://go.cb-w.com/dapp?cb_url=https%3A%2F%2Fmini.basedoracle.space"
   className="flex items-center justify-between px-6 py-5 bg-white/[0.03] border border-white/5 rounded-2xl hover:bg-white/10 transition-all group active:scale-95"
 >
-                <span className="text-[11px] font-bold text-white/70 group-hover:text-white uppercase tracking-widest">
-                  Base App / Coinbase Wallet
-                </span>
+  <span className="text-[11px] font-bold text-white/70 group-hover:text-white uppercase tracking-widest">
+    Base App / Coinbase Wallet
+  </span>
 
-                <div className="relative w-6 h-6">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-full h-full"
-                  >
-                    <circle
-                      cx="12"
-                      cy="12"
-                      r="12"
-                      fill="#0052FF"
-                    />
+  <div className="relative w-6 h-6">
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="w-full h-full"
+    >
+      <circle
+        cx="12"
+        cy="12"
+        r="12"
+        fill="#0052FF"
+      />
 
-                    <circle
-                      cx="12"
-                      cy="12"
-                      r="5"
-                      fill="white"
-                    />
-                  </svg>
-                </div>
-              </a>
+      <circle
+        cx="12"
+        cy="12"
+        r="5"
+        fill="white"
+      />
+    </svg>
+  </div>
+</a>
             </div>
           </div>
         </div>
