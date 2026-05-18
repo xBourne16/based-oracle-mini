@@ -1189,6 +1189,27 @@ onClick={() => {
     </div>
 
 </footer>
+<button
+  type="button"
+  onClick={() => {
+    alert("clicked");
+    setIsModalOpen(true);
+  }}
+  style={{
+    position: "fixed",
+    left: "20px",
+    bottom: "90px",
+    zIndex: 2147483647,
+    background: "white",
+    color: "black",
+    padding: "18px 28px",
+    borderRadius: "999px",
+    fontWeight: 900,
+    pointerEvents: "auto",
+  }}
+>
+  CONNECT TEST
+</button>
     </main>
   );
 }
