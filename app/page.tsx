@@ -923,6 +923,15 @@ onClick={() => {
                     <span className="text-[9px] text-green-400 uppercase tracking-widest font-bold">Base Mainnet</span>
                   </div>
                 </div>
+                <div className="flex items-center justify-between mb-4 px-3 py-2 rounded-xl bg-blue-500/10 border border-blue-500/20">
+  <span className="text-[9px] text-white/40 uppercase tracking-[0.2em]">
+    Oracle Rank
+  </span>
+
+  <span className="text-[9px] text-blue-400 uppercase tracking-widest font-black">
+    {getStreakBadge(streak)}
+  </span>
+</div>
 
                 {/* ACTIONS */}
                 <div className="flex flex-col gap-2">
