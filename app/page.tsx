@@ -1190,11 +1190,11 @@ onClick={() => {
       </div>
 
       {/* FOOTER */}
-<footer className="flex justify-center mt-14 md:mt-10">
+<footer className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[99999]">
 
   
     {/* BASE STATUS */}
-    <div className="flex items-center gap-4 bg-white/[0.05] px-7 py-3.5 rounded-full border border-white/10 backdrop-blur-xl shadow-xl">
+    <div className="flex items-center gap-1 bg-white/[0.05] px-7 py-3.5 rounded-full border border-white/10 backdrop-blur-xl shadow-xl">
       <span className="text-[11px] text-blue-500 font-black tracking-widest uppercase italic leading-none">
         You&apos;re now based
       </span>
