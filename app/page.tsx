@@ -752,7 +752,17 @@ setOracleHistory(updatedHistory);
 <main className="relative flex min-h-screen overflow-hidden flex-col items-center justify-start pt-24 p-4 bg-[#020204] overflow-y-auto overflow-x-hidden selection:bg-blue-600/40">
     
       {/* NAV */}
-     <nav className="fixed top-0 left-0 w-full p-8 flex justify-between items-start z-[999999] pointer-events-auto">
+     <nav
+  style={{
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    zIndex: 2147483647,
+    pointerEvents: "auto",
+  }}
+  className="p-8 flex justify-between items-start"
+>
         <div className="flex flex-col group text-left">
           <div className="text-[11px] text-blue-500 tracking-[0.5em] font-black uppercase italic transition-all group-hover:tracking-[0.6em]">
             {txHash
@@ -773,7 +783,7 @@ setOracleHistory(updatedHistory);
           </div>
         </div>
 
-        <div
+<div
   style={{
     position: "relative",
     zIndex: 2147483647,
@@ -781,42 +791,38 @@ setOracleHistory(updatedHistory);
     touchAction: "manipulation",
   }}
 >
-<ConnectButton.Custom>
-  {({ account, openAccountModal, openConnectModal }) => (
-<button
-  type="button"
+  <ConnectButton.Custom>
+    {({
+      account,
+      openAccountModal,
+      openConnectModal,
+    }) => (
+      <button
+        type="button"
+        onClick={() => {
+          if (account) {
+            openAccountModal?.();
+          } else {
+            openConnectModal?.();
+          }
+        }}
+        style={{
+          pointerEvents: "auto",
+          touchAction: "manipulation",
+        }}
+        className="group flex items-center gap-3 px-7 py-3 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full active:scale-95 cursor-pointer"
+      >
+        <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)] animate-pulse"></div>
 
-  onTouchStart={() => {
-    alert("touch çalışıyor");
-  }}
-
-  onClick={() => {
-    if (account) {
-      openAccountModal?.();
-    } else {
-      openConnectModal?.();
-    }
-  }}
-
-  style={{
-    position: "relative",
-    zIndex: 2147483647,
-    pointerEvents: "auto",
-    touchAction: "manipulation",
-  }}
-
-  className="group flex items-center gap-3 px-7 py-3 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full active:scale-95 cursor-pointer"
->
-      <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)] animate-pulse"></div>
-
-      <span className="text-[11px] font-black text-white uppercase tracking-[0.25em]">
-        {account
-          ? account.displayName
-          : "Connect Wallet"}
-      </span>
-    </button>
-  )}
-</ConnectButton.Custom>
+        <span className="text-[11px] font-black text-white uppercase tracking-[0.25em]">
+          {account
+            ? account.displayName
+            : "Connect Wallet"}
+        </span>
+      </button>
+    )}
+  </ConnectButton.Custom>
+</div>
 
           {/* NEW DROPDOWN DESIGN */}
           {address && isDropdownOpen && (
@@ -876,7 +882,6 @@ setOracleHistory(updatedHistory);
               </div>
             </div>
           )}
-        </div>
       </nav>
 
     Connect Wallet
