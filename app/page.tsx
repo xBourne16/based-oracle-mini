@@ -750,9 +750,11 @@ setOracleHistory(updatedHistory);
 <main className="relative flex min-h-screen overflow-hidden flex-col items-center justify-start pt-24 p-4 bg-[#020204] overflow-y-auto overflow-x-hidden selection:bg-blue-600/40">
     
       {/* WALLET MODAL */}
-      {isModalOpen && (
-        <div id="wallet-modal" className="fixed inset-0-4 bg-black/90 backdrop-blur-xl">
-          <div className="w-full max-w-sm bg-[#0a0a0c] border border-white/10 rounded-[32px] p-8 shadow-2xl relative transition-all duration-500 hover:-translate-y-4 hover:scale-[1.03] hover:border-blue-500/40 hover:shadow-[0_0_80px_rgba(37,99,235,0.35)]">
+     <div
+  id="wallet-modal"
+  className="fixed inset-0 z-[9999999] hidden items-center justify-center p-4 bg-black/90 backdrop-blur-xl target:flex"
+>
+  <div className="w-full max-w-sm bg-[#0a0a0c] border border-white/10 rounded-[32px] p-8 shadow-2xl relative transition-all duration-500 hover:-translate-y-4 hover:scale-[1.03] hover:border-blue-500/40 hover:shadow-[0_0_80px_rgba(37,99,235,0.35)]">
             <button
               onClick={() =>
                 setIsModalOpen(false)
@@ -845,7 +847,7 @@ setOracleHistory(updatedHistory);
             </div>
           </div>
         </div>
-      )}
+    
 
       {/* NAV */}
      <nav className="fixed top-0 left-0 w-full p-8 flex justify-between items-start z-[999999] pointer-events-auto">
