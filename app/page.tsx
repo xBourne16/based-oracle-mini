@@ -1186,7 +1186,7 @@ onClick={() => {
     : "Consult Fate"}
 </span>
             </button>
-            <div className="mt-6 flex justify-center animate-float">
+           <div className="mt-10 flex justify-center animate-float">
   <div className="flex items-center gap-1 bg-white/[0.05] px-5 py-3.5 rounded-full border border-white/10 backdrop-blur-xl shadow-xl">
     <span className="text-[11px] text-blue-500 font-black tracking-widest uppercase italic leading-none">
       You&apos;re now based
