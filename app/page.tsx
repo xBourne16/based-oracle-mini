@@ -770,12 +770,9 @@ setOracleHistory(updatedHistory);
 
             <div className="flex flex-col gap-3">
               {/* METAMASK */}
-              <button
-                onClick={() =>
-                  connectWallet(
-                    "metamask"
-                  )
-                }
+              <a
+  href="https://metamask.app.link/dapp/mini.basedoracle.space"
+                
                 className="flex items-center justify-between px-6 py-5 bg-white/[0.03] border border-white/5 rounded-2xl hover:bg-white/10 transition-all group active:scale-95"
               >
                 <span className="text-[11px] font-bold text-white/70 group-hover:text-white uppercase tracking-widest">
@@ -785,13 +782,11 @@ setOracleHistory(updatedHistory);
                 <span className="text-xl">
                   🦊
                 </span>
-              </button>
+              </a>
 
               {/* RABBY */}
-              <button
-                onClick={() =>
-                  connectWallet("rabby")
-                }
+              <a
+  href="https://mini.basedoracle.space"
                 className="flex items-center justify-between px-6 py-5 bg-white/[0.03] border border-white/5 rounded-2xl hover:bg-white/10 transition-all group active:scale-95"
               >
                 <span className="text-[11px] font-bold text-white/70 group-hover:text-white uppercase tracking-widest">
@@ -806,17 +801,13 @@ setOracleHistory(updatedHistory);
                     className="object-contain"
                   />
                 </div>
-              </button>
+              </a>
 
               {/* COINBASE */}
-              <button
-                onClick={() =>
-                  connectWallet(
-                    "coinbase"
-                  )
-                }
-                className="flex items-center justify-between px-6 py-5 bg-white/[0.03] border border-white/5 rounded-2xl hover:bg-white/10 transition-all group active:scale-95"
-              >
+<a
+  href="https://go.cb-w.com/dapp?cb_url=https%3A%2F%2Fmini.basedoracle.space"
+  className="flex items-center justify-between px-6 py-5 bg-white/[0.03] border border-white/5 rounded-2xl hover:bg-white/10 transition-all group active:scale-95"
+>
                 <span className="text-[11px] font-bold text-white/70 group-hover:text-white uppercase tracking-widest">
                   Base App / Coinbase Wallet
                 </span>
@@ -843,7 +834,7 @@ setOracleHistory(updatedHistory);
                     />
                   </svg>
                 </div>
-              </button>
+              </a>
             </div>
           </div>
         </div>
