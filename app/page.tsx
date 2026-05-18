@@ -790,38 +790,7 @@ setOracleHistory(updatedHistory);
     pointerEvents: "auto",
     touchAction: "manipulation",
   }}
->
-  <ConnectButton.Custom>
-    {({
-      account,
-      openAccountModal,
-      openConnectModal,
-    }) => (
-      <button
-        type="button"
-        onClick={() => {
-          if (account) {
-            openAccountModal?.();
-          } else {
-            openConnectModal?.();
-          }
-        }}
-        style={{
-          pointerEvents: "auto",
-          touchAction: "manipulation",
-        }}
-        className="group flex items-center gap-3 px-7 py-3 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full active:scale-95 cursor-pointer"
-      >
-        <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)] animate-pulse"></div>
-
-        <span className="text-[11px] font-black text-white uppercase tracking-[0.25em]">
-          {account
-            ? account.displayName
-            : "Connect Wallet"}
-        </span>
-      </button>
-    )}
-  </ConnectButton.Custom>
+><ConnectButton />
 </div>
 
           {/* NEW DROPDOWN DESIGN */}
