@@ -749,48 +749,7 @@ setOracleHistory(updatedHistory);
   return (
 <main className="relative flex min-h-screen flex-col items-center justify-start pt-24 p-4 bg-[#020204] overflow-y-auto overflow-x-hidden selection:bg-blue-600/40 pointer-events-none">
     
-      {/* NAV */}
-     <nav className="fixed top-0 left-0 w-full px-5 pt-16 flex justify-between items-start z-[99999999] pointer-events-auto">
-        <div className="flex flex-col group text-left">
-          <div className="text-[11px] text-blue-500 tracking-[0.5em] font-black uppercase italic transition-all group-hover:tracking-[0.6em]">
-            {txHash
-              ? "✦ Oracle Synchronized ✦"
-              : `◈ ${greeting}`}
-          </div>
 
-<div className="flex items-center gap-2 mt-1.5 text-[9px] text-white/40 font-mono uppercase tracking-[0.3em]">
-  <span className="relative flex h-1.5 w-1.5">
-    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-blue-500"></span>
-  </span>
-
-  {address ? "Timeline Encrypted" : "Scanning Souls..."}
-</div>
-</div>
-
-<div className="relative z-[9999999] pointer-events-auto">
-  <ConnectButton.Custom>
-    {({ account, openAccountModal, openConnectModal }) => (
-      <button
-        type="button"
-        onClick={() => {
-          if (account) {
-            openAccountModal?.();
-          } else {
-            openConnectModal?.();
-          }
-        }}
-        className="group flex items-center gap-3 px-7 py-3 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full active:scale-95 cursor-pointer"
-      >
-        <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)] animate-pulse"></div>
-
-        <span className="text-[11px] font-black text-white uppercase tracking-[0.25em]">
-          {account ? account.displayName : "Connect Wallet"}
-        </span>
-      </button>
-    )}
-  </ConnectButton.Custom>
-</div>
 
           {/* NEW DROPDOWN DESIGN */}
           {address && isDropdownOpen && (
@@ -850,7 +809,7 @@ setOracleHistory(updatedHistory);
               </div>
             </div>
           )}
-      </nav>
+    
 
 
       {/* BG */}
@@ -898,7 +857,42 @@ setOracleHistory(updatedHistory);
       ? "scale-95 border-blue-500/40 shadow-[0_0_50px_rgba(37,99,235,0.18)]"
       : ""
   }`}
->
+><div className="flex items-start justify-between gap-4 mb-10">
+  <div>
+    <div className="text-[11px] text-blue-500 tracking-[0.5em] font-black uppercase italic">
+      ◈ GM
+    </div>
+
+    <div className="mt-3 text-[13px] text-white/40 font-mono uppercase tracking-[0.3em]">
+      Scanning Souls...
+    </div>
+  </div>
+
+  <div className="relative z-[9999999] pointer-events-auto">
+    <ConnectButton.Custom>
+      {({ account, openAccountModal, openConnectModal }) => (
+        <button
+          type="button"
+          onClick={() => {
+            if (account) {
+              openAccountModal?.();
+            } else {
+              openConnectModal?.();
+            }
+          }}
+          className="flex items-center gap-3 px-7 py-4 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full active:scale-95"
+        >
+          <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+
+          <span className="text-[11px] font-black text-white uppercase tracking-[0.25em]">
+            {account ? account.displayName : "Connect Wallet"}
+          </span>
+        </button>
+      )}
+    </ConnectButton.Custom>
+  </div>
+</div>
+
   <div className="absolute inset-0 rounded-[50px] bg-blue-500/10 blur-3xl animate-pulse pointer-events-none" />
 
 
