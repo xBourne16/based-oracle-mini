@@ -750,7 +750,7 @@ setOracleHistory(updatedHistory);
 <main className="relative flex min-h-screen flex-col items-center justify-start pt-24 p-4 bg-[#020204] overflow-y-auto overflow-x-hidden selection:bg-blue-600/40 pointer-events-none">
     
       {/* NAV */}
-     <nav className="fixed top-0 left-0 w-full p-8 flex justify-between items-start z-[999999] pointer-events-auto">
+     <nav className="fixed top-0 left-0 w-full px-5 pt-16 flex justify-between items-start z-[99999999] pointer-events-auto">
         <div className="flex flex-col group text-left">
           <div className="text-[11px] text-blue-500 tracking-[0.5em] font-black uppercase italic transition-all group-hover:tracking-[0.6em]">
             {txHash
@@ -884,7 +884,7 @@ setOracleHistory(updatedHistory);
       : ""
   }`}
 >
-        <h1 className="text-[54px] sm:text-7xl md:text-[115px] font-black text-white leading-none tracking-tighter uppercase italic mb-16 drop-shadow-2xl select-none">
+        <h1 className="text-[54px] sm:text-7xl md:text-[115px] font-black text-white leading-none tracking-tighter uppercase italic mt-16mb-16 drop-shadow-2xl select-none">
           BASED
           <span className="text-blue-600">
             .
