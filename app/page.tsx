@@ -905,6 +905,11 @@ setOracleHistory(updatedHistory);
             )}
 
             {/* QUOTE */}
+            {!address && (
+  <div className="relative z-[9999] mb-8 flex justify-center">
+    <ConnectButton />
+  </div>
+)}
           <p
   key={quote || isAnimating ? "active" : "empty"}
   className={`text-2xl sm:text-3xl md:text-5xl text-white italic text-center leading-[1.1] font-medium transition-all duration-700 ${
