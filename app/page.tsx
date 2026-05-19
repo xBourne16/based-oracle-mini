@@ -1021,15 +1021,28 @@ setOracleHistory(updatedHistory);
           <div className="mt-6 flex flex-col items-center gap-5 relative z-[60] w-full">
 <ConnectButton.Custom>
   {({ openConnectModal }) => (
-    <button
-      onClick={() => {
-        if (!address) {
-          openConnectModal?.();
-          return;
-        }
+<button
+  type="button"
+  onTouchEnd={() => {
+    if (!address) {
+      openConnectModal?.();
+      return;
+    }
 
-        handleAction();
-      }}
+    handleAction();
+  }}
+  onClick={() => {
+    if (!address) {
+      openConnectModal?.();
+      return;
+    }
+
+    handleAction();
+  }}
+  style={{
+    touchAction: "manipulation",
+    pointerEvents: "auto",
+  }}
       disabled={isAnimating || cooldown > 0}
       className={`group overflow-hidden relative z-[70] px-14 py-6 font-black rounded-full transition-all text-[10px] uppercase tracking-[0.3em] shadow-xl
 
