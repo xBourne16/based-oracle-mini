@@ -1,7 +1,6 @@
 "use client"; 
 
 import { useConnectModal } from "@rainbow-me/rainbowkit";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { ethers } from "ethers";
@@ -55,6 +54,8 @@ const { disconnect } =
 
   const [isModalOpen, setIsModalOpen] =
     useState(false);
+
+    const [showWalletOptions, setShowWalletOptions] = useState(false);
 
   const [activeProvider, setActiveProvider] =
     useState<any>(null);
@@ -445,7 +446,26 @@ setIsModalOpen(false);
   setLuckyNumber(null);
   setIsDropdownOpen(false);
 };
+const connectSelectedWallet = async (wallet: string) => {
+  const selectedConnector = connectors.find((c) =>
+    c.name.toLowerCase().includes(wallet)
+  );
 
+  if (!selectedConnector) {
+    alert(`${wallet} connector not found`);
+    return;
+  }
+
+  try {
+    await connectAsync({
+      connector: selectedConnector,
+    });
+
+    setShowWalletOptions(false);
+  } catch (err) {
+    console.log("Wallet connect failed", err);
+  }
+};
   const handleAction = async () => {
     if (isAnimating) return;
 
@@ -927,17 +947,44 @@ setOracleHistory(updatedHistory);
 
 <button
   type="button"
-  onClick={() => {
-    if (!address) {
-      openConnectModal?.();
-      return;
-    }
+onClick={() => {
+  if (!address) {
+    setShowWalletOptions((prev) => !prev);
+    return;
+  }
 
-    handleAction();
-  }}
+  handleAction();
+}}
   className="bg-white text-black px-14 py-6 rounded-full font-black text-[10px] uppercase tracking-[0.3em] active:scale-95"
 >
-  {!address ? "Connect Wallet" : "Consult Fate"}
+{!address ? "Connect Wallet" : "Consult Fate"}
+{showWalletOptions && !address && (
+  <div className="mt-5 w-full max-w-sm flex flex-col gap-3 relative z-[999999]">
+    <button
+      type="button"
+      onClick={() => connectSelectedWallet("metamask")}
+      className="w-full px-6 py-4 rounded-2xl bg-white/[0.05] border border-white/10 text-white text-[11px] font-black uppercase tracking-[0.25em]"
+    >
+      MetaMask
+    </button>
+
+    <button
+      type="button"
+      onClick={() => connectSelectedWallet("coinbase")}
+      className="w-full px-6 py-4 rounded-2xl bg-blue-500/20 border border-blue-500/30 text-blue-300 text-[11px] font-black uppercase tracking-[0.25em]"
+    >
+      Base App / Coinbase
+    </button>
+
+    <button
+      type="button"
+      onClick={() => connectSelectedWallet("rabby")}
+      className="w-full px-6 py-4 rounded-2xl bg-white/[0.05] border border-white/10 text-white text-[11px] font-black uppercase tracking-[0.25em]"
+    >
+      Rabby Wallet
+    </button>
+  </div>
+)}
 </button>
 </div>
 
