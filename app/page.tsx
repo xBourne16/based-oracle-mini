@@ -1,5 +1,6 @@
 "use client"; 
 
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
@@ -922,6 +923,26 @@ setOracleHistory(updatedHistory);
   ? "The Oracle sleeps..."
   : "Authorize the transaction to decrypt your fate."}
 </p>
+<div className="mt-10 flex justify-center">
+  <ConnectButton.Custom>
+    {({ openConnectModal }) => (
+      <button
+        type="button"
+        onClick={() => {
+          if (!address) {
+            openConnectModal?.();
+            return;
+          }
+
+          handleAction();
+        }}
+        className="bg-white text-black px-14 py-6 rounded-full font-black text-[10px] uppercase tracking-[0.3em]"
+      >
+        {!address ? "Connect Wallet" : "Consult Fate"}
+      </button>
+    )}
+  </ConnectButton.Custom>
+</div>
 
             {/* LUCKY NUMBER */}
             {/* DAILY STREAK */}
