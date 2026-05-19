@@ -758,7 +758,7 @@ setOracleHistory(updatedHistory);
     top: 0,
     left: 0,
     width: "100%",
-    zIndex: 2147483647,
+    zIndex: 100,
     pointerEvents: "auto",
   }}
   className="p-8 flex justify-between items-start"
@@ -1023,14 +1023,6 @@ setOracleHistory(updatedHistory);
   {({ openConnectModal }) => (
 <button
   type="button"
-  onTouchEnd={() => {
-    if (!address) {
-      openConnectModal?.();
-      return;
-    }
-
-    handleAction();
-  }}
   onClick={() => {
     if (!address) {
       openConnectModal?.();
@@ -1039,6 +1031,7 @@ setOracleHistory(updatedHistory);
 
     handleAction();
   }}
+
   style={{
     touchAction: "manipulation",
     pointerEvents: "auto",
