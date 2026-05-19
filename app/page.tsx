@@ -1,6 +1,7 @@
 "use client"; 
 
-import { useConnectModal } from "@rainbow-me/rainbowkit";
+
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { ethers } from "ethers";
@@ -29,18 +30,8 @@ export default function Home() {
   }
 };
 
-const { openConnectModal } = useConnectModal();
-
   const { address, isConnected } =
   useAccount();
-
-  useEffect(() => {
-  if (!address && openConnectModal) {
-    setTimeout(() => {
-      openConnectModal();
-    }, 800);
-  }
-}, [address, openConnectModal]);
 
 const { connectAsync, connectors } =
   useConnect();
@@ -63,8 +54,6 @@ const { disconnect } =
 
   const [isModalOpen, setIsModalOpen] =
     useState(false);
-
-    const [showWalletOptions, setShowWalletOptions] = useState(false);
 
   const [activeProvider, setActiveProvider] =
     useState<any>(null);
@@ -455,26 +444,7 @@ setIsModalOpen(false);
   setLuckyNumber(null);
   setIsDropdownOpen(false);
 };
-const connectSelectedWallet = async (wallet: string) => {
-  const selectedConnector = connectors.find((c) =>
-    c.name.toLowerCase().includes(wallet)
-  );
 
-  if (!selectedConnector) {
-    alert(`${wallet} connector not found`);
-    return;
-  }
-
-  try {
-    await connectAsync({
-      connector: selectedConnector,
-    });
-
-    setShowWalletOptions(false);
-  } catch (err) {
-    console.log("Wallet connect failed", err);
-  }
-};
   const handleAction = async () => {
     if (isAnimating) return;
 
@@ -483,10 +453,10 @@ const connectSelectedWallet = async (wallet: string) => {
       audioRef.current.play().catch(() => console.log("Audio play blocked"));
     }
 
-if (!address) {
-  openConnectModal?.();
-  return;
-}
+    if (!address) {
+      setIsModalOpen(true);
+      return;
+    }
 
     // BLOCKCHAIN COOLDOWN CHECK
     if (cooldown > 0) {
@@ -779,20 +749,10 @@ setOracleHistory(updatedHistory);
   };
 
   return (
-<main className="relative flex min-h-screen flex-col items-center justify-start pt-24 p-4 bg-[#020204] overflow-y-auto overflow-x-hidden selection:bg-blue-600/40">
+<main className="relative flex min-h-screen overflow-hidden flex-col items-center justify-start pt-24 p-4 bg-[#020204] overflow-y-auto overflow-x-hidden selection:bg-blue-600/40">
     
       {/* NAV */}
-     <nav
-  style={{
-    position: "fixed",
-    top: 0,
-    left: 0,
-    width: "100%",
-    zIndex: 100,
-    pointerEvents: "auto",
-  }}
-  className="p-8 flex justify-between items-start"
->
+     <nav className="fixed top-0 left-0 w-full p-8 flex justify-between items-start z-[999999] pointer-events-auto">
         <div className="flex flex-col group text-left">
           <div className="text-[11px] text-blue-500 tracking-[0.5em] font-black uppercase italic transition-all group-hover:tracking-[0.6em]">
             {txHash
@@ -812,6 +772,31 @@ setOracleHistory(updatedHistory);
               : "Scanning Souls..."}
           </div>
         </div>
+
+        <div className="relative z-[999999] pointer-events-auto">
+<ConnectButton.Custom>
+  {({ account, openAccountModal, openConnectModal }) => (
+    <button
+      type="button"
+      onClick={() => {
+        if (account) {
+          openAccountModal?.();
+        } else {
+          openConnectModal?.();
+        }
+      }}
+      className="group flex items-center gap-3 px-7 py-3 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full active:scale-95 cursor-pointer"
+    >
+      <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)] animate-pulse"></div>
+
+      <span className="text-[11px] font-black text-white uppercase tracking-[0.25em]">
+        {account
+          ? account.displayName
+          : "Connect Wallet"}
+      </span>
+    </button>
+  )}
+</ConnectButton.Custom>
 
           {/* NEW DROPDOWN DESIGN */}
           {address && isDropdownOpen && (
@@ -871,6 +856,7 @@ setOracleHistory(updatedHistory);
               </div>
             </div>
           )}
+        </div>
       </nav>
 
     Connect Wallet
@@ -935,7 +921,6 @@ setOracleHistory(updatedHistory);
             )}
 
             {/* QUOTE */}
-  
           <p
   key={quote || isAnimating ? "active" : "empty"}
   className={`text-2xl sm:text-3xl md:text-5xl text-white italic text-center leading-[1.1] font-medium transition-all duration-700 ${
@@ -951,51 +936,7 @@ setOracleHistory(updatedHistory);
   : cooldown > 0
   ? "The Oracle sleeps..."
   : "Authorize the transaction to decrypt your fate."}
-</p>
-<div className="mt-10 flex justify-center relative z-[9999999]">
-
-<button
-  type="button"
-onClick={() => {
-  if (!address) {
-    setShowWalletOptions((prev) => !prev);
-    return;
-  }
-
-  handleAction();
-}}
-  className="bg-white text-black px-14 py-6 rounded-full font-black text-[10px] uppercase tracking-[0.3em] active:scale-95"
->
-{!address ? "Connect Wallet" : "Consult Fate"}
-{showWalletOptions && !address && (
-  <div className="mt-5 w-full max-w-sm flex flex-col gap-3 relative z-[999999]">
-    <button
-      type="button"
-      onClick={() => connectSelectedWallet("metamask")}
-      className="w-full px-6 py-4 rounded-2xl bg-white/[0.05] border border-white/10 text-white text-[11px] font-black uppercase tracking-[0.25em]"
-    >
-      MetaMask
-    </button>
-
-    <button
-      type="button"
-      onClick={() => connectSelectedWallet("coinbase")}
-      className="w-full px-6 py-4 rounded-2xl bg-blue-500/20 border border-blue-500/30 text-blue-300 text-[11px] font-black uppercase tracking-[0.25em]"
-    >
-      Base App / Coinbase
-    </button>
-
-    <button
-      type="button"
-      onClick={() => connectSelectedWallet("rabby")}
-      className="w-full px-6 py-4 rounded-2xl bg-white/[0.05] border border-white/10 text-white text-[11px] font-black uppercase tracking-[0.25em]"
-    >
-      Rabby Wallet
-    </button>
-  </div>
-)}
-</button>
-</div>
+            </p>
 
             {/* LUCKY NUMBER */}
             {/* DAILY STREAK */}
@@ -1021,8 +962,7 @@ onClick={() => {
   `https://twitter.com/intent/tweet?text=${encodeURIComponent(
     `🔮 BASED ORACLE PROPHECY 🔮\n\n“${quote}”\n\n✦ Lucky Number: ${luckyNumber}\n\n✦ Oracle TX:\nhttps://basescan.org/tx/${oracleHistory[0]?.txHash}\n\nConsult your fate:\n${window.location.origin}`
   )}`
-  }
-  
+}
     target="_blank"
     rel="noopener noreferrer"
     className="
@@ -1094,6 +1034,39 @@ onClick={() => {
             </div>
           )}
 
+          <div className="mt-6 flex flex-col items-center gap-5 relative z-[60] w-full">
+            <button
+              onClick={handleAction}
+              disabled={
+                isAnimating ||
+                cooldown > 0
+              }
+              className={`group overflow-hidden relative z-[70] px-14 py-6 font-black rounded-full transition-all text-[10px] uppercase tracking-[0.3em] shadow-xl
+
+              ${
+                cooldown > 0
+                  ? "bg-blue-950/40 text-blue-300 border border-blue-500/20 cursor-not-allowed"
+                  : "bg-white text-black hover:bg-blue-600 hover:text-white hover:scale-105 active:scale-95 hover:shadow-[0_0_35px_rgba(37,99,235,0.55)]"
+              }
+        
+              ${
+                isAnimating
+                  ? "opacity-50"
+                  : ""
+              }`}
+
+          
+            >
+            <span className="relative z-10">
+  {isAnimating
+    ? "Consulting..."
+    : cooldown > 0
+    ? "Oracle Sleeping"
+    : txHash
+    ? "Fate Decrypted"
+    : "Consult Fate"}
+</span>
+            </button>
            <div className="mt-10 flex justify-center animate-float">
   <div className="flex items-center gap-1 bg-white/[0.05] px-5 py-3.5 rounded-full border border-white/10 backdrop-blur-xl shadow-xl">
     <span className="text-[11px] text-blue-500 font-black tracking-widest uppercase italic leading-none">
@@ -1112,6 +1085,7 @@ onClick={() => {
 </div>
           </div>
         </div>
+      </div>
 
       {/* FOOTER */}
 <footer className="absolute left-1/2 -translate-x-1/2 top-[760px] z-50">
