@@ -783,11 +783,6 @@ setOracleHistory(updatedHistory);
           </div>
         </div>
 
-<div className="fixed top-24 right-4 z-[999999999] pointer-events-auto">
-  <div className="scale-90 origin-top-right">
-    <ConnectButton />
-  </div>
-</div>
           {/* NEW DROPDOWN DESIGN */}
           {address && isDropdownOpen && (
             <div className="absolute right-0 mt-4 w-[280px] rounded-3xl p-[1px] bg-gradient-to-r from-blue-500/40 via-white/10 to-blue-500/20 shadow-2xl animate-in fade-in zoom-in duration-200 origin-top-right">
@@ -1024,38 +1019,42 @@ setOracleHistory(updatedHistory);
           )}
 
           <div className="mt-6 flex flex-col items-center gap-5 relative z-[60] w-full">
-            <button
-              onClick={handleAction}
-              disabled={
-                isAnimating ||
-                cooldown > 0
-              }
-              className={`group overflow-hidden relative z-[70] px-14 py-6 font-black rounded-full transition-all text-[10px] uppercase tracking-[0.3em] shadow-xl
+<ConnectButton.Custom>
+  {({ openConnectModal }) => (
+    <button
+      onClick={() => {
+        if (!address) {
+          openConnectModal?.();
+          return;
+        }
 
-              ${
-                cooldown > 0
-                  ? "bg-blue-950/40 text-blue-300 border border-blue-500/20 cursor-not-allowed"
-                  : "bg-white text-black hover:bg-blue-600 hover:text-white hover:scale-105 active:scale-95 hover:shadow-[0_0_35px_rgba(37,99,235,0.55)]"
-              }
-        
-              ${
-                isAnimating
-                  ? "opacity-50"
-                  : ""
-              }`}
+        handleAction();
+      }}
+      disabled={isAnimating || cooldown > 0}
+      className={`group overflow-hidden relative z-[70] px-14 py-6 font-black rounded-full transition-all text-[10px] uppercase tracking-[0.3em] shadow-xl
 
-          
-            >
-            <span className="relative z-10">
-  {isAnimating
-    ? "Consulting..."
-    : cooldown > 0
-    ? "Oracle Sleeping"
-    : txHash
-    ? "Fate Decrypted"
-    : "Consult Fate"}
-</span>
-            </button>
+      ${
+        cooldown > 0
+          ? "bg-blue-950/40 text-blue-300 border border-blue-500/20 cursor-not-allowed"
+          : "bg-white text-black hover:bg-blue-600 hover:text-white hover:scale-105 active:scale-95 hover:shadow-[0_0_35px_rgba(37,99,235,0.55)]"
+      }
+
+      ${isAnimating ? "opacity-50" : ""}`}
+    >
+      <span className="relative z-10">
+        {!address
+          ? "Connect Wallet"
+          : isAnimating
+          ? "Consulting..."
+          : cooldown > 0
+          ? "Oracle Sleeping"
+          : txHash
+          ? "Fate Decrypted"
+          : "Consult Fate"}
+      </span>
+    </button>
+  )}
+</ConnectButton.Custom>
            <div className="mt-10 flex justify-center animate-float">
   <div className="flex items-center gap-1 bg-white/[0.05] px-5 py-3.5 rounded-full border border-white/10 backdrop-blur-xl shadow-xl">
     <span className="text-[11px] text-blue-500 font-black tracking-widest uppercase italic leading-none">
