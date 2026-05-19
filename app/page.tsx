@@ -13,7 +13,6 @@ import {
 } from "wagmi";
 
 export default function Home() {
-  const { openConnectModal } = useConnectModal();
   const [quote, setQuote] = useState("");
   const [displayedQuote, setDisplayedQuote] = useState("");
   const [isAnimating, setIsAnimating] = useState(false);
@@ -30,8 +29,18 @@ export default function Home() {
   }
 };
 
+const { openConnectModal } = useConnectModal();
+
   const { address, isConnected } =
   useAccount();
+
+  useEffect(() => {
+  if (!address && openConnectModal) {
+    setTimeout(() => {
+      openConnectModal();
+    }, 800);
+  }
+}, [address, openConnectModal]);
 
 const { connectAsync, connectors } =
   useConnect();
