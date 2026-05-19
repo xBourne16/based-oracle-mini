@@ -866,7 +866,7 @@ setOracleHistory(updatedHistory);
 
       {/* GLOW */}
       <div
-        className={`absolute right-[8%] top-[15%] w-[600px] h-[550px] z-[5] transition-all duration-1000 ${glowIntensity} select-none`}
+        className={`absolute right-[8%] top-[15%] w-[600px] h-[550px] z-[5] transition-all duration-1000 ${glowIntensity} pointer-events-none select-none`}
       >
         <Image
           src="/crypto_scribble.png"
@@ -878,12 +878,12 @@ setOracleHistory(updatedHistory);
 
       {/* MAIN */}
       <div
-        className={`relative z-[50] w-full max-w-6xl flex flex-col items-center xl:scale-90 origin-top transition-all lg:pr-32 ${
-          isAnimating
-            ? "scale-95 blur-sm"
-            : ""
-        }`}
-      >
+  className={`relative z-[50] w-full max-w-6xl flex flex-col items-center xl:scale-90 origin-top transition-all lg:pr-32 pointer-events-auto ${
+    isAnimating
+      ? "scale-95 blur-sm"
+      : ""
+  }`}
+>
         <h1 className="text-[54px] sm:text-7xl md:text-[115px] font-black text-white leading-none tracking-tighter uppercase italic mb-16 drop-shadow-2xl select-none">
           BASED
           <span className="text-blue-600">
