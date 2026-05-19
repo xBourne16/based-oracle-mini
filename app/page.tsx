@@ -1,7 +1,6 @@
 "use client"; 
 
-
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { ethers } from "ethers";
@@ -14,6 +13,7 @@ import {
 } from "wagmi";
 
 export default function Home() {
+  const { openConnectModal } = useConnectModal();
   const [quote, setQuote] = useState("");
   const [displayedQuote, setDisplayedQuote] = useState("");
   const [isAnimating, setIsAnimating] = useState(false);
@@ -453,10 +453,10 @@ setIsModalOpen(false);
       audioRef.current.play().catch(() => console.log("Audio play blocked"));
     }
 
-    if (!address) {
-      setIsModalOpen(true);
-      return;
-    }
+if (!address) {
+  openConnectModal?.();
+  return;
+}
 
     // BLOCKCHAIN COOLDOWN CHECK
     if (cooldown > 0) {
@@ -905,11 +905,7 @@ setOracleHistory(updatedHistory);
             )}
 
             {/* QUOTE */}
-            {!address && (
-  <div className="relative z-[9999] mb-8 flex justify-center">
-    <ConnectButton />
-  </div>
-)}
+  
           <p
   key={quote || isAnimating ? "active" : "empty"}
   className={`text-2xl sm:text-3xl md:text-5xl text-white italic text-center leading-[1.1] font-medium transition-all duration-700 ${
@@ -925,7 +921,7 @@ setOracleHistory(updatedHistory);
   : cooldown > 0
   ? "The Oracle sleeps..."
   : "Authorize the transaction to decrypt your fate."}
-            </p>
+</p>
 
             {/* LUCKY NUMBER */}
             {/* DAILY STREAK */}
@@ -951,7 +947,8 @@ setOracleHistory(updatedHistory);
   `https://twitter.com/intent/tweet?text=${encodeURIComponent(
     `🔮 BASED ORACLE PROPHECY 🔮\n\n“${quote}”\n\n✦ Lucky Number: ${luckyNumber}\n\n✦ Oracle TX:\nhttps://basescan.org/tx/${oracleHistory[0]?.txHash}\n\nConsult your fate:\n${window.location.origin}`
   )}`
-}
+  }
+  
     target="_blank"
     rel="noopener noreferrer"
     className="
@@ -1023,10 +1020,6 @@ setOracleHistory(updatedHistory);
             </div>
           )}
 
-          <div className="mt-6 flex flex-col items-center gap-5 relative z-[60] w-full">
-<div className="flex justify-center">
-  <ConnectButton />
-</div>
            <div className="mt-10 flex justify-center animate-float">
   <div className="flex items-center gap-1 bg-white/[0.05] px-5 py-3.5 rounded-full border border-white/10 backdrop-blur-xl shadow-xl">
     <span className="text-[11px] text-blue-500 font-black tracking-widest uppercase italic leading-none">
@@ -1045,7 +1038,6 @@ setOracleHistory(updatedHistory);
 </div>
           </div>
         </div>
-      </div>
 
       {/* FOOTER */}
 <footer className="absolute left-1/2 -translate-x-1/2 top-[760px] z-50">
