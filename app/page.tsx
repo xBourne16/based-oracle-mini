@@ -749,7 +749,7 @@ setOracleHistory(updatedHistory);
   };
 
   return (
-<main className="relative flex min-h-screen overflow-hidden flex-col items-center justify-start pt-24 p-4 bg-[#020204] overflow-y-auto overflow-x-hidden selection:bg-blue-600/40">
+<main className="relative flex min-h-screen flex-col items-center justify-start pt-24 p-4 bg-[#020204] overflow-y-auto overflow-x-hidden selection:bg-blue-600/40">
     
       {/* NAV */}
      <nav
