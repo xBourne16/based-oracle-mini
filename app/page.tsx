@@ -1,6 +1,5 @@
 "use client"; 
 
-
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
@@ -38,7 +37,6 @@ const { connectAsync, connectors } =
 
 const { disconnect } =
   useDisconnect();
-
 
     const [baseName, setBaseName] =
   useState<string | null>(null);
@@ -749,7 +747,7 @@ setOracleHistory(updatedHistory);
   };
 
   return (
-<main className="relative flex min-h-screen overflow-hidden flex-col items-center justify-start pt-24 p-4 bg-[#020204] overflow-y-auto overflow-x-hidden selection:bg-blue-600/40">
+<main className="relative flex min-h-screen flex-col items-center justify-start pt-24 p-4 bg-[#020204] overflow-y-auto overflow-x-hidden selection:bg-blue-600/40 pointer-events-none">
     
       {/* NAV */}
      <nav className="fixed top-0 left-0 w-full p-8 flex justify-between items-start z-[999999] pointer-events-auto">
@@ -760,43 +758,39 @@ setOracleHistory(updatedHistory);
               : `◈ ${greeting}`}
           </div>
 
-          <div className="flex items-center gap-2 mt-1.5 text-[9px] text-white/40 font-mono uppercase tracking-[0.3em]">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+<div className="flex items-center gap-2 mt-1.5 text-[9px] text-white/40 font-mono uppercase tracking-[0.3em]">
+  <span className="relative flex h-1.5 w-1.5">
+    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-blue-500"></span>
+  </span>
 
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-blue-500"></span>
-            </span>
+  {address ? "Timeline Encrypted" : "Scanning Souls..."}
+</div>
+</div>
 
-            {address
-              ? "Timeline Encrypted"
-              : "Scanning Souls..."}
-          </div>
-        </div>
+<div className="relative z-[9999999] pointer-events-auto">
+  <ConnectButton.Custom>
+    {({ account, openAccountModal, openConnectModal }) => (
+      <button
+        type="button"
+        onClick={() => {
+          if (account) {
+            openAccountModal?.();
+          } else {
+            openConnectModal?.();
+          }
+        }}
+        className="group flex items-center gap-3 px-7 py-3 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full active:scale-95 cursor-pointer"
+      >
+        <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)] animate-pulse"></div>
 
-        <div className="relative z-[999999] pointer-events-auto">
-<ConnectButton.Custom>
-  {({ account, openAccountModal, openConnectModal }) => (
-    <button
-      type="button"
-      onClick={() => {
-        if (account) {
-          openAccountModal?.();
-        } else {
-          openConnectModal?.();
-        }
-      }}
-      className="group flex items-center gap-3 px-7 py-3 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full active:scale-95 cursor-pointer"
-    >
-      <div className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)] animate-pulse"></div>
-
-      <span className="text-[11px] font-black text-white uppercase tracking-[0.25em]">
-        {account
-          ? account.displayName
-          : "Connect Wallet"}
-      </span>
-    </button>
-  )}
-</ConnectButton.Custom>
+        <span className="text-[11px] font-black text-white uppercase tracking-[0.25em]">
+          {account ? account.displayName : "Connect Wallet"}
+        </span>
+      </button>
+    )}
+  </ConnectButton.Custom>
+</div>
 
           {/* NEW DROPDOWN DESIGN */}
           {address && isDropdownOpen && (
@@ -856,10 +850,8 @@ setOracleHistory(updatedHistory);
               </div>
             </div>
           )}
-        </div>
       </nav>
 
-    Connect Wallet
 
       {/* BG */}
       <div className="absolute inset-0 z-0 opacity-[0.06] select-none">
@@ -874,7 +866,7 @@ setOracleHistory(updatedHistory);
 
       {/* GLOW */}
       <div
-        className={`absolute right-[8%] top-[15%] w-[600px] h-[550px] z-[5] transition-all duration-1000 ${glowIntensity} pointer-events-none select-none`}
+        className={`absolute right-[8%] top-[15%] w-[600px] h-[550px] z-[5] transition-all duration-1000 ${glowIntensity} select-none`}
       >
         <Image
           src="/crypto_scribble.png"

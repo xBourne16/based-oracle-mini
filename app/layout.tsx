@@ -70,13 +70,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <RootProvider>
-      <html lang="en">
-        <body className={`${inter.variable} ${sourceCodePro.variable}`}>
-          {children}
-        </body>
-      </html>
-    </RootProvider>
-  );
+return (
+  <html lang="en">
+    <body className={`${inter.variable} ${sourceCodePro.variable}`}>
+      <RootProvider>
+        {children}
+      </RootProvider>
+    </body>
+  </html>
+);
 }

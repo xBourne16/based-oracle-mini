@@ -1,5 +1,7 @@
 "use client";
 
+import { farcasterMiniApp as miniAppConnector } from "@farcaster/miniapp-wagmi-connector";
+
 import "@rainbow-me/rainbowkit/styles.css";
 
 import {
@@ -48,7 +50,10 @@ const connectors = connectorsForWallets(
 
 const config = createConfig({
   chains: [base],
-  connectors,
+  connectors: [
+    miniAppConnector(),
+    ...connectors,
+  ],
   transports: {
     [base.id]: http(),
   },
