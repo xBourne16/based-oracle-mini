@@ -1,7 +1,7 @@
 "use client"; 
 
-import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { ethers } from "ethers";
@@ -924,47 +924,21 @@ setOracleHistory(updatedHistory);
   : "Authorize the transaction to decrypt your fate."}
 </p>
 <div className="mt-10 flex justify-center relative z-[9999999]">
-  <ConnectButton.Custom>
-    {({ openConnectModal }) => (
-      <button
-        type="button"
-        onPointerUp={() => {
-          if (!address) {
-            openConnectModal?.();
-            return;
-          }
 
-          handleAction();
-        }}
-        onTouchEnd={() => {
-          if (!address) {
-            openConnectModal?.();
-            return;
-          }
+<button
+  type="button"
+  onClick={() => {
+    if (!address) {
+      openConnectModal?.();
+      return;
+    }
 
-          handleAction();
-        }}
-        onClick={() => {
-          if (!address) {
-            openConnectModal?.();
-            return;
-          }
-
-          handleAction();
-        }}
-        style={{
-          WebkitTapHighlightColor: "transparent",
-          touchAction: "manipulation",
-          pointerEvents: "auto",
-          position: "relative",
-          zIndex: 2147483647,
-        }}
-        className="bg-white text-black px-14 py-6 rounded-full font-black text-[10px] uppercase tracking-[0.3em] active:scale-95"
-      >
-        {!address ? "Connect Wallet" : "Consult Fate"}
-      </button>
-    )}
-  </ConnectButton.Custom>
+    handleAction();
+  }}
+  className="bg-white text-black px-14 py-6 rounded-full font-black text-[10px] uppercase tracking-[0.3em] active:scale-95"
+>
+  {!address ? "Connect Wallet" : "Consult Fate"}
+</button>
 </div>
 
             {/* LUCKY NUMBER */}
