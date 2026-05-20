@@ -747,7 +747,7 @@ setOracleHistory(updatedHistory);
   };
 
   return (
-<main className="relative flex min-h-screen flex-col items-center justify-start pt-24 p-4 bg-[#020204] overflow-y-auto overflow-x-hidden selection:bg-blue-600/40 pointer-events-none">
+<main className="relative flex min-h-screen flex-col items-center justify-start pt-24 p-4 bg-[#020204] overflow-y-auto overflow-x-hidden selection:bg-blue-600/40">
     
 
 
@@ -884,9 +884,7 @@ setOracleHistory(updatedHistory);
   </button>
 </div>
 </div>
-  <div className="absolute inset-0 rounded-[50px] bg-blue-500/10 blur-3xl animate-pulse pointer-events-none" />
-
-
+ 
           <div className="absolute top-10 left-12 w-10 h-[2px] bg-blue-600 shadow-[0_0_15px_rgba(37,99,235,1)]"></div>
 
           <div className="min-h-[220px] flex flex-col items-center justify-center text-center">
