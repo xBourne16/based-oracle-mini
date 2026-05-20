@@ -116,6 +116,30 @@ const { disconnect } =
       setGreeting("The Midnight Watch");
     }
 
+    useEffect(() => {
+  const testTouch = (e: TouchEvent) => {
+    const t = e.touches[0];
+    const el = document.elementFromPoint(
+      t.clientX,
+      t.clientY
+    );
+
+    console.log("TOUCHED ELEMENT:", el);
+  };
+
+  document.addEventListener(
+    "touchstart",
+    testTouch
+  );
+
+  return () => {
+    document.removeEventListener(
+      "touchstart",
+      testTouch
+    );
+  };
+}, []);
+
     // Ses Hazırlığı
     const audio = new Audio("/mystic-temple.mp3");
     audio.loop = true;
