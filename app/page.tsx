@@ -868,7 +868,7 @@ setOracleHistory(updatedHistory);
     </div>
   </div>
 
-  <div className="relative z-[9999999] pointer-events-auto">
+ <div className="relative z-[999999999] pointer-events-auto isolate">
     <ConnectButton.Custom>
       {({ account, openAccountModal, openConnectModal }) => (
         <button
@@ -880,7 +880,7 @@ setOracleHistory(updatedHistory);
     connectWallet("coinbase");
   }
 }}
-          className="flex items-center gap-3 px-7 py-4 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full active:scale-95"
+          className="relative z-[999999999] pointer-events-auto flex items-center gap-3 px-7 py-4 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full active:scale-95"
         >
           <div className="w-2 h-2 rounded-full bg-blue-500"></div>
 
