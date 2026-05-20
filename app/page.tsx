@@ -868,11 +868,22 @@ setOracleHistory(updatedHistory);
     </div>
   </div>
 
- <div className="relative z-[999999999] pointer-events-auto isolate">
-  <ConnectButton />
-</div>
-</div>
+<div className="relative z-[999999999] pointer-events-auto isolate">
+  <button
+    type="button"
+    onClick={() => connectWallet("coinbase")}
+    className="relative z-[999999999] pointer-events-auto flex items-center gap-3 px-7 py-4 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full active:scale-95"
+  >
+    <div className="w-2 h-2 rounded-full bg-blue-500"></div>
 
+    <span className="text-[11px] font-black text-white uppercase tracking-[0.25em]">
+      {address
+        ? `${address.slice(0, 6)}...${address.slice(-4)}`
+        : "Connect Wallet"}
+    </span>
+  </button>
+</div>
+</div>
   <div className="absolute inset-0 rounded-[50px] bg-blue-500/10 blur-3xl animate-pulse pointer-events-none" />
 
 
