@@ -24,8 +24,25 @@ export default function Home() {
   const { address, isConnected } =
   useAccount();
 
-  const { openConnectModal } =
-    useConnectModal();
+  const { openConnectModal } = useConnectModal();
+
+  const openWalletModal = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation(); // iOS tarayıcılarında event karmaşasını önler
+    }
+
+    if (address) {
+      setIsDropdownOpen((prev) => !prev);
+    } else {
+      // Doğrudan kullanıcı hareketinin (User Gesture) içinde tetikliyoruz
+      if (openConnectModal) {
+        openConnectModal();
+      } else {
+        setIsModalOpen(true); // Fallback modalınız
+      }
+    }
+  };
 
 const { connectAsync, connectors } =
   useConnect();
@@ -54,21 +71,6 @@ const { disconnect } =
   // DROPDOWN
   const [isDropdownOpen, setIsDropdownOpen] =
     useState(false);
-
-  const openWalletModal = () => {
-  if (address) {
-    setIsDropdownOpen((prev) => !prev);
-  } else {
-    // Araya hiçbir setTimeout koymadan direkt butona tıklandığı an tetiklenmeli
-    // iOS Chrome ancak bu şekilde kullanıcı hareketini doğrular ve modalı engellemez
-    if (openConnectModal) {
-      openConnectModal();
-    } else {
-      // Rainbowkit henüz yüklenmediyse fallback modalınız
-      setIsModalOpen(true); 
-    }
-  }
-};
 
   // COOLDOWN TIMER
   const [cooldown, setCooldown] =
