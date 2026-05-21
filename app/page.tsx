@@ -41,11 +41,21 @@ export default function Home() {
 
   const { openConnectModal } = useConnectModal();
 
+// Eski useEffect yerine bunu deneyin:
 useEffect(() => {
+  // openConnectModal fonksiyonunun hazır olduğundan ve adres olmadığından emin olalım
   if (!address && openConnectModal) {
-    setTimeout(() => {
-      openConnectModal();
-    }, 800);
+    const handleMobileAutoConnect = () => {
+      try {
+        openConnectModal();
+      } catch (err) {
+        console.error("Auto connect failed", err);
+      }
+    };
+
+    // Mobilde pop-up engelleyicileri aşmak için ufak bir gecikme ekliyoruz
+    const timer = setTimeout(handleMobileAutoConnect, 1200);
+    return () => clearTimeout(timer);
   }
 }, [address, openConnectModal]);
 
