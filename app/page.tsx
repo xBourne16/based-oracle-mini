@@ -8,44 +8,23 @@ import { quotes } from "./quotes";
 import "./globals.css";
 import {
   useAccount,
-  useConnect,
   useDisconnect,
 } from "wagmi";
 
 export default function Home() {
   const [quote, setQuote] = useState("");
-  const [displayedQuote, setDisplayedQuote] = useState("");
   const [isAnimating, setIsAnimating] = useState(false);
 
   const [glowIntensity, setGlowIntensity] = useState(
     "opacity-20 scale-100"
   );
 
-  const { address, isConnected } =
+  const { address } =
   useAccount();
 
-  const { openConnectModal } = useConnectModal();
+  const { openConnectModal } =
+    useConnectModal();
 
-  const openWalletModal = (e?: React.MouseEvent) => {
-    if (e) {
-      e.preventDefault();
-      e.stopPropagation(); // iOS tarayıcılarında event karmaşasını önler
-    }
-
-    if (address) {
-      setIsDropdownOpen((prev) => !prev);
-    } else {
-      // Doğrudan kullanıcı hareketinin (User Gesture) içinde tetikliyoruz
-      if (openConnectModal) {
-        openConnectModal();
-      } else {
-        setIsModalOpen(true); // Fallback modalınız
-      }
-    }
-  };
-
-const { connectAsync, connectors } =
-  useConnect();
 
 const { disconnect } =
   useDisconnect();
@@ -62,15 +41,17 @@ const { disconnect } =
   const [isMuted, setIsMuted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const [isModalOpen, setIsModalOpen] =
-    useState(false);
-
-  const [activeProvider, setActiveProvider] =
-    useState<any>(null);
-
   // DROPDOWN
   const [isDropdownOpen, setIsDropdownOpen] =
     useState(false);
+
+  const openWalletModal = () => {
+    if (address) {
+      setIsDropdownOpen((prev) => !prev);
+    } else {
+      openConnectModal?.();
+    }
+  };
 
   // COOLDOWN TIMER
   const [cooldown, setCooldown] =
@@ -81,8 +62,10 @@ const { disconnect } =
     useState<number | null>(null);
     const [shareUrl, setShareUrl] =
   useState("");
+  const [siteOrigin, setSiteOrigin] =
+  useState("");
   useEffect(() => {
-  
+  if (!address) return;
 
   const today = new Date().toISOString().split("T")[0];
 
@@ -116,6 +99,8 @@ const { disconnect } =
   ];
 
   useEffect(() => {
+    setSiteOrigin(window.location.origin);
+
     const hour = new Date().getHours();
 
     if (hour >= 5 && hour < 12) {
@@ -248,7 +233,6 @@ useEffect(() => {
     const fetchCooldown = async () => {
       try {
         const injectedProvider =
-          activeProvider ||
           (window as any).ethereum;
 
         if (!injectedProvider) return;
@@ -289,7 +273,7 @@ useEffect(() => {
     );
 
     return () => clearInterval(interval);
-  }, [address, activeProvider]);
+  }, [address]);
 
   const getUniqueQuoteIndex = (
     address: string,
@@ -341,113 +325,9 @@ useEffect(() => {
   return "SEEKER";
 };
 
-  const connectWallet = async (
-    walletType:
-      | "metamask"
-      | "rabby"
-      | "coinbase"
-  ) => {
-    if (typeof window === "undefined")
-      return;
-
-   const eth = (window as any).ethereum;
-
-if (!eth) {
-  const currentUrl = window.location.href;
-
-  if (walletType === "coinbase") {
-    window.location.href =
-      `https://go.cb-w.com/dapp?cb_url=${encodeURIComponent(currentUrl)}`;
-    return;
-  }
-
-  if (walletType === "metamask") {
-    window.location.href =
-      `https://metamask.app.link/dapp/${currentUrl.replace(/^https?:\/\//, "")}`;
-    return;
-  }
-
-  alert("Open this site inside Base App / Coinbase Wallet browser.");
-  return;
-}
-    let provider: any = null;
-
-    if (eth.providers?.length) {
-      if (walletType === "rabby") {
-        provider = eth.providers.find(
-          (p: any) => p.isRabby
-        );
-      } else if (
-        walletType === "coinbase"
-      ) {
-        provider = eth.providers.find(
-          (p: any) =>
-            p.isCoinbaseWallet
-        );
-      } else {
-        provider = eth.providers.find(
-          (p: any) =>
-            p.isMetaMask &&
-            !p.isRabby &&
-            !p.isCoinbaseWallet
-        );
-      }
-    } else {
-      if (
-        walletType === "rabby" &&
-        eth.isRabby
-      ) {
-        provider = eth;
-      } else if (
-        walletType === "coinbase" &&
-        eth.isCoinbaseWallet
-      ) {
-        provider = eth;
-      } else if (
-        walletType === "metamask" &&
-        eth.isMetaMask &&
-        !eth.isCoinbaseWallet
-      ) {
-        provider = eth;
-      } else {
-        provider = eth;
-      }
-    }
-
-    if (provider) {
-      try {
-     await provider.request({
-  method: "eth_requestAccounts",
-});
-
-setActiveProvider(provider);
-
-const injectedConnector =
-  connectors.find(
-    (c) => c.type === "injected"
-  );
-
-if (injectedConnector) {
-  await connectAsync({
-    connector: injectedConnector,
-  });
-}
-
-setIsModalOpen(false);
-
-setIsModalOpen(false);
-      } catch (err) {
-        console.error(
-          "Connection rejected"
-        );
-      }
-    }
-  };
-
  const disconnectWallet = () => {
   disconnect();
 
-  setActiveProvider(null);
   setTxHash(null);
   setQuote("");
   setCooldown(0);
@@ -464,7 +344,7 @@ setIsModalOpen(false);
     }
 
     if (!address) {
-      setIsModalOpen(true);
+      openConnectModal?.();
       return;
     }
 
@@ -483,7 +363,6 @@ setLuckyNumber(null);
       );
 
       const injectedProvider =
-        activeProvider ||
         (window as any).ethereum;
 
       if (!injectedProvider) {
@@ -591,7 +470,7 @@ const tweet = encodeURIComponent(
 
   `✦ Oracle TX:\nhttps://basescan.org/tx/${tx.hash}\n\n` +
 
-  `Consult your fate:\n${window.location.origin}`
+  `Consult your fate:\n${siteOrigin}`
 );
 
 const finalShareUrl =
@@ -759,103 +638,119 @@ setOracleHistory(updatedHistory);
   };
 
   return (
-    <main className="min-h-screen bg-[#020204] flex flex-col items-center justify-start pt-24 p-4">
-      
-      {/* NEW DROPDOWN DESIGN */}
-      {address && isDropdownOpen && (
-        <div className="absolute right-0 mt-4 w-[280px] rounded-3xl p-[1px] bg-gradient-to-r from-blue-500/40 via-white/10 to-blue-500/20 shadow-2xl animate-in fade-in zoom-in duration-200 origin-top-right z-[100]">
-          <div className="bg-[#0a0a0c]/95 backdrop-blur-2xl rounded-3xl p-5 border border-white/10 text-left">
-            
-            {/* HEADER */}
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-white/20 flex items-center justify-center font-bold text-black text-xs">
-                {address.slice(2, 4).toUpperCase()}
-              </div>
-              <div className="flex flex-col">
-                <span className="text-[9px] text-white/40 uppercase tracking-[0.2em]">Connected Wallet</span>
-                <span className="text-[12px] text-white font-mono">
-                  {baseName || `${address.slice(0, 6)}...${address.slice(-4)}`}
-                </span>
-              </div>
-            </div>
+<main className="min-h-screen bg-[#020204] flex flex-col items-center justify-start pt-24 p-4">
+    
+{/* NEW DROPDOWN DESIGN */}
+          {address && isDropdownOpen && (
+            <div className="absolute right-0 mt-4 w-[280px] rounded-3xl p-[1px] bg-gradient-to-r from-blue-500/40 via-white/10 to-blue-500/20 shadow-2xl animate-in fade-in zoom-in duration-200 origin-top-right">
+              <div className="bg-[#0a0a0c]/95 backdrop-blur-2xl rounded-3xl p-5 border border-white/10 text-left">
+                
+                {/* HEADER */}
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-white/20 flex items-center justify-center font-bold text-black text-xs">
+                    {address.slice(2, 4).toUpperCase()}
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-[9px] text-white/40 uppercase tracking-[0.2em]">Connected Wallet</span>
+                    <span className="text-[12px] text-white font-mono">
+                      {baseName ||
+  `${address.slice(0, 6)}...${address.slice(-4)}`}
+                    </span>
+                  </div>
+                </div>
 
-            {/* STATUS / NETWORK */}
-            <div className="flex items-center justify-between mb-4 px-3 py-2 rounded-xl bg-white/[0.03] border border-white/5">
-              <span className="text-[9px] text-white/40 uppercase tracking-[0.2em]">Network</span>
-              <div className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse shadow-[0_0_8px_#4ade80]"></span>
-                <span className="text-[9px] text-green-400 uppercase tracking-widest font-bold">Base Mainnet</span>
+                {/* STATUS / NETWORK */}
+                <div className="flex items-center justify-between mb-4 px-3 py-2 rounded-xl bg-white/[0.03] border border-white/5">
+                  <span className="text-[9px] text-white/40 uppercase tracking-[0.2em]">Network</span>
+                  <div className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse shadow-[0_0_8px_#4ade80]"></span>
+                    <span className="text-[9px] text-green-400 uppercase tracking-widest font-bold">Base Mainnet</span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between mb-4 px-3 py-2 rounded-xl bg-blue-500/10 border border-blue-500/20">
+  <span className="text-[9px] text-white/40 uppercase tracking-[0.2em]">
+    Oracle Rank
+  </span>
+
+  <span className="text-[9px] text-blue-400 uppercase tracking-widest font-black">
+    {getStreakBadge(streak)}
+  </span>
+</div>
+
+                {/* ACTIONS */}
+                <div className="flex flex-col gap-2">
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(address);
+                      setIsDropdownOpen(false);
+                    }}
+                    className="w-full px-4 py-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/5 transition-all text-[10px] uppercase tracking-[0.2em] text-white/70 hover:text-white text-center"
+                  >
+                    Copy Address
+                  </button>
+                  <button
+                    onClick={disconnectWallet}
+                    className="w-full px-4 py-3 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 hover:border-red-500/40 transition-all text-[10px] uppercase tracking-[0.2em] text-red-300 hover:text-red-200 text-center font-bold"
+                  >
+                    Disconnect Wallet
+                  </button>
+                </div>
               </div>
             </div>
-            
-            <div className="flex items-center justify-between mb-4 px-3 py-2 rounded-xl bg-blue-500/10 border border-blue-500/20">
-              <span className="text-[9px] text-white/40 uppercase tracking-[0.2em]">Oracle Rank</span>
-              <span className="text-[9px] text-blue-400 uppercase tracking-widest font-black">
-                {getStreakBadge(streak)}
-              </span>
-            </div>
+          )}
 
-            {/* ACTIONS */}
-            <div className="flex flex-col gap-2">
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText(address);
-                  setIsDropdownOpen(false);
-                }}
-                className="w-full px-4 py-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/5 transition-all text-[10px] uppercase tracking-[0.2em] text-white/70 hover:text-white text-center"
-              >
-                Copy Address
-              </button>
-              <button
-                onClick={disconnectWallet}
-                className="w-full px-4 py-3 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 hover:border-red-500/40 transition-all text-[10px] uppercase tracking-[0.2em] text-red-300 hover:text-red-200 text-center font-bold"
-              >
-                Disconnect Wallet
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* MAIN CONTENT AREA */}
-      <div className={`relative z-[50] w-full max-w-6xl flex flex-col items-center xl:scale-90 origin-top transition-all lg:pr-32 pointer-events-auto ${isAnimating ? "scale-95 blur-sm" : ""}`}>
-        
+      {/* MAIN */}
+      <div
+  className={`relative z-[50] w-full max-w-6xl flex flex-col items-center xl:scale-90 origin-top transition-all lg:pr-32 pointer-events-auto ${
+    isAnimating
+      ? "scale-95 blur-sm"
+      : ""
+  }`}
+>
         <h1 className="text-[54px] sm:text-7xl md:text-[115px] font-black text-white leading-none tracking-tighter uppercase italic mt-16 mb-16 drop-shadow-2xl select-none">
-          BASED<span className="text-blue-600">.</span>ORACLE
+          BASED
+          <span className="text-blue-600">
+            .
+          </span>
+          ORACLE
         </h1>
 
-        {/* ORACLE CARD */}
-        <div className={`relative w-full max-w-2xl bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[50px] p-7 md:p-10 shadow-2xl md:-translate-x-12 transition-all duration-700 animate-[float_6s_ease-in-out_infinite] hover:-translate-y-4 hover:scale-[1.02] hover:border-blue-500/40 hover:shadow-[0_0_80px_rgba(37,99,235,0.35)] ${isAnimating ? "scale-95 border-blue-500/40 shadow-[0_0_50px_rgba(37,99,235,0.18)]" : ""}`}>
-          
-          {/* CARD HEADER AREA */}
-          <div className="flex items-start justify-between gap-4 mb-10">
-            <div>
-              <div className="text-[11px] text-blue-500 tracking-[0.5em] font-black uppercase italic">◈ GM</div>
-              <div className="mt-3 text-[13px] text-white/40 font-mono uppercase tracking-[0.3em]">Scanning Souls...</div>
-            </div>
+        <div
+  className={`relative w-full max-w-2xl bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[50px] p-7 md:p-10 shadow-2xl md:-translate-x-12 transition-all duration-700 animate-[float_6s_ease-in-out_infinite] hover:-translate-y-4 hover:scale-[1.02] hover:border-blue-500/40 hover:shadow-[0_0_80px_rgba(37,99,235,0.35)] ${
+    isAnimating
+      ? "scale-95 border-blue-500/40 shadow-[0_0_50px_rgba(37,99,235,0.18)]"
+      : ""
+  }`}
+><div className="flex items-start justify-between gap-4 mb-10">
+  <div>
+    <div className="text-[11px] text-blue-500 tracking-[0.5em] font-black uppercase italic">
+      ◈ GM
+    </div>
 
-            {/* CONNECT WALLET BUTTON */}
-            {/* Butonun tam etrafını bu şekilde sararak iOS katman hatasını eziyoruz */}
-<div className="relative z-[999999] pointer-events-auto block w-full flex justify-center">
+    <div className="mt-3 text-[13px] text-white/40 font-mono uppercase tracking-[0.3em]">
+      Scanning Souls...
+    </div>
+  </div>
+
+<div className="relative z-[999999999] pointer-events-auto isolate">
   <button
     type="button"
-    onClick={(e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      openWalletModal(e);
-    }}
-    // iOS için cursor ve tıklama hassasiyetini artırmak adına sınıfları sadeleştirdik
-    className="relative z-[999999] pointer-events-auto flex items-center gap-3 px-7 py-4 bg-zinc-900 border border-white/20 rounded-full active:scale-95 transition-transform cursor-pointer select-none touch-manipulation"
+    onClick={openWalletModal}
+    className="flex items-center gap-3 px-7 py-4 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full active:scale-95"
   >
     <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+
     <span className="text-[11px] font-black text-white uppercase tracking-[0.25em]">
-      {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "Connect Wallet"}
+      {address
+        ? `${address.slice(0, 6)}...${address.slice(-4)}`
+        : "Connect Wallet"}
     </span>
   </button>
 </div>
+</div>
+ 
           <div className="absolute top-10 left-12 w-10 h-[2px] bg-blue-600 shadow-[0_0_15px_rgba(37,99,235,1)]"></div>
 
-          {/* DYNAMIC CONTENT AREA */}
           <div className="min-h-[220px] flex flex-col items-center justify-center text-center">
             {/* DAILY TITLE */}
             {quote && (
@@ -865,47 +760,96 @@ setOracleHistory(updatedHistory);
             )}
 
             {/* QUOTE */}
-            <p key={quote || isAnimating ? "active" : "empty"} className={`text-2xl sm:text-3xl md:text-5xl text-white italic text-center leading-[1.1] font-medium transition-all duration-700 ${quote ? "opacity-100 translate-y-0" : "opacity-80 translate-y-2"}`}>
-              {quote ? `"${quote}"` : isAnimating ? "Decrypting your onchain prophecy..." : cooldown > 0 ? "The Oracle sleeps..." : "Authorize the transaction to decrypt your fate."}
+          <p
+  key={quote || isAnimating ? "active" : "empty"}
+  className={`text-2xl sm:text-3xl md:text-5xl text-white italic text-center leading-[1.1] font-medium transition-all duration-700 ${
+    quote
+      ? "opacity-100 translate-y-0"
+      : "opacity-80 translate-y-2"
+  }`}
+>
+              {quote
+  ? `"${quote}"`
+  : isAnimating
+  ? "Decrypting your onchain prophecy..."
+  : cooldown > 0
+  ? "The Oracle sleeps..."
+  : "Authorize the transaction to decrypt your fate."}
             </p>
 
-            {/* DAILY STREAK */}
-            {quote && streak > 0 && (
-              <div className="mt-8 flex flex-col items-center">
-                <span className="text-[10px] uppercase tracking-[0.4em] text-white/30 mb-3 italic">Oracle Streak</span>
-                <div className="px-7 py-3 rounded-full border border-blue-500/30 bg-blue-500/10 backdrop-blur-xl shadow-[0_0_30px_rgba(37,99,235,0.2)]">
-                  <span className="text-[13px] font-black text-blue-400 tracking-[0.25em] uppercase">
-                    ✦ {streak} Day — {getStreakBadge(streak)}
-                  </span>
-                </div>
-              </div>
-            )}
-
-            {/* SHARE PROPHECY */}
-            {quote && (shareUrl || oracleHistory[0]?.txHash) && (
-              <a
-                href={shareUrl || `https://twitter.com/intent/tweet?text=${encodeURIComponent(`🔮 BASED ORACLE PROPHECY 🔮\n\n“${quote}”\n\n✦ Lucky Number: ${luckyNumber}\n\n✦ Oracle TX:\nhttps://basescan.org/tx/${oracleHistory[0]?.txHash}\n\nConsult your fate:\n${window.location.origin}`)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-8 inline-flex items-center gap-3 px-6 py-3 rounded-full bg-white/[0.04] border border-white/10 hover:border-blue-500/40 hover:bg-blue-500/10 transition-all duration-300 group"
-              >
-                <span className="text-[10px] uppercase tracking-[0.3em] text-white/50 group-hover:text-blue-400 font-black">Share Prophecy</span>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M4 4l16 16"></path>
-                  <path d="M20 4L9 15"></path>
-                </svg>
-              </a>
-            )}
-
             {/* LUCKY NUMBER */}
-            {quote && luckyNumber && (
-              <div className="mt-6 flex flex-col items-center relative z-[60]">
-                <span className="text-[10px] uppercase tracking-[0.4em] text-white/30 mb-3 italic">Your Lucky Number Today</span>
-                <div className="px-8 py-3 rounded-full border border-blue-500/30 bg-blue-500/10 backdrop-blur-xl shadow-[0_0_30px_rgba(37,99,235,0.2)]">
-                  <span className="text-3xl md:text-4xl font-black text-blue-400 tracking-[0.15em]">{luckyNumber}</span>
+            {/* DAILY STREAK */}
+{quote && streak > 0 && (
+  <div className="mt-8 flex flex-col items-center">
+    <span className="text-[10px] uppercase tracking-[0.4em] text-white/30 mb-3 italic">
+      Oracle Streak
+    </span>
+
+    <div className="px-7 py-3 rounded-full border border-blue-500/30 bg-blue-500/10 backdrop-blur-xl shadow-[0_0_30px_rgba(37,99,235,0.2)]">
+      <span className="text-[13px] font-black text-blue-400 tracking-[0.25em] uppercase">
+        ✦ {streak} Day — {getStreakBadge(streak)}
+      </span>
+    </div>
+
+</div>
+)}
+            {/* SHARE PROPHECY */}
+{quote && (shareUrl || oracleHistory[0]?.txHash) && (
+  <a
+    href={
+  shareUrl ||
+  `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+    `🔮 BASED ORACLE PROPHECY 🔮\n\n“${quote}”\n\n✦ Lucky Number: ${luckyNumber}\n\n✦ Oracle TX:\nhttps://basescan.org/tx/${oracleHistory[0]?.txHash}\n\nConsult your fate:\n${siteOrigin}`
+  )}`
+}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="
+      mt-8 inline-flex items-center gap-3
+      px-6 py-3
+      rounded-full
+      bg-white/[0.04]
+      border border-white/10
+      hover:border-blue-500/40
+      hover:bg-blue-500/10
+      transition-all duration-300
+      group
+    "
+  >
+    <span className="text-[10px] uppercase tracking-[0.3em] text-white/50 group-hover:text-blue-400 font-black">
+      Share Prophecy
+    </span>
+
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="#3b82f6"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M4 4l16 16"></path>
+      <path d="M20 4L9 15"></path>
+    </svg>
+  </a>
+)}
+            {quote &&
+              luckyNumber && (
+                <div className="mt-6 flex flex-col items-center relative z-[60]">
+                  <span className="text-[10px] uppercase tracking-[0.4em] text-white/30 mb-3 italic">
+                    Your Lucky Number Today
+                  </span>
+
+                  <div className="px-8 py-3 rounded-full border border-blue-500/30 bg-blue-500/10 backdrop-blur-xl shadow-[0_0_30px_rgba(37,99,235,0.2)]">
+                    <span className="text-3xl md:text-4xl font-black text-blue-400 tracking-[0.15em]">
+                      {luckyNumber}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
           </div>
 
           {/* COOL TIMER */}
@@ -913,51 +857,79 @@ setOracleHistory(updatedHistory);
             <div className="flex flex-col items-center justify-center mb-10 animate-pulse">
               <div className="relative">
                 <div className="absolute inset-0 rounded-full bg-blue-500/20 blur-lg"></div>
+
                 <div className="relative px-10 py-5 rounded-full border border-blue-500/40 bg-blue-500/10 backdrop-blur-2xl shadow-[0_0_40px_rgba(37,99,235,0.35)]">
                   <span className="text-blue-400 font-black tracking-[0.35em] uppercase text-[13px] md:text-[16px]">
-                    {formatCooldown(cooldown)}
+                    {formatCooldown(
+                      cooldown
+                    )}
                   </span>
                 </div>
               </div>
-              <span className="mt-4 text-[10px] uppercase tracking-[0.4em] text-white/30 italic">Oracle Cooldown Active</span>
+
+              <span className="mt-4 text-[10px] uppercase tracking-[0.4em] text-white/30 italic">
+                Oracle Cooldown Active
+              </span>
             </div>
           )}
 
-          {/* ACTION BUTTON BLOCKS */}
           <div className="mt-6 flex flex-col items-center gap-5 relative z-[60] w-full">
             <button
               onClick={handleAction}
-              disabled={isAnimating || cooldown > 0}
-              className={`group overflow-hidden relative z-[70] px-14 py-6 font-black rounded-full transition-all text-[10px] uppercase tracking-[0.3em] shadow-xl ${
+              disabled={
+                isAnimating ||
+                cooldown > 0
+              }
+              className={`group overflow-hidden relative z-[70] px-14 py-6 font-black rounded-full transition-all text-[10px] uppercase tracking-[0.3em] shadow-xl
+
+              ${
                 cooldown > 0
                   ? "bg-blue-950/40 text-blue-300 border border-blue-500/20 cursor-not-allowed"
                   : "bg-white text-black hover:bg-blue-600 hover:text-white hover:scale-105 active:scale-95 hover:shadow-[0_0_35px_rgba(37,99,235,0.55)]"
-              } ${isAnimating ? "opacity-50" : ""}`}
+              }
+        
+              ${
+                isAnimating
+                  ? "opacity-50"
+                  : ""
+              }`}
+
+          
             >
-              <span className="relative z-10">
-                {isAnimating ? "Consulting..." : cooldown > 0 ? "Oracle Sleeping" : txHash ? "Fate Decrypted" : "Consult Fate"}
-              </span>
+            <span className="relative z-10">
+  {isAnimating
+    ? "Consulting..."
+    : cooldown > 0
+    ? "Oracle Sleeping"
+    : txHash
+    ? "Fate Decrypted"
+    : "Consult Fate"}
+</span>
             </button>
+           <div className="mt-10 flex justify-center animate-float">
+  <div className="flex items-center gap-1 bg-white/[0.05] px-5 py-3.5 rounded-full border border-white/10 backdrop-blur-xl shadow-xl">
+    <span className="text-[11px] text-blue-500 font-black tracking-widest uppercase italic leading-none">
+      You&apos;re now based
+    </span>
 
-            {/* BASE POWERED BADGE */}
-            <div className="mt-10 flex justify-center animate-float">
-              <div className="flex items-center gap-1 bg-white/[0.05] px-5 py-3.5 rounded-full border border-white/10 backdrop-blur-xl shadow-xl">
-                <span className="text-[11px] text-blue-500 font-black tracking-widest uppercase italic leading-none">You&apos;re now based</span>
-                <div className="relative w-5 h-4 flex items-center">
-                  <Image src="/base_logo.png" alt="Base Logo" fill className="object-contain brightness-200" />
-                </div>
-              </div>
-            </div>
-          </div> {/* ACTION BUTTON BLOCKS END */}
-
-</div> 
-      </div> 
+    <div className="relative w-5 h-4 flex items-center">
+      <Image
+        src="/base_logo.png"
+        alt="Base Logo"
+        fill
+        className="object-contain brightness-200"
+      />
+    </div>
+  </div>
+</div>
+          </div>
+        </div>
+      </div>
 
       {/* FOOTER */}
-      <footer className="w-full text-center py-8 z-50 text-white/20 text-[10px] tracking-widest uppercase mt-8">
-        © {new Date().getFullYear()} BASED ORACLE. All rights reserved.
-      </footer>
-</div>
+<footer className="absolute left-1/2 -translate-x-1/2 top-[760px] z-50">
+
+</footer>
     </main>
   );
 }
