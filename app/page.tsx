@@ -845,14 +845,10 @@ setOracleHistory(updatedHistory);
 <div className="relative z-[999999999] pointer-events-auto isolate">
 <button
   type="button"
-  onTouchStart={(e) => {
-    e.preventDefault();
-    connectWallet("coinbase");
-  }}
-  onClick={(e) => {
-    e.preventDefault();
-    connectWallet("coinbase");
-  }}
+  onPointerDown={() => connectWallet("coinbase")}
+  onTouchEnd={() => connectWallet("coinbase")}
+  onClick={() => connectWallet("coinbase")}
+  style={{ touchAction: "manipulation" }}
   className="flex items-center gap-3 px-7 py-4 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full"
 >
     <div className="w-2 h-2 rounded-full bg-blue-500"></div>
