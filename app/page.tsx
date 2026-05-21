@@ -835,23 +835,24 @@ setOracleHistory(updatedHistory);
             </div>
 
             {/* CONNECT WALLET BUTTON */}
-            <div className="relative z-[9999] pointer-events-auto isolate">
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.preventDefault();
-                  openWalletModal();
-                }}
-                className="flex items-center gap-3 px-7 py-4 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full active:scale-95 transition-all duration-200 cursor-pointer"
-              >
-                <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                <span className="text-[11px] font-black text-white uppercase tracking-[0.25em]">
-                  {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "Connect Wallet"}
-                </span>
-              </button>
-            </div>
-          </div>
-
+            {/* Butonun tam etrafını bu şekilde sararak iOS katman hatasını eziyoruz */}
+<div className="relative z-[999999] pointer-events-auto block w-full flex justify-center">
+  <button
+    type="button"
+    onClick={(e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      openWalletModal(e);
+    }}
+    // iOS için cursor ve tıklama hassasiyetini artırmak adına sınıfları sadeleştirdik
+    className="relative z-[999999] pointer-events-auto flex items-center gap-3 px-7 py-4 bg-zinc-900 border border-white/20 rounded-full active:scale-95 transition-transform cursor-pointer select-none touch-manipulation"
+  >
+    <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+    <span className="text-[11px] font-black text-white uppercase tracking-[0.25em]">
+      {address ? `${address.slice(0, 6)}...${address.slice(-4)}` : "Connect Wallet"}
+    </span>
+  </button>
+</div>
           <div className="absolute top-10 left-12 w-10 h-[2px] bg-blue-600 shadow-[0_0_15px_rgba(37,99,235,1)]"></div>
 
           {/* DYNAMIC CONTENT AREA */}
@@ -949,14 +950,14 @@ setOracleHistory(updatedHistory);
             </div>
           </div> {/* ACTION BUTTON BLOCKS END */}
 
-        </div> {/* ORACLE CARD END */}
-      </div> {/* MAIN CONTENT AREA END */}
+</div> 
+      </div> 
 
       {/* FOOTER */}
       <footer className="w-full text-center py-8 z-50 text-white/20 text-[10px] tracking-widest uppercase mt-8">
         © {new Date().getFullYear()} BASED ORACLE. All rights reserved.
       </footer>
-
+</div>
     </main>
   );
 }

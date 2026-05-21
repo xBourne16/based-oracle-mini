@@ -5,6 +5,7 @@ import "@rainbow-me/rainbowkit/styles.css";
 import {
   RainbowKitProvider,
   connectorsForWallets,
+  darkTheme,
 } from "@rainbow-me/rainbowkit";
 
 import {
@@ -27,8 +28,7 @@ import {
 import { base } from "wagmi/chains";
 import { useState } from "react";
 
-const projectId =
-  "31299aa6a25a6b4fec5d2af2ed4a91bd";
+const projectId = "31299aa6a25a6b4fec5d2af2ed4a91bd";
 
 const connectors = connectorsForWallets(
   [
@@ -53,6 +53,7 @@ const config = createConfig({
   transports: {
     [base.id]: http(),
   },
+  ssr: true,
 });
 
 export function RootProvider({
@@ -67,7 +68,10 @@ export function RootProvider({
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider>
+        <RainbowKitProvider
+          theme={darkTheme()}
+          modalSize="compact"
+        >
           {children}
         </RainbowKitProvider>
       </QueryClientProvider>
