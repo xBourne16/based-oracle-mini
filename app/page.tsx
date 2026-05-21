@@ -825,7 +825,6 @@ setOracleHistory(updatedHistory);
               </div>
             </div>
           )}
-          
     
       {/* MAIN */}
       <div
@@ -861,11 +860,14 @@ setOracleHistory(updatedHistory);
   </div>
 
 <div className="relative z-[999999999] pointer-events-auto isolate">
-  <button
-    type="button"
-    onClick={openWalletModal}
-    className="flex items-center gap-3 px-7 py-4 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full"
-  >
+<button
+  type="button"
+  onPointerDown={() => connectWallet("coinbase")}
+  onTouchEnd={() => connectWallet("coinbase")}
+  onClick={() => connectWallet("coinbase")}
+  style={{ touchAction: "manipulation" }}
+  className="flex items-center gap-3 px-7 py-4 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full"
+>
     <div className="w-2 h-2 rounded-full bg-blue-500"></div>
 
     <span className="text-[11px] font-black text-white uppercase tracking-[0.25em]">
@@ -874,6 +876,7 @@ setOracleHistory(updatedHistory);
         : "Connect Wallet"}
     </span>
   </button>
+</div>
 </div>
  
           <div className="absolute top-10 left-12 w-10 h-[2px] bg-blue-600 shadow-[0_0_15px_rgba(37,99,235,1)]"></div>
@@ -1057,7 +1060,6 @@ setOracleHistory(updatedHistory);
 <footer className="absolute left-1/2 -translate-x-1/2 top-[760px] z-50">
 
 </footer>
-</div>
     </main>
   );
 }
