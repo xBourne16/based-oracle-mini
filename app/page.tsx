@@ -116,30 +116,6 @@ const { disconnect } =
       setGreeting("The Midnight Watch");
     }
 
-    useEffect(() => {
-  const testTouch = (e: TouchEvent) => {
-    const t = e.touches[0];
-    const el = document.elementFromPoint(
-      t.clientX,
-      t.clientY
-    );
-
-    console.log("TOUCHED ELEMENT:", el);
-  };
-
-  document.addEventListener(
-    "touchstart",
-    testTouch
-  );
-
-  return () => {
-    document.removeEventListener(
-      "touchstart",
-      testTouch
-    );
-  };
-}, []);
-
     // Ses Hazırlığı
     const audio = new Audio("/mystic-temple.mp3");
     audio.loop = true;
@@ -771,10 +747,9 @@ setOracleHistory(updatedHistory);
   };
 
   return (
-<main className="relative flex min-h-screen flex-col items-center justify-start pt-24 p-4 bg-[#020204] overflow-y-auto overflow-x-hidden selection:bg-blue-600/40">
+<main className="min-h-screen bg-[#020204] flex flex-col items-center justify-start pt-24 p-4">
     
-
-
+  
           {/* NEW DROPDOWN DESIGN */}
           {address && isDropdownOpen && (
             <div className="absolute right-0 mt-4 w-[280px] rounded-3xl p-[1px] bg-gradient-to-r from-blue-500/40 via-white/10 to-blue-500/20 shadow-2xl animate-in fade-in zoom-in duration-200 origin-top-right">
@@ -834,31 +809,6 @@ setOracleHistory(updatedHistory);
             </div>
           )}
     
-
-
-      {/* BG */}
-      <div className="absolute inset-0 z-0 opacity-[0.06] select-none">
-        <Image
-          src="/always_has_been.png"
-          alt="BG"
-          fill
-          className="object-cover contrast-125"
-          priority
-        />
-      </div>
-
-      {/* GLOW */}
-      <div
-        className={`absolute right-[8%] top-[15%] w-[600px] h-[550px] z-[5] transition-all duration-1000 ${glowIntensity} pointer-events-none select-none`}
-      >
-        <Image
-          src="/crypto_scribble.png"
-          alt="Oracle"
-          fill
-          className="object-contain grayscale brightness-125 contrast-110"
-        />
-      </div>
-
       {/* MAIN */}
       <div
   className={`relative z-[50] w-full max-w-6xl flex flex-col items-center xl:scale-90 origin-top transition-all lg:pr-32 pointer-events-auto ${
@@ -893,11 +843,18 @@ setOracleHistory(updatedHistory);
   </div>
 
 <div className="relative z-[999999999] pointer-events-auto isolate">
-  <button
-    type="button"
-    onClick={() => connectWallet("coinbase")}
-    className="relative z-[999999999] pointer-events-auto flex items-center gap-3 px-7 py-4 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full active:scale-95"
-  >
+<button
+  type="button"
+  onTouchStart={(e) => {
+    e.preventDefault();
+    connectWallet("coinbase");
+  }}
+  onClick={(e) => {
+    e.preventDefault();
+    connectWallet("coinbase");
+  }}
+  className="flex items-center gap-3 px-7 py-4 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full"
+>
     <div className="w-2 h-2 rounded-full bg-blue-500"></div>
 
     <span className="text-[11px] font-black text-white uppercase tracking-[0.25em]">

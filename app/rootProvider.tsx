@@ -1,7 +1,5 @@
 "use client";
 
-import { farcasterMiniApp as miniAppConnector } from "@farcaster/miniapp-wagmi-connector";
-
 import "@rainbow-me/rainbowkit/styles.css";
 
 import {
@@ -29,7 +27,8 @@ import {
 import { base } from "wagmi/chains";
 import { useState } from "react";
 
-const projectId = "31299aa6a25a6b4fec5d2af2ed4a91bd";
+const projectId =
+  "31299aa6a25a6b4fec5d2af2ed4a91bd";
 
 const connectors = connectorsForWallets(
   [
@@ -50,10 +49,7 @@ const connectors = connectorsForWallets(
 
 const config = createConfig({
   chains: [base],
-  connectors: [
-    miniAppConnector(),
-    ...connectors,
-  ],
+  connectors,
   transports: {
     [base.id]: http(),
   },
