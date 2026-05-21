@@ -1,6 +1,6 @@
 "use client"; 
 
-import { ConnectButton, useConnectModal } from "@rainbow-me/rainbowkit";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { ethers } from "ethers";
@@ -13,8 +13,6 @@ import {
 } from "wagmi";
 
 export default function Home() {
-  
-  
   const [quote, setQuote] = useState("");
   const [displayedQuote, setDisplayedQuote] = useState("");
   const [isAnimating, setIsAnimating] = useState(false);
@@ -23,41 +21,11 @@ export default function Home() {
     "opacity-20 scale-100"
   );
 
-
-
-  
-  const openWalletModal = () => {
-  if (address) {
-    setIsDropdownOpen(!isDropdownOpen);
-  } else {
-    setIsModalOpen(true);
-  }
-};
-
-
-
   const { address, isConnected } =
   useAccount();
 
-  const { openConnectModal } = useConnectModal();
-
-// Eski useEffect yerine bunu deneyin:
-useEffect(() => {
-  // openConnectModal fonksiyonunun hazır olduğundan ve adres olmadığından emin olalım
-  if (!address && openConnectModal) {
-    const handleMobileAutoConnect = () => {
-      try {
-        openConnectModal();
-      } catch (err) {
-        console.error("Auto connect failed", err);
-      }
-    };
-
-    // Mobilde pop-up engelleyicileri aşmak için ufak bir gecikme ekliyoruz
-    const timer = setTimeout(handleMobileAutoConnect, 1200);
-    return () => clearTimeout(timer);
-  }
-}, [address, openConnectModal]);
+  const { openConnectModal } =
+    useConnectModal();
 
 const { connectAsync, connectors } =
   useConnect();
@@ -86,6 +54,14 @@ const { disconnect } =
   // DROPDOWN
   const [isDropdownOpen, setIsDropdownOpen] =
     useState(false);
+
+  const openWalletModal = () => {
+    if (address) {
+      setIsDropdownOpen((prev) => !prev);
+    } else {
+      openConnectModal?.();
+    }
+  };
 
   // COOLDOWN TIMER
   const [cooldown, setCooldown] =
@@ -776,8 +752,7 @@ setOracleHistory(updatedHistory);
   return (
 <main className="min-h-screen bg-[#020204] flex flex-col items-center justify-start pt-24 p-4">
     
-  
-          {/* NEW DROPDOWN DESIGN */}
+{/* NEW DROPDOWN DESIGN */}
           {address && isDropdownOpen && (
             <div className="absolute right-0 mt-4 w-[280px] rounded-3xl p-[1px] bg-gradient-to-r from-blue-500/40 via-white/10 to-blue-500/20 shadow-2xl animate-in fade-in zoom-in duration-200 origin-top-right">
               <div className="bg-[#0a0a0c]/95 backdrop-blur-2xl rounded-3xl p-5 border border-white/10 text-left">
@@ -835,7 +810,7 @@ setOracleHistory(updatedHistory);
               </div>
             </div>
           )}
-    
+
       {/* MAIN */}
       <div
   className={`relative z-[50] w-full max-w-6xl flex flex-col items-center xl:scale-90 origin-top transition-all lg:pr-32 pointer-events-auto ${
@@ -844,7 +819,7 @@ setOracleHistory(updatedHistory);
       : ""
   }`}
 >
-        <h1 className="text-[54px] sm:text-7xl md:text-[115px] font-black text-white leading-none tracking-tighter uppercase italic mt-16mb-16 drop-shadow-2xl select-none">
+        <h1 className="text-[54px] sm:text-7xl md:text-[115px] font-black text-white leading-none tracking-tighter uppercase italic mt-16 mb-16 drop-shadow-2xl select-none">
           BASED
           <span className="text-blue-600">
             .
@@ -870,14 +845,11 @@ setOracleHistory(updatedHistory);
   </div>
 
 <div className="relative z-[999999999] pointer-events-auto isolate">
-<button
-  type="button"
-  onPointerDown={() => connectWallet("coinbase")}
-  onTouchEnd={() => connectWallet("coinbase")}
-  onClick={() => connectWallet("coinbase")}
-  style={{ touchAction: "manipulation" }}
-  className="flex items-center gap-3 px-7 py-4 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full"
->
+  <button
+    type="button"
+    onClick={openWalletModal}
+    className="flex items-center gap-3 px-7 py-4 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full active:scale-95"
+  >
     <div className="w-2 h-2 rounded-full bg-blue-500"></div>
 
     <span className="text-[11px] font-black text-white uppercase tracking-[0.25em]">
