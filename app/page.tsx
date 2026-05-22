@@ -826,9 +826,7 @@ setOracleHistory(updatedHistory);
 
                 <div className="relative px-10 py-5 rounded-full border border-blue-500/40 bg-blue-500/10 backdrop-blur-2xl shadow-[0_0_40px_rgba(37,99,235,0.35)]">
                   <span className="text-blue-400 font-black tracking-[0.35em] uppercase text-[13px] md:text-[16px]">
-                    {formatCooldown(
-                      cooldown
-                    )}
+                    {formatCooldown(cooldown)}
                   </span>
                 </div>
               </div>
@@ -839,62 +837,50 @@ setOracleHistory(updatedHistory);
             </div>
           )}
 
-        <div className="mt-12 flex flex-col items-center gap-5 relative z-[60] w-full">
+          <div className="mt-10 flex flex-col items-center gap-5 relative z-[60] w-full">
             <button
               onClick={handleAction}
-              disabled={
-                isAnimating ||
-                cooldown > 0
-              }
-              className={`group overflow-hidden relative z-[70] px-14 py-6 font-black rounded-full transition-all text-[10px] uppercase tracking-[0.3em] shadow-xl
-
-              ${
+              disabled={isAnimating || cooldown > 0}
+              className={`group overflow-hidden relative z-[70] px-14 py-6 font-black rounded-full transition-all text-[10px] uppercase tracking-[0.3em] shadow-xl ${
                 cooldown > 0
                   ? "bg-blue-950/40 text-blue-300 border border-blue-500/20 cursor-not-allowed"
                   : "bg-white text-black hover:bg-blue-600 hover:text-white hover:scale-105 active:scale-95 hover:shadow-[0_0_35px_rgba(37,99,235,0.55)]"
-              }
-        
-              ${
-                isAnimating
-                  ? "opacity-50"
-                  : ""
-              }`}
-
-          
+              } ${isAnimating ? "opacity-50" : ""}`}
             >
-            <span className="relative z-10">
-  {isAnimating
-    ? "Consulting..."
-    : cooldown > 0
-    ? "Oracle Sleeping"
-    : txHash
-    ? "Fate Decrypted"
-    : "Consult Fate"}
-</span>
+              <span className="relative z-10">
+                {isAnimating
+                  ? "Consulting..."
+                  : cooldown > 0
+                  ? "Oracle Sleeping"
+                  : txHash
+                  ? "Fate Decrypted"
+                  : "Consult Fate"}
+              </span>
             </button>
-           <div className="mt-14 mb-8 w-full flex justify-center animate-float">
-  <div className="inline-flex items-center justify-center gap-1 bg-white/[0.05] px-5 py-3.5 rounded-full border border-white/10 backdrop-blur-xl shadow-xl">
-    <span className="text-[11px] text-blue-500 font-black tracking-widest uppercase italic leading-none">
-      You&apos;re now based
-    </span>
 
-    <div className="relative w-5 h-4 flex items-center">
-      <Image
-        src="/base_logo.png"
-        alt="Base Logo"
-        fill
-        className="object-contain brightness-200"
-      />
-    </div>
-  </div>
-</div>
+            <div className="mt-4 mb-2 w-full flex justify-center animate-float">
+              <div className="inline-flex items-center justify-center gap-1 bg-white/[0.05] px-5 py-3.5 rounded-full border border-white/10 backdrop-blur-xl shadow-xl">
+                <span className="text-[11px] text-blue-500 font-black tracking-widest uppercase italic leading-none">
+                  You&apos;re now based
+                </span>
+
+                <div className="relative w-5 h-4 flex items-center">
+                  <Image
+                    src="/base_logo.png"
+                    alt="Base Logo"
+                    fill
+                    className="object-contain brightness-200"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
-           </div>
+
+        </div>
 
       {/* FOOTER */}
-<footer className="absolute left-1/2 -translate-x-1/2 top-[760px] z-50">
-
-</footer>
+      <footer className="absolute left-1/2 -translate-x-1/2 top-[760px] z-50">
+      </footer>
     </main>
   );
 }
