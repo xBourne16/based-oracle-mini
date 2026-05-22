@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Source_Code_Pro } from "next/font/google";
 import { minikitConfig } from "@/minikit.config";
 
 export const viewport: Viewport = {
@@ -61,15 +60,6 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-});
-
-const sourceCodePro = Source_Code_Pro({
-  variable: "--font-source-code-pro",
-  subsets: ["latin"],
-});
 
 export default function RootLayout({
   children,
