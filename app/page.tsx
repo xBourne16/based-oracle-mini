@@ -702,11 +702,14 @@ setOracleHistory(updatedHistory);
   </div>
 </div>
 
-{/* TEMP TEST BUTTON */}
+{/* iOS FINAL FIX */}
 <div suppressHydrationWarning={true} className="relative z-[999999999] pointer-events-auto isolate">
   <button
-    onClick={() => window.alert("Buton çalışıyor!")}
-    className="flex items-center gap-3 px-7 py-4 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full active:scale-95"
+    onClick={() => {
+      console.log("Button clicked on iOS");
+      alert("Buton çalışıyor! 🎉");
+    }}
+    className="flex items-center gap-3 px-7 py-4 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full active:scale-95 touch-manipulation"
   >
     <div className="w-2 h-2 rounded-full bg-blue-500"></div>
     <span className="text-[11px] font-black text-white uppercase tracking-[0.25em]">
