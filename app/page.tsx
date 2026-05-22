@@ -1,6 +1,10 @@
 "use client"; 
 
-import { useConnectModal } from "@rainbow-me/rainbowkit";
+
+import {
+  useConnectModal,
+  ConnectButton,
+} from "@rainbow-me/rainbowkit";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { ethers } from "ethers";
@@ -700,11 +704,9 @@ setOracleHistory(updatedHistory);
           )}
 
       {/* MAIN */}
-      <div
+<div
   className={`relative z-[50] w-full max-w-6xl flex flex-col items-center xl:scale-90 origin-top transition-all lg:pr-32 pointer-events-auto ${
-    isAnimating
-      ? "scale-95 blur-sm"
-      : ""
+    isAnimating ? "scale-95 blur-sm" : ""
   }`}
 >
         <h1 className="text-[54px] sm:text-7xl md:text-[115px] font-black text-white leading-none tracking-tighter uppercase italic mt-16 mb-16 drop-shadow-2xl select-none">
@@ -721,7 +723,8 @@ setOracleHistory(updatedHistory);
       ? "scale-95 border-blue-500/40 shadow-[0_0_50px_rgba(37,99,235,0.18)]"
       : ""
   }`}
-><div className="flex items-start justify-between gap-4 mb-10">
+>
+          <div className="flex items-start justify-between gap-4 mb-10">
   <div>
     <div className="text-[11px] text-blue-500 tracking-[0.5em] font-black uppercase italic">
       ◈ GM
@@ -732,21 +735,38 @@ setOracleHistory(updatedHistory);
     </div>
   </div>
 
-<div className="relative z-[999999999] pointer-events-auto isolate">
-  <button
-    type="button"
-    onClick={openWalletModal}
-    className="flex items-center gap-3 px-7 py-4 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full active:scale-95"
-  >
-    <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+  <div className="relative z-[999999999] pointer-events-auto isolate">
+    <ConnectButton.Custom>
+      {({
+        account,
+        openConnectModal,
+        openAccountModal,
+        mounted,
+      }) => {
+        const connected = mounted && account;
 
-    <span className="text-[11px] font-black text-white uppercase tracking-[0.25em]">
-      {address
-        ? `${address.slice(0, 6)}...${address.slice(-4)}`
-        : "Connect Wallet"}
-    </span>
-  </button>
-</div>
+        return (
+          <button
+            type="button"
+            onClick={
+              connected
+                ? openAccountModal
+                : openConnectModal
+            }
+            className="flex items-center gap-3 px-7 py-4 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full active:scale-95"
+          >
+            <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+
+            <span className="text-[11px] font-black text-white uppercase tracking-[0.25em]">
+              {connected
+                ? account.displayName
+                : "Connect Wallet"}
+            </span>
+          </button>
+        );
+      }}
+    </ConnectButton.Custom>
+  </div>
 </div>
  
           <div className="absolute top-10 left-12 w-10 h-[2px] bg-blue-600 shadow-[0_0_15px_rgba(37,99,235,1)]"></div>
@@ -924,8 +944,7 @@ setOracleHistory(updatedHistory);
 </div>
           </div>
         </div>
-      </div>
-
+</div>
       {/* FOOTER */}
 <footer className="absolute left-1/2 -translate-x-1/2 top-[760px] z-50">
 
