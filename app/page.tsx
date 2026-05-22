@@ -1,11 +1,12 @@
-"use client"; 
+"use client";
+
+import "@rainbow-me/rainbowkit/styles.css";
 
 import {
   useConnectModal,
   ConnectButton,
 } from "@rainbow-me/rainbowkit";
 
-<ConnectButton />
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { ethers } from "ethers";
@@ -19,9 +20,14 @@ import {
 } from "wagmi";
 
 export default function Home() {
+
+  const [isClient, setIsClient] = useState(false);
+
+useEffect(() => {
+  setIsClient(true);
+}, []);
   const [quote, setQuote] = useState("");
   const [isAnimating, setIsAnimating] = useState(false);
-
   const [glowIntensity, setGlowIntensity] = useState(
     "opacity-20 scale-100"
   );
@@ -110,6 +116,10 @@ const { switchChainAsync } =
     "function consult() public",
     "function getRemainingTime(address user) view returns (uint256)",
   ];
+
+useEffect(() => {
+  setIsClient(true);
+}, []);
 
   useEffect(() => {
     setSiteOrigin(window.location.origin);
@@ -698,9 +708,9 @@ setOracleHistory(updatedHistory);
     </div>
   </div>
 </div>
-{/* iOS Hydration Fix */}
-<div suppressHydrationWarning={true}>
-  <ConnectButton />
+
+{/* iOS & Hydration Fix */}
+{isClient && <ConnectButton />}
 </div>
  
           <div className="absolute top-10 left-12 w-10 h-[2px] bg-blue-600 shadow-[0_0_15px_rgba(37,99,235,1)]"></div>
@@ -878,7 +888,7 @@ setOracleHistory(updatedHistory);
 </div>
           </div>
         </div>
-      </div>
+
 
       {/* FOOTER */}
 <footer className="absolute left-1/2 -translate-x-1/2 top-[760px] z-50">
