@@ -416,12 +416,47 @@ const todaySeed = new Date()
   .toISOString()
   .slice(0, 10);
 
+const rarityWeights = {
+  COMMON: 45,
+  RARE: 30,
+  EPIC: 15,
+  LEGENDARY: 8,
+  MYTHIC: 2,
+};
+
+const random =
+  Math.floor(Math.random() * 100);
+
+let selectedRarity = "COMMON";
+
+if (random >= 98) {
+  selectedRarity = "MYTHIC";
+} else if (random >= 90) {
+  selectedRarity = "LEGENDARY";
+} else if (random >= 75) {
+  selectedRarity = "EPIC";
+} else if (random >= 45) {
+  selectedRarity = "RARE";
+}
+
+const filteredDrops =
+  oracleDrops.filter(
+    (drop) =>
+      drop.rarity ===
+      selectedRarity
+  );
+
+const safeDrops =
+  filteredDrops.length > 0
+    ? filteredDrops
+    : oracleDrops;
+
 const prophecyQuote =
-  oracleDrops[
+  safeDrops[
     getUniqueQuoteIndex(
       address,
       todaySeed
-    )
+    ) % safeDrops.length
   ];
   setQuote(prophecyQuote.text);
   setOracleDrop(prophecyQuote);
