@@ -15,6 +15,7 @@ import {
   useWalletClient,
   useSwitchChain,
 } from "wagmi";
+import html2canvas from "html2canvas";
 
 export default function Home() {
 const [oracleDrop, setOracleDrop] =
@@ -26,6 +27,7 @@ const [oracleDrop, setOracleDrop] =
     "opacity-20 scale-100"
   );
 
+  const shareCardRef = useRef<HTMLDivElement | null>(null);
 
   const { address } =
   useAccount();
@@ -348,6 +350,26 @@ const provider =
   setCooldown(0);
   setLuckyNumber(null);
   setIsDropdownOpen(false);
+};
+
+
+const downloadShareCard = async () => {
+  if (!shareCardRef.current) return;
+
+  const canvas = await html2canvas(
+    shareCardRef.current,
+    {
+      backgroundColor: "#020204",
+      scale: 2,
+    }
+  );
+
+  const image = canvas.toDataURL("image/png");
+
+  const link = document.createElement("a");
+  link.href = image;
+  link.download = "based-oracle-prophecy.png";
+  link.click();
 };
 
   const handleAction = async () => {
@@ -722,6 +744,14 @@ setOracleHistory(updatedHistory);
     isAnimating
       ? "scale-95 border-blue-500/40 shadow-[0_0_50px_rgba(37,99,235,0.18)]"
       : ""
+  } ${
+    oracleDrop?.rarity === "MYTHIC"
+      ? "animate-pulse border-red-500/50 shadow-[0_0_90px_rgba(239,68,68,0.35)]"
+      : oracleDrop?.rarity === "LEGENDARY"
+      ? "border-yellow-500/30 shadow-[0_0_70px_rgba(250,204,21,0.18)]"
+      : oracleDrop?.rarity === "EPIC"
+      ? "border-purple-500/30 shadow-[0_0_60px_rgba(168,85,247,0.18)]"
+      : ""
   }`}
 >
 
@@ -866,6 +896,24 @@ setOracleHistory(updatedHistory);
         <path d="M20 4L9 15"></path>
       </svg>
     </a>
+
+<button
+  onClick={downloadShareCard}
+  className="
+    mt-4 inline-flex items-center gap-3
+    px-6 py-3
+    rounded-full
+    bg-blue-500/10
+    border border-blue-500/30
+    hover:bg-blue-500/20
+    transition-all duration-300
+  "
+>
+  <span className="text-[10px] uppercase tracking-[0.3em] text-blue-300 font-black">
+    Download Oracle Card
+  </span>
+</button>
+    
   </div>
 )}
             {quote &&
@@ -940,6 +988,44 @@ setOracleHistory(updatedHistory);
               </div>
             </div>
           </div>
+
+<div className="hidden">
+  <div
+    ref={shareCardRef}
+    className="w-[1200px] h-[630px] bg-[#020204] flex flex-col justify-center items-center text-center px-24"
+  >
+    <div className="text-blue-500 text-[22px] uppercase tracking-[0.4em] font-black mb-6">
+      Oracle Transmission
+    </div>
+
+    <div className="text-white text-7xl font-black italic leading-tight max-w-5xl">
+      “{oracleDrop?.text || quote}”
+    </div>
+
+    <div className="flex gap-4 mt-10">
+      <div className="px-6 py-3 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-300 text-xl uppercase tracking-[0.25em] font-black">
+        {oracleDrop?.category}
+      </div>
+
+      <div className="px-6 py-3 rounded-full border border-white/10 bg-white/[0.04] text-white/60 text-xl uppercase tracking-[0.25em] font-black">
+        {oracleDrop?.source}
+      </div>
+
+      <div className="px-6 py-3 rounded-full border border-yellow-500/30 bg-yellow-500/10 text-yellow-300 text-xl uppercase tracking-[0.25em] font-black">
+        {oracleDrop?.rarity}
+      </div>
+    </div>
+
+    <div className="mt-14 text-5xl text-blue-400 font-black">
+      Lucky Number: {luckyNumber}
+    </div>
+
+    <div className="mt-16 text-white/30 text-2xl tracking-[0.4em] uppercase">
+      mini.basedoracle.space
+    </div>
+  </div>
+</div>
+
 
         </div>
          </div>
