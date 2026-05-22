@@ -658,11 +658,9 @@ setOracleHistory(updatedHistory);
           )}
 
       {/* MAIN */}
-      <div
+<div
   className={`relative z-[50] w-full max-w-6xl flex flex-col items-center xl:scale-90 origin-top transition-all lg:pr-32 pointer-events-auto ${
-    isAnimating
-      ? "scale-95 blur-sm"
-      : ""
+    isAnimating ? "scale-95 blur-sm" : ""
   }`}
 >
         <h1 className="text-[54px] sm:text-7xl md:text-[115px] font-black text-white leading-none tracking-tighter uppercase italic mt-16 mb-16 drop-shadow-2xl select-none">
