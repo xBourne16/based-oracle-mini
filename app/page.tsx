@@ -7,7 +7,7 @@ import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { ethers } from "ethers";
-import { quotes } from "./quotes";
+import { oracleDrops } from "./quotes";
 import "./globals.css";
 import {
   useAccount,
@@ -17,12 +17,15 @@ import {
 } from "wagmi";
 
 export default function Home() {
+const [oracleDrop, setOracleDrop] =
+  useState<(typeof oracleDrops)[number] | null>(null);
   const [quote, setQuote] = useState("");
   const [isAnimating, setIsAnimating] = useState(false);
 
   const [glowIntensity, setGlowIntensity] = useState(
     "opacity-20 scale-100"
   );
+
 
   const { address } =
   useAccount();
@@ -299,7 +302,7 @@ const provider =
         0
       );
 
-    return charSum % quotes.length;
+   return charSum % oracleDrops.length;
   };
 
   // DAILY LUCKY NUMBER
@@ -408,12 +411,13 @@ const todaySeed = new Date()
   .slice(0, 10);
 
 const prophecyQuote =
-  quotes[
+ oracleDrops[
     getUniqueQuoteIndex(
       address,
       todaySeed
     )
   ];
+  setQuote(prophecyQuote.text);
 
 const prophecyNumber =
   generateLuckyNumber(address);
@@ -446,15 +450,12 @@ localStorage.setItem(
 );
 
       // DAILY QUOTE
-      const dailyQuote =
-        quotes[
-          getUniqueQuoteIndex(
-            address,
-            tx.hash
-          )
-        ];
+const dailyDrop =
+  oracleDrops[
+    getUniqueQuoteIndex(address, tx.hash)
+  ];
 
-      setQuote(dailyQuote);
+setOracleDrop(dailyDrop);
 
       // DAILY LUCKY NUMBER
       const number =
@@ -500,7 +501,7 @@ localStorage.setItem(
 setStreak(newStreak);
       // SAVE HISTORY
 const historyItem = {
-  quote: dailyQuote,
+  quote: prophecyQuote.text,
   luckyNumber: number,
   txHash: tx.hash,
   date: new Date().toLocaleDateString(),
@@ -528,7 +529,7 @@ setOracleHistory(updatedHistory);
      
       localStorage.setItem(
         `oracle_quote_${address}_${today}`,
-        dailyQuote
+        prophecyQuote.text
       );
 
       localStorage.setItem(
@@ -716,8 +717,31 @@ setOracleHistory(updatedHistory);
               </span>
             )}
 
-            {/* QUOTE */}
-          <p
+{/* ORACLE TITLE */}
+{quote && oracleDrop && (
+  <div className="mb-6 flex flex-col items-center gap-3">
+    <span className="text-[10px] uppercase tracking-[0.45em] text-blue-400 font-black italic">
+      Oracle Transmission
+    </span>
+
+    <div className="flex flex-wrap items-center justify-center gap-2">
+      <span className="px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-[9px] text-blue-300 uppercase tracking-[0.25em] font-black">
+        {oracleDrop.type}
+      </span>
+
+      <span className="px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 text-[9px] text-white/50 uppercase tracking-[0.25em] font-black">
+        {oracleDrop.category}
+      </span>
+
+      <span className="px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 text-[9px] text-white/50 uppercase tracking-[0.25em] font-black">
+        {oracleDrop.rarity}
+      </span>
+    </div>
+  </div>
+)}
+
+{/* ORACLE TEXT */}
+<p
   key={quote || isAnimating ? "active" : "empty"}
   className={`text-2xl sm:text-3xl md:text-5xl text-white italic text-center leading-[1.1] font-medium transition-all duration-700 ${
     quote
@@ -725,22 +749,14 @@ setOracleHistory(updatedHistory);
       : "opacity-80 translate-y-2"
   }`}
 >
-              {quote
-  ? `"${quote}"`
-  : isAnimating
-  ? "Decrypting your onchain prophecy..."
-  : cooldown > 0
-  ? "The Oracle sleeps..."
-  : "Authorize the transaction to decrypt your fate."}
-            </p>
-
-            {/* LUCKY NUMBER */}
-            {/* DAILY STREAK */}
-{quote && streak > 0 && (
-  <div className="mt-8 flex flex-col items-center">
-    <span className="text-[10px] uppercase tracking-[0.4em] text-white/30 mb-3 italic">
-      Oracle Streak
-    </span>
+  {quote
+    ? `"${quote}"`
+    : isAnimating
+    ? "Decrypting your onchain transmission..."
+    : cooldown > 0
+    ? "The Oracle sleeps..."
+    : "Authorize the transaction to reveal your transmission."}
+</p>
 
     <div className="px-7 py-3 rounded-full border border-blue-500/30 bg-blue-500/10 backdrop-blur-xl shadow-[0_0_30px_rgba(37,99,235,0.2)]">
       <span className="text-[13px] font-black text-blue-400 tracking-[0.25em] uppercase">
@@ -749,7 +765,6 @@ setOracleHistory(updatedHistory);
     </div>
 
 </div>
-)}
             {/* SHARE PROPHECY */}
 {quote && (shareUrl || oracleHistory[0]?.txHash) && (
   <a
@@ -880,8 +895,7 @@ setOracleHistory(updatedHistory);
   </div>
 </div>
           </div>
-        </div>
-      </div>
+           </div>
 
       {/* FOOTER */}
 <footer className="absolute left-1/2 -translate-x-1/2 top-[760px] z-50">
