@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Source_Code_Pro } from "next/font/google";
 import { minikitConfig } from "@/minikit.config";
-import { RootProvider } from "./rootProvider";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -87,9 +86,7 @@ export default function RootLayout({
     pointerEvents: "auto",
   }}
 >
-        <RootProvider>
-          {children}
-        </RootProvider>
+{children}
       </body>
     </html>
   );
