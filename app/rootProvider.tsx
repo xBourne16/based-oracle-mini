@@ -38,8 +38,8 @@ const connectors = connectorsForWallets(
       groupName: "Recommended",
 wallets: [
   walletConnectWallet,
-  metaMaskWallet,
   coinbaseWallet,
+  metaMaskWallet,
   injectedWallet,
   rabbyWallet,
 ],

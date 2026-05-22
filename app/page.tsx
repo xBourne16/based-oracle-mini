@@ -1,6 +1,9 @@
 "use client"; 
 
-import { useConnectModal } from "@rainbow-me/rainbowkit";
+import {
+  useConnectModal,
+  ConnectButton,
+} from "@rainbow-me/rainbowkit";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { ethers } from "ethers";
@@ -694,19 +697,25 @@ setOracleHistory(updatedHistory);
   </div>
 
 <div className="relative z-[999999999] pointer-events-auto isolate">
-  <button
-    type="button"
-    onClick={openWalletModal}
-    className="flex items-center gap-3 px-7 py-4 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full active:scale-95"
-  >
-    <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+  <ConnectButton.Custom>
+    {({ account, openConnectModal, openAccountModal, mounted }) => {
+      const connected = mounted && account;
 
-    <span className="text-[11px] font-black text-white uppercase tracking-[0.25em]">
-      {address
-        ? `${address.slice(0, 6)}...${address.slice(-4)}`
-        : "Connect Wallet"}
-    </span>
-  </button>
+      return (
+        <button
+          type="button"
+          onClick={connected ? openAccountModal : openConnectModal}
+          className="flex items-center gap-3 px-7 py-4 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full active:scale-95"
+        >
+          <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+
+          <span className="text-[11px] font-black text-white uppercase tracking-[0.25em]">
+            {connected ? account.displayName : "Connect Wallet"}
+          </span>
+        </button>
+      );
+    }}
+  </ConnectButton.Custom>
 </div>
 </div>
  
