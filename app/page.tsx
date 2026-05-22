@@ -697,29 +697,8 @@ setOracleHistory(updatedHistory);
       Scanning Souls...
     </div>
   </div>
-
-<div className="relative z-[999999999] pointer-events-auto isolate">
-  <ConnectButton.Custom>
-    {({ account, openConnectModal, openAccountModal, mounted }) => {
-      const connected = mounted && account;
-
-      return (
-        <button
-          type="button"
-          onClick={connected ? openAccountModal : openConnectModal}
-          className="flex items-center gap-3 px-7 py-4 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full active:scale-95"
-        >
-          <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-
-          <span className="text-[11px] font-black text-white uppercase tracking-[0.25em]">
-            {connected ? account.displayName : "Connect Wallet"}
-          </span>
-        </button>
-      );
-    }}
-  </ConnectButton.Custom>
 </div>
-</div>
+<ConnectButton />
  
           <div className="absolute top-10 left-12 w-10 h-[2px] bg-blue-600 shadow-[0_0_15px_rgba(37,99,235,1)]"></div>
 
