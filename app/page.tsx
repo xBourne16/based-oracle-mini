@@ -240,15 +240,12 @@ useEffect(() => {
 
     const fetchCooldown = async () => {
       try {
-        const injectedProvider =
-          (window as any).ethereum;
+ if (!walletClient) return;
 
-        if (!injectedProvider) return;
-
-        const provider =
-          new ethers.BrowserProvider(
-            injectedProvider
-          );
+const provider =
+  new ethers.BrowserProvider(
+    walletClient.transport
+  );
 
         const contract =
           new ethers.Contract(
