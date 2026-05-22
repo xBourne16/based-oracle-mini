@@ -759,48 +759,50 @@ setOracleHistory(updatedHistory);
     </div>
 
 </div>
-            {/* SHARE PROPHECY */}
+{/* SHARE PROPHECY */}
 {quote && (shareUrl || oracleHistory[0]?.txHash) && (
-  <a
-    href={
-  shareUrl ||
-  `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-    `🔮 BASED ORACLE PROPHECY 🔮\n\n“${quote}”\n\n✦ Lucky Number: ${luckyNumber}\n\n✦ Oracle TX:\nhttps://basescan.org/tx/${oracleHistory[0]?.txHash}\n\nConsult your fate:\n${siteOrigin}`
-  )}`
-}
-    target="_blank"
-    rel="noopener noreferrer"
-    className="
-      mt-8 inline-flex items-center gap-3
-      px-6 py-3
-      rounded-full
-      bg-white/[0.04]
-      border border-white/10
-      hover:border-blue-500/40
-      hover:bg-blue-500/10
-      transition-all duration-300
-      group
-    "
-  >
-    <span className="text-[10px] uppercase tracking-[0.3em] text-white/50 group-hover:text-blue-400 font-black">
-      Share Prophecy
-    </span>
-
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#3b82f6"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+  <div className="mt-8 w-full flex justify-center">
+    <a
+      href={
+        shareUrl ||
+        `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+          `🔮 BASED ORACLE PROPHECY 🔮\n\n“${quote}”\n\n✦ Lucky Number: ${luckyNumber}\n\n✦ Oracle TX:\nhttps://basescan.org/tx/${oracleHistory[0]?.txHash}\n\nConsult your fate:\n${siteOrigin}`
+        )}`
+      }
+      target="_blank"
+      rel="noopener noreferrer"
+      className="
+        inline-flex items-center justify-center gap-3
+        px-6 py-3
+        rounded-full
+        bg-white/[0.04]
+        border border-white/10
+        hover:border-blue-500/40
+        hover:bg-blue-500/10
+        transition-all duration-300
+        group
+      "
     >
-      <path d="M4 4l16 16"></path>
-      <path d="M20 4L9 15"></path>
-    </svg>
-  </a>
+      <span className="text-[10px] uppercase tracking-[0.3em] text-white/50 group-hover:text-blue-400 font-black">
+        Share Prophecy
+      </span>
+
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#3b82f6"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M4 4l16 16"></path>
+        <path d="M20 4L9 15"></path>
+      </svg>
+    </a>
+  </div>
 )}
             {quote &&
               luckyNumber && (
@@ -839,7 +841,7 @@ setOracleHistory(updatedHistory);
             </div>
           )}
 
-          <div className="mt-6 flex flex-col items-center gap-5 relative z-[60] w-full">
+        <div className="mt-12 flex flex-col items-center gap-5 relative z-[60] w-full">
             <button
               onClick={handleAction}
               disabled={
@@ -872,8 +874,8 @@ setOracleHistory(updatedHistory);
     : "Consult Fate"}
 </span>
             </button>
-           <div className="mt-10 flex justify-center animate-float">
-  <div className="flex items-center gap-1 bg-white/[0.05] px-5 py-3.5 rounded-full border border-white/10 backdrop-blur-xl shadow-xl">
+           <div className="mt-14 mb-8 w-full flex justify-center animate-float">
+  <div className="inline-flex items-center justify-center gap-1 bg-white/[0.05] px-5 py-3.5 rounded-full border border-white/10 backdrop-blur-xl shadow-xl">
     <span className="text-[11px] text-blue-500 font-black tracking-widest uppercase italic leading-none">
       You&apos;re now based
     </span>
