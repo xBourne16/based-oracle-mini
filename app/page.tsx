@@ -599,7 +599,7 @@ setOracleHistory(updatedHistory);
     
 {/* NEW DROPDOWN DESIGN */}
           {address && isDropdownOpen && (
-            <div className="absolute right-0 mt-4 w-[280px] rounded-3xl p-[1px] bg-gradient-to-r from-blue-500/40 via-white/10 to-blue-500/20 shadow-2xl animate-in fade-in zoom-in duration-200 origin-top-right">
+            <div className="fixed top-24 left-4 right-4 z-[999999999] rounded-3xl p-[1px] bg-gradient-to-r from-blue-500/40 via-white/10 to-blue-500/20 shadow-2xl animate-in fade-in zoom-in duration-200">
               <div className="bg-[#0a0a0c]/95 backdrop-blur-2xl rounded-3xl p-5 border border-white/10 text-left">
                 
                 {/* HEADER */}
