@@ -4,6 +4,8 @@ import {
   useConnectModal,
   ConnectButton,
 } from "@rainbow-me/rainbowkit";
+
+<ConnectButton />
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { ethers } from "ethers";

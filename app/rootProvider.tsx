@@ -4,59 +4,25 @@ import "@rainbow-me/rainbowkit/styles.css";
 
 import {
   RainbowKitProvider,
-  connectorsForWallets,
   darkTheme,
+  getDefaultConfig,
 } from "@rainbow-me/rainbowkit";
-
-import {
-  injectedWallet,
-  metaMaskWallet,
-  coinbaseWallet,
-  rabbyWallet,
-  walletConnectWallet,
-} from "@rainbow-me/rainbowkit/wallets";
 
 import {
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
 
-import {
-  WagmiProvider,
-  createConfig,
-  http,
-} from "wagmi";
-
+import { WagmiProvider } from "wagmi";
 import { base } from "wagmi/chains";
-import { useState } from "react";
+import { useState } from "react";          // ← Bunu ekle
 
 const projectId = "31299aa6a25a6b4fec5d2af2ed4a91bd";
 
-const connectors = connectorsForWallets(
-  [
-    {
-      groupName: "Recommended",
-wallets: [
-  walletConnectWallet,
-  coinbaseWallet,
-  metaMaskWallet,
-  injectedWallet,
-  rabbyWallet,
-],
-    },
-  ],
-  {
-    appName: "Based Oracle",
-    projectId,
-  }
-);
-
-const config = createConfig({
+const config = getDefaultConfig({
+  appName: "Based Oracle",
+  projectId,
   chains: [base],
-  connectors,
-  transports: {
-    [base.id]: http(),
-  },
   ssr: true,
 });
 
@@ -65,9 +31,7 @@ export function RootProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [queryClient] = useState(
-    () => new QueryClient()
-  );
+  const [queryClient] = useState(() => new QueryClient());
 
   return (
     <WagmiProvider config={config}>
