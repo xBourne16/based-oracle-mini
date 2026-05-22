@@ -57,6 +57,16 @@ const { disconnect } =
     }
   };
 
+  useEffect(() => {
+  if (!address && openConnectModal) {
+    const timer = setTimeout(() => {
+      openConnectModal();
+    }, 800);
+
+    return () => clearTimeout(timer);
+  }
+}, [address, openConnectModal]);
+
   // COOLDOWN TIMER
   const [cooldown, setCooldown] =
     useState<number>(0);
