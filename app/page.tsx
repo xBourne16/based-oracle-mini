@@ -773,9 +773,27 @@ setOracleHistory(updatedHistory);
         {oracleDrop.category}
       </span>
 
-      <span className="px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 text-[9px] text-white/50 uppercase tracking-[0.25em] font-black">
-        {oracleDrop.rarity}
-      </span>
+    <span
+  className={`
+    px-3 py-1 rounded-full text-[9px]
+    uppercase tracking-[0.25em]
+    font-black border transition-all duration-500
+    ${
+      oracleDrop?.rarity === "COMMON"
+        ? "bg-white/5 text-white/40 border-white/10"
+        : oracleDrop?.rarity === "RARE"
+        ? "bg-blue-500/10 text-blue-300 border-blue-500/30 shadow-[0_0_20px_rgba(59,130,246,0.35)]"
+        : oracleDrop?.rarity === "EPIC"
+        ? "bg-purple-500/10 text-purple-300 border-purple-500/30 shadow-[0_0_25px_rgba(168,85,247,0.4)]"
+        : oracleDrop?.rarity === "LEGENDARY"
+        ? "bg-yellow-500/10 text-yellow-300 border-yellow-500/30 shadow-[0_0_30px_rgba(250,204,21,0.45)]"
+        : "bg-red-500/10 text-red-300 border-red-500/30 shadow-[0_0_35px_rgba(239,68,68,0.5)] animate-pulse"
+    }
+  `}
+>
+  {oracleDrop.rarity}
+</span>
+
     </div>
   </div>
 )}
