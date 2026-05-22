@@ -285,25 +285,31 @@ const provider =
   }, [address]);
 
   const getUniqueQuoteIndex = (
-    address: string,
-    hash: string
-  ) => {
-    const today =
-      new Date().toISOString().split("T")[0];
+  address: string,
+  hash: string
+) => {
+  const today =
+    new Date().toISOString().split("T")[0];
 
-    const combinedSeed =
-      address + hash + today;
+  const seed =
+    address + hash + today;
 
-    const charSum = combinedSeed
-      .split("")
-      .reduce(
-        (acc, char) =>
-          acc + char.charCodeAt(0),
-        0
-      );
+  let hashValue = 0;
 
-   return charSum % oracleDrops.length;
-  };
+  for (let i = 0; i < seed.length; i++) {
+    hashValue =
+      (hashValue << 5) -
+      hashValue +
+      seed.charCodeAt(i);
+
+    hashValue |= 0;
+  }
+
+  return (
+    Math.abs(hashValue) %
+    oracleDrops.length
+  );
+};
 
   // DAILY LUCKY NUMBER
   const generateLuckyNumber = (
