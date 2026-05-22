@@ -1,12 +1,16 @@
 "use client";
 
+import { useState } from "react";
+
 export default function Home() {
+  const [text, setText] = useState("TEST");
+
   return (
     <main style={{ minHeight: "100vh", background: "black", padding: 40 }}>
       <button
         type="button"
-        onClick={() => alert("CLICK CALISTI")}
-        onTouchStart={() => alert("TOUCH CALISTI")}
+        onClick={() => setText("TIKLANDI")}
+        onTouchStart={() => setText("TOUCH ÇALIŞTI")}
         style={{
           background: "white",
           color: "black",
@@ -18,7 +22,7 @@ export default function Home() {
           zIndex: 999999999,
         }}
       >
-        TEST
+        {text}
       </button>
     </main>
   );

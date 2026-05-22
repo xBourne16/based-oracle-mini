@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Source_Code_Pro } from "next/font/google";
 import { minikitConfig } from "@/minikit.config";
-import "./globals.css";
 
 export const viewport: Viewport = {
   width: "device-width",
