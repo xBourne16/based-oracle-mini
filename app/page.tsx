@@ -411,13 +411,14 @@ const todaySeed = new Date()
   .slice(0, 10);
 
 const prophecyQuote =
- oracleDrops[
+  oracleDrops[
     getUniqueQuoteIndex(
       address,
       todaySeed
     )
   ];
   setQuote(prophecyQuote.text);
+  setOracleDrop(prophecyQuote);
 
 const prophecyNumber =
   generateLuckyNumber(address);
@@ -720,7 +721,7 @@ setOracleHistory(updatedHistory);
 
     <div className="flex flex-wrap items-center justify-center gap-2">
       <span className="px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-[9px] text-blue-300 uppercase tracking-[0.25em] font-black">
-        {oracleDrop.type}
+      {oracleDrop.source}
       </span>
 
       <span className="px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 text-[9px] text-white/50 uppercase tracking-[0.25em] font-black">
