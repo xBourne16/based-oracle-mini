@@ -710,16 +710,10 @@ setOracleHistory(updatedHistory);
           <div className="absolute top-10 left-12 w-10 h-[2px] bg-blue-600 shadow-[0_0_15px_rgba(37,99,235,1)]"></div>
 
           <div className="min-h-[220px] flex flex-col items-center justify-center text-center">
-            {/* DAILY TITLE */}
-            {quote && (
-              <span className="mb-6 text-[11px] uppercase tracking-[0.45em] text-blue-400 font-black italic">
-                Your Quote Of The Day
-              </span>
-            )}
 
 {/* ORACLE TITLE */}
 {quote && oracleDrop && (
-  <div className="mb-6 flex flex-col items-center gap-3">
+ <div className="mt-10 mb-6 flex flex-col items-center gap-3">
     <span className="text-[10px] uppercase tracking-[0.45em] text-blue-400 font-black italic">
       Oracle Transmission
     </span>
@@ -743,7 +737,7 @@ setOracleHistory(updatedHistory);
 {/* ORACLE TEXT */}
 <p
   key={quote || isAnimating ? "active" : "empty"}
-  className={`text-2xl sm:text-3xl md:text-5xl text-white italic text-center leading-[1.1] font-medium transition-all duration-700 ${
+  className={`mt-4 text-2xl sm:text-3xl md:text-5xl text-white italic text-center leading-[1.1] font-medium transition-all duration-700 ${
     quote
       ? "opacity-100 translate-y-0"
       : "opacity-80 translate-y-2"
@@ -758,7 +752,7 @@ setOracleHistory(updatedHistory);
     : "Authorize the transaction to reveal your transmission."}
 </p>
 
-    <div className="px-7 py-3 rounded-full border border-blue-500/30 bg-blue-500/10 backdrop-blur-xl shadow-[0_0_30px_rgba(37,99,235,0.2)]">
+    <div className="mt-8 px-7 py-3 rounded-full border border-blue-500/30 bg-blue-500/10 backdrop-blur-xl shadow-[0_0_30px_rgba(37,99,235,0.2)]">
       <span className="text-[13px] font-black text-blue-400 tracking-[0.25em] uppercase">
         ✦ {streak} Day — {getStreakBadge(streak)}
       </span>
