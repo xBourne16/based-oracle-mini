@@ -657,7 +657,7 @@ setOracleHistory(updatedHistory);
             </div>
           )}
 
-      {/* MAIN */}
+{/* MAIN */}
 <div
   className={`relative z-[50] w-full max-w-6xl flex flex-col items-center xl:scale-90 origin-top transition-all lg:pr-32 pointer-events-auto ${
     isAnimating ? "scale-95 blur-sm" : ""
@@ -818,7 +818,6 @@ setOracleHistory(updatedHistory);
                   </div>
                 </div>
               )}
-          </div>
 
           {/* COOL TIMER */}
           {cooldown > 0 && (
@@ -839,7 +838,7 @@ setOracleHistory(updatedHistory);
             </div>
           )}
 
-          <div className="mt-6 flex flex-col items-center gap-5 relative z-[60] w-full">
+          <div className="mt-2 flex flex-col items-center gap-5 relative z-[60] w-full">
             <button
               onClick={handleAction}
               disabled={isAnimating || cooldown > 0}
@@ -860,7 +859,7 @@ setOracleHistory(updatedHistory);
               </span>
             </button>
 
-            <div className="mt-4 mb-2 w-full flex justify-center animate-float">
+            <div className="mt-1 mb-0 w-full flex justify-center animate-float">
               <div className="inline-flex items-center justify-center gap-1 bg-white/[0.05] px-5 py-3.5 rounded-full border border-white/10 backdrop-blur-xl shadow-xl">
                 <span className="text-[11px] text-blue-500 font-black tracking-widest uppercase italic leading-none">
                   You&apos;re now based
@@ -879,6 +878,7 @@ setOracleHistory(updatedHistory);
           </div>
 
         </div>
+         </div>
 
       {/* FOOTER */}
       <footer className="absolute left-1/2 -translate-x-1/2 top-[760px] z-50">
