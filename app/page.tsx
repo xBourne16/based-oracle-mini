@@ -21,11 +21,7 @@ import {
 
 export default function Home() {
 
-  const [isClient, setIsClient] = useState(false);
 
-useEffect(() => {
-  setIsClient(true);
-}, []);
   const [quote, setQuote] = useState("");
   const [isAnimating, setIsAnimating] = useState(false);
   const [glowIntensity, setGlowIntensity] = useState(
@@ -117,9 +113,6 @@ const { switchChainAsync } =
     "function getRemainingTime(address user) view returns (uint256)",
   ];
 
-useEffect(() => {
-  setIsClient(true);
-}, []);
 
   useEffect(() => {
     setSiteOrigin(window.location.origin);
@@ -709,8 +702,9 @@ setOracleHistory(updatedHistory);
   </div>
 </div>
 
-{/* iOS & Hydration Fix */}
-{isClient && <ConnectButton />}
+{/* iOS Hydration Fix - Güçlü Versiyon */}
+<div suppressHydrationWarning={true} className="relative z-[999999999] pointer-events-auto">
+  <ConnectButton />
 </div>
  
           <div className="absolute top-10 left-12 w-10 h-[2px] bg-blue-600 shadow-[0_0_15px_rgba(37,99,235,1)]"></div>
@@ -888,7 +882,7 @@ setOracleHistory(updatedHistory);
 </div>
           </div>
         </div>
-
+</div>
 
       {/* FOOTER */}
 <footer className="absolute left-1/2 -translate-x-1/2 top-[760px] z-50">
