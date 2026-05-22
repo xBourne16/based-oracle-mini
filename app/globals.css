@@ -15,3 +15,17 @@
     transform: translateY(0px);
   }
 }
+
+html,
+body {
+  pointer-events: auto !important;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+main,
+button,
+a {
+  pointer-events: auto !important;
+  touch-action: manipulation;
+}

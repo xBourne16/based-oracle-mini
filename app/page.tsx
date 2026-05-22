@@ -608,12 +608,15 @@ setOracleHistory(updatedHistory);
 
 return (
   <main className="min-h-screen bg-black">
-    <button
-      onClick={() => alert("CALISTI")}
-      className="fixed top-10 left-10 z-[999999999] bg-white text-black p-5"
-    >
-      TEST
-    </button>
-  </main>
+<button
+  type="button"
+  onClick={() => alert("CLICK")}
+  onTouchStart={() => alert("TOUCH START")}
+  onPointerDown={() => alert("POINTER DOWN")}
+  className="fixed top-10 left-10 z-[999999999] bg-white text-black p-5"
+>
+  TEST
+</button>
+</main>
 );
 }
