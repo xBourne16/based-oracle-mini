@@ -430,7 +430,7 @@ const prophecyNumber =
   generateLuckyNumber(address);
 
 const tweet = encodeURIComponent(
-  `🔮 BASED ORACLE PROPHECY 🔮\n\n` +
+  `🔮 ORACLE TRANSMISSION 🔮\n\n` +
 
   `“${prophecyQuote.text}”\n\n` +
 
