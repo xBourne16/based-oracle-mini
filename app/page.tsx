@@ -84,7 +84,7 @@ const { switchChainAsync } =
   if (savedShare) {
     setShareUrl(savedShare);
   }
-}, [address]);
+}, [address, walletClient]);
   const [streak, setStreak] =
   useState<number>(0);
   const [oracleHistory, setOracleHistory] = useState<
@@ -244,7 +244,7 @@ useEffect(() => {
 
 const provider =
   new ethers.BrowserProvider(
-    walletClient.transport
+    walletClient.transport as any
   );
 
         const contract =
@@ -386,7 +386,7 @@ if (chainId !== 8453) {
 
 const provider =
   new ethers.BrowserProvider(
-    walletClient.transport
+    walletClient.transport as any
   );
 
       const signer =
