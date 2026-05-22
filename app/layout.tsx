@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { minikitConfig } from "@/minikit.config";
+import { RootProvider } from "./rootProvider";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -70,13 +71,12 @@ export default function RootLayout({
     <html lang="en">
 <body
   suppressHydrationWarning={true}
-  style={{
-    touchAction: "auto",
-    pointerEvents: "auto",
-  }}
+  style={{ touchAction: "auto" }}
 >
-{children}
-      </body>
+  <RootProvider>
+    {children}
+  </RootProvider>
+</body>
     </html>
   );
 }
