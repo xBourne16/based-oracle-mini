@@ -698,7 +698,10 @@ setOracleHistory(updatedHistory);
     </div>
   </div>
 </div>
-<ConnectButton />
+{/* iOS Hydration Fix */}
+<div suppressHydrationWarning={true}>
+  <ConnectButton />
+</div>
  
           <div className="absolute top-10 left-12 w-10 h-[2px] bg-blue-600 shadow-[0_0_15px_rgba(37,99,235,1)]"></div>
 
