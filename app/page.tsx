@@ -702,14 +702,23 @@ setOracleHistory(updatedHistory);
   </div>
 </div>
 
-{/* iOS FINAL FIX */}
-<div suppressHydrationWarning={true} className="relative z-[999999999] pointer-events-auto isolate">
+{/* iOS ULTIMATE FIX */}
+<div 
+  suppressHydrationWarning={true} 
+  className="relative z-[9999999999] pointer-events-auto isolate"
+  style={{ position: 'relative', zIndex: 9999999999 }}
+>
   <button
     onClick={() => {
-      console.log("Button clicked on iOS");
-      alert("Buton çalışıyor! 🎉");
+      alert("Buton TIKLANDI! 🎉");
+      console.log("Button clicked");
     }}
-    className="flex items-center gap-3 px-7 py-4 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full active:scale-95 touch-manipulation"
+    onTouchEnd={() => alert("TouchEnd tetiklendi!")}
+    className="flex items-center gap-3 px-7 py-4 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full active:scale-95 touch-manipulation select-none"
+    style={{ 
+      WebkitTapHighlightColor: 'transparent',
+      WebkitTouchCallout: 'none'
+    }}
   >
     <div className="w-2 h-2 rounded-full bg-blue-500"></div>
     <span className="text-[11px] font-black text-white uppercase tracking-[0.25em]">
