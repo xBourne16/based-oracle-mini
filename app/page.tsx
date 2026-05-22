@@ -702,9 +702,17 @@ setOracleHistory(updatedHistory);
   </div>
 </div>
 
-{/* iOS Hydration Fix - Güçlü Versiyon */}
-<div suppressHydrationWarning={true} className="relative z-[999999999] pointer-events-auto">
-  <ConnectButton />
+{/* TEMP TEST BUTTON */}
+<div suppressHydrationWarning={true} className="relative z-[999999999] pointer-events-auto isolate">
+  <button
+    onClick={() => window.alert("Buton çalışıyor!")}
+    className="flex items-center gap-3 px-7 py-4 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full active:scale-95"
+  >
+    <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+    <span className="text-[11px] font-black text-white uppercase tracking-[0.25em]">
+      Connect Wallet TEST
+    </span>
+  </button>
 </div>
  
           <div className="absolute top-10 left-12 w-10 h-[2px] bg-blue-600 shadow-[0_0_15px_rgba(37,99,235,1)]"></div>
