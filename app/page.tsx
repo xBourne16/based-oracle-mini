@@ -856,6 +856,7 @@ setOracleHistory(updatedHistory);
 {/* SHARE PROPHECY */}
 {quote && (shareUrl || oracleHistory[0]?.txHash) && (
   <div className="mt-8 w-full flex justify-center">
+    <div className="mt-8 flex items-center justify-center gap-3">
     <a
       href={
         shareUrl ||
@@ -896,6 +897,25 @@ setOracleHistory(updatedHistory);
         <path d="M20 4L9 15"></path>
       </svg>
     </a>
+    <button
+  onClick={downloadShareCard}
+  className="
+    inline-flex items-center justify-center gap-3
+    h-[42px] min-w-[170px]
+    px-6
+    rounded-full
+    bg-white/[0.04]
+    border border-white/10
+    hover:border-blue-500/40
+    hover:bg-blue-500/10
+    transition-all duration-300
+    group
+  "
+>
+  <span className="text-[10px] uppercase tracking-[0.3em] text-white/50 group-hover:text-blue-400 font-black">
+    Download Oracle Card
+  </span>
+</button>
 
 <button
   onClick={downloadShareCard}
@@ -914,6 +934,7 @@ setOracleHistory(updatedHistory);
   </span>
 </button>
     
+  </div>
   </div>
 )}
             {quote &&
@@ -1016,9 +1037,10 @@ setOracleHistory(updatedHistory);
       </div>
     </div>
 
-    <div className="mt-14 text-5xl text-blue-400 font-bold">
-      Lucky Number: {luckyNumber}
-    </div>
+   <div className="mt-14 text-5xl text-blue-400 font-semibold flex gap-4">
+  <span>Lucky Number:</span>
+  <span>{luckyNumber}</span>
+</div>
 
     <div className="mt-16 text-white/30 text-2xl tracking-[0.4em] uppercase">
       mini.basedoracle.space
