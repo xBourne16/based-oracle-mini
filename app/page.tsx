@@ -390,6 +390,22 @@ const getUnusedOracleDrop = (
   return "INITIATE";
 };
 
+const getStreakGlow = (days: number) => {
+  if (days >= 30)
+    return "text-red-400 shadow-[0_0_25px_rgba(248,113,113,0.9)]";
+
+  if (days >= 14)
+    return "text-yellow-300 shadow-[0_0_25px_rgba(253,224,71,0.9)]";
+
+  if (days >= 7)
+    return "text-purple-300 shadow-[0_0_25px_rgba(216,180,254,0.9)]";
+
+  if (days >= 3)
+    return "text-cyan-300 shadow-[0_0_25px_rgba(103,232,249,0.9)]";
+
+  return "text-blue-300 shadow-[0_0_20px_rgba(96,165,250,0.8)]";
+};
+
  const disconnectWallet = () => {
   disconnect();
 
@@ -744,9 +760,20 @@ setOracleHistory(updatedHistory);
     Oracle Rank
   </span>
 
-  <span className="text-[9px] text-blue-400 uppercase tracking-widest font-black">
-    {getStreakBadge(streak)}
-  </span>
+<span
+  className={`
+    text-[9px]
+    uppercase
+    tracking-widest
+    font-black
+    px-3 py-1 rounded-full
+    border border-white/10
+    bg-white/[0.03]
+    ${getStreakGlow(streak)}
+  `}
+>
+  {getStreakBadge(streak)}
+</span>
 </div>
 
                 {/* ACTIONS */}
