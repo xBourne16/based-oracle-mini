@@ -1015,20 +1015,28 @@ setOracleHistory(updatedHistory);
             {quote &&
               luckyNumber && (
                 <div className="mt-6 flex flex-col items-center relative z-[60]">
-                  <span
-  className="
-    text-[10px]
-    uppercase
-    tracking-[0.45em]
-    text-blue-300
-    mb-3
-    font-black
-    animate-pulse
-    drop-shadow-[0_0_12px_rgba(96,165,250,0.9)]
-  "
->
-  YOUR LUCKY NUMBER TODAY
-</span>
+                  <div className="relative mb-4">
+  <div className="absolute inset-0 bg-blue-500/20 blur-2xl rounded-full animate-pulse"></div>
+
+  <span
+    className="
+      relative
+      text-[11px]
+      uppercase
+      tracking-[0.55em]
+      text-blue-200
+      font-black
+      px-4 py-1.5
+      rounded-full
+      border border-blue-400/30
+      bg-blue-500/10
+      shadow-[0_0_30px_rgba(59,130,246,0.55)]
+      animate-[pulse_1.8s_ease-in-out_infinite]
+    "
+  >
+    ✦ YOUR LUCKY NUMBER TODAY ✦
+  </span>
+</div>
 
                   <div className="px-8 py-3 rounded-full border border-blue-500/30 bg-blue-500/10 backdrop-blur-xl shadow-[0_0_30px_rgba(37,99,235,0.2)]">
                     <span className="text-3xl md:text-4xl font-black text-blue-400 tracking-[0.15em]">
