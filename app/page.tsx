@@ -947,8 +947,8 @@ setOracleHistory(updatedHistory);
 </div>
 {/* SHARE PROPHECY */}
 {quote && (shareUrl || oracleHistory[0]?.txHash) && (
-  <div className="mt-8 w-full flex justify-center">
-    <div className="mt-8 flex items-center justify-center gap-3">
+ <div className="absolute bottom-8 left-0 right-0 px-6 flex justify-between items-center z-[80]">
+  <div className="w-full flex justify-between items-center">
     <a
       href={
         shareUrl ||
