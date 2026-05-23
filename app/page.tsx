@@ -916,23 +916,6 @@ setOracleHistory(updatedHistory);
     Download Oracle Card
   </span>
 </button>
-
-<button
-  onClick={downloadShareCard}
-  className="
-    mt-4 inline-flex items-center gap-3
-    px-6 py-3
-    rounded-full
-    bg-blue-500/10
-    border border-blue-500/30
-    hover:bg-blue-500/20
-    transition-all duration-300
-  "
->
-  <span className="text-[10px] uppercase tracking-[0.3em] text-blue-300 font-black">
-    Download Oracle Card
-  </span>
-</button>
     
   </div>
   </div>
