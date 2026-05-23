@@ -832,7 +832,7 @@ setOracleHistory(updatedHistory);
         </h1>
 
 <div
-  className={`relative w-full max-w-2xl bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[50px] p-7 md:p-10 pb-10 min-h-[620px] shadow-2xl md:-translate-x-12 transition-all duration-700 animate-[float_6s_ease-in-out_infinite] hover:-translate-y-4 hover:scale-[1.02] hover:border-blue-500/40 hover:shadow-[0_0_80px_rgba(37,99,235,0.35)] ${
+  className={`relative w-full max-w-[660px] bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[50px] p-8 md:p-12 pb-36 min-h-[620px] shadow-2xl md:-translate-x-12 transition-all duration-700 animate-[float_6s_ease-in-out_infinite] hover:-translate-y-4 hover:scale-[1.02] hover:border-blue-500/40 hover:shadow-[0_0_80px_rgba(37,99,235,0.35)] ${
     isAnimating
       ? "scale-95 border-blue-500/40 shadow-[0_0_50px_rgba(37,99,235,0.18)]"
       : ""
@@ -923,7 +923,7 @@ setOracleHistory(updatedHistory);
 {/* ORACLE TEXT */}
 <p
   key={quote || isAnimating ? "active" : "empty"}
-  className={`mt-4 text-2xl sm:text-3xl md:text-5xl text-white italic text-center leading-[1.1] font-medium transition-all duration-700 ${
+  className={`mt-4 text-2xl sm:text-3xl md:text-[44px] text-white italic text-center leading-[1.1] font-medium transition-all duration-700 ${
     quote
       ? "opacity-100 translate-y-0"
       : "opacity-80 translate-y-2"
@@ -945,98 +945,177 @@ setOracleHistory(updatedHistory);
     </div>
 
 </div>
+
 {/* SHARE PROPHECY */}
 {quote && (shareUrl || oracleHistory[0]?.txHash) && (
- <div className="absolute bottom-8 left-0 right-0 px-6 flex justify-between items-center z-[80]">
-  <div className="w-full flex justify-between items-center">
-    <a
-      href={
-        shareUrl ||
-        `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-          `🔮 BASED ORACLE PROPHECY 🔮\n\n“${quote}”\n\n✦ Lucky Number: ${luckyNumber}\n\n✦ Oracle TX:\nhttps://basescan.org/tx/${oracleHistory[0]?.txHash}\n\nConsult your fate:\n${siteOrigin}`
-        )}`
-      }
-      target="_blank"
-      rel="noopener noreferrer"
-      className="
-        inline-flex items-center justify-center gap-3
-        px-6 py-3
-        rounded-full
-        bg-white/[0.04]
-        border border-white/10
-        hover:border-blue-500/40
-        hover:bg-blue-500/10
-        transition-all duration-300
-        group
-      "
-    >
-      <span className="text-[10px] uppercase tracking-[0.3em] text-white/50 group-hover:text-blue-400 font-black">
-        Share Prophecy
-      </span>
+  <div className="absolute bottom-2 left-0 right-0 px-8 z-[80]">
+    <div className="w-full flex justify-between items-center gap-5">
 
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="#3b82f6"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
+      {/* SHARE BUTTON */}
+      <a
+        href={
+          shareUrl ||
+          `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+            `🔮 BASED ORACLE PROPHECY 🔮\n\n“${quote}”\n\n✦ Lucky Number: ${luckyNumber}\n\n✦ Oracle TX:\nhttps://basescan.org/tx/${oracleHistory[0]?.txHash}\n\nConsult your fate:\n${siteOrigin}`
+          )}`
+        }
+        target="_blank"
+        rel="noopener noreferrer"
+        className="
+          group relative flex-1 overflow-hidden
+          rounded-[24px]
+          border border-blue-500/30
+          bg-[#071120]
+          px-5 py-4
+          transition-all duration-300
+          hover:scale-[1.03]
+          hover:border-blue-400
+          hover:bg-blue-500/[0.08]
+          hover:shadow-[0_0_35px_rgba(59,130,246,0.35)]
+        "
       >
-        <path d="M4 4l16 16"></path>
-        <path d="M20 4L9 15"></path>
-      </svg>
-    </a>
-    <button
-  onClick={downloadShareCard}
-  className="
-    inline-flex items-center justify-center gap-3
-    h-[42px] min-w-[170px]
-    px-6
-    rounded-full
-    bg-white/[0.04]
-    border border-white/10
-    hover:border-blue-500/40
-    hover:bg-blue-500/10
-    transition-all duration-300
-    group
-  "
->
-  <span className="text-[10px] uppercase tracking-[0.3em] text-white/50 group-hover:text-blue-400 font-black">
-    Download Oracle Card
-  </span>
-</button>
-    
-  </div>
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-blue-500/5"></div>
+
+        <div className="relative flex items-center justify-between">
+
+          <div className="flex items-center gap-4">
+
+            <div
+              className="
+                w-11 h-11 rounded-2xl
+                bg-blue-500/10
+                border border-blue-500/20
+                flex items-center justify-center
+              "
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#60a5fa"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="18" cy="5" r="3"></circle>
+                <circle cx="6" cy="12" r="3"></circle>
+                <circle cx="18" cy="19" r="3"></circle>
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+              </svg>
+            </div>
+
+            <div className="flex flex-col">
+              <span className="text-white font-black text-[12px] tracking-wide uppercase">
+                Share Prophecy
+              </span>
+
+              <span className="text-blue-200/40 text-[9px] tracking-[0.25em] uppercase">
+                Spread The Wisdom
+              </span>
+            </div>
+          </div>
+
+          <span className="text-blue-400 text-lg group-hover:translate-x-1 transition-transform">
+            →
+          </span>
+        </div>
+      </a>
+
+      {/* DOWNLOAD BUTTON */}
+      <button
+        onClick={downloadShareCard}
+        className="
+          group relative flex-1 overflow-hidden
+          rounded-[24px]
+          border border-blue-500/30
+          bg-[#071120]
+          px-5 py-4
+          transition-all duration-300
+          hover:scale-[1.03]
+          hover:border-blue-400
+          hover:bg-blue-500/[0.08]
+          hover:shadow-[0_0_35px_rgba(59,130,246,0.35)]
+        "
+      >
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-blue-500/5"></div>
+
+        <div className="relative flex items-center justify-between">
+
+          <div className="flex items-center gap-4">
+
+            <div
+              className="
+                w-11 h-11 rounded-2xl
+                bg-blue-500/10
+                border border-blue-500/20
+                flex items-center justify-center
+              "
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#60a5fa"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+            </div>
+
+            <div className="flex flex-col">
+              <span className="text-white font-black text-[12px] tracking-wide uppercase">
+                Download Card
+              </span>
+
+              <span className="text-blue-200/40 text-[9px] tracking-[0.25em] uppercase">
+                Save Your Fate
+              </span>
+            </div>
+          </div>
+
+          <span className="text-blue-400 text-lg group-hover:translate-x-1 transition-transform">
+            →
+          </span>
+        </div>
+      </button>
+    </div>
   </div>
 )}
-            {quote &&
-              luckyNumber && (
-                <div className="mt-6 flex flex-col items-center relative z-[60]">
-                  <div className="relative mb-4">
-  <div className="absolute inset-0 bg-blue-500/20 blur-2xl rounded-full animate-pulse"></div>
 
-  <span
-    className="
-      relative
-      text-[11px]
-      uppercase
-      tracking-[0.55em]
-      text-blue-200
-      font-black
-      px-4 py-1.5
-      rounded-full
-      border border-blue-400/30
-      bg-blue-500/10
-      shadow-[0_0_30px_rgba(59,130,246,0.55)]
-      animate-[pulse_1.8s_ease-in-out_infinite]
-    "
-  >
-    ✦ YOUR LUCKY NUMBER TODAY ✦
-  </span>
-</div>
+{quote && luckyNumber && (
+  <div className="mt-6 flex flex-col items-center relative z-[60]">
+    
+    <div className="relative mb-4">
+      <div className="absolute inset-0 bg-blue-500/20 blur-2xl rounded-full animate-pulse"></div>
+
+      <span
+        className="
+          relative
+          text-[11px]
+          uppercase
+          tracking-[0.55em]
+          text-blue-200
+          font-black
+          px-4 py-1.5
+          rounded-full
+          border border-blue-400/30
+          bg-blue-500/10
+          shadow-[0_0_30px_rgba(59,130,246,0.55)]
+          animate-[pulse_1.8s_ease-in-out_infinite]
+        "
+      >
+        ✦ YOUR LUCKY NUMBER TODAY ✦
+      </span>
+    </div>
 
                   <div className="px-8 py-3 rounded-full border border-blue-500/30 bg-blue-500/10 backdrop-blur-xl shadow-[0_0_30px_rgba(37,99,235,0.2)]">
                     <span className="text-3xl md:text-4xl font-black text-blue-400 tracking-[0.15em]">
@@ -1086,7 +1165,7 @@ setOracleHistory(updatedHistory);
               </span>
             </button>
 
-            <div className="mt-1 mb-0 w-full flex justify-center animate-float">
+            <div className="mt-3 mb-14 w-full flex justify-center animate-float">
               <div className="inline-flex items-center justify-center gap-1 bg-white/[0.05] px-5 py-3.5 rounded-full border border-white/10 backdrop-blur-xl shadow-xl">
                 <span className="text-[11px] text-blue-500 font-black tracking-widest uppercase italic leading-none">
                   You&apos;re now based
