@@ -1278,107 +1278,93 @@ setOracleHistory(updatedHistory);
           </div>
 
 <div className="fixed -left-[99999px] top-0">
+<div
+  ref={shareCardRef}
+  className="
+    w-[1200px] h-[630px]
+    relative overflow-hidden
+    flex flex-col items-start text-left
+    px-20 py-10
+    bg-cover bg-center
+  "
+  style={{
+    backgroundImage: "url('/share-bg.png')",
+  }}
+>
+  {/* DARK OVERLAY */}
+  <div className="absolute inset-0 bg-black/35"></div>
+
+  {/* LEFT READABILITY GRADIENT */}
+  <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/40 to-transparent"></div>
+
+  {/* QUOTE */}
   <div
-    ref={shareCardRef}
     className="
-      w-[1200px] h-[630px]
-      bg-[#020204]
-      relative overflow-hidden
-      flex flex-col items-center text-center
-      px-24 py-14
+      relative z-10 mt-20
+      ml-8
+      max-w-[500px]
+      px-8 py-4
+      rounded-[30px]
+      bg-black/10
+      backdrop-blur-[1px]
+      text-white
+      text-[38px]
+      font-black
+      italic
+      leading-[1.02]
+      tracking-tight
+      drop-shadow-[0_0_30px_rgba(255,255,255,0.25)]
     "
   >
-    {/* BACKGROUND GLOW */}
-    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(37,99,235,0.18),transparent_55%)]"></div>
-    <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-blue-600/10 blur-[120px] rounded-full"></div>
-    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(168,85,247,0.10),transparent_45%)]"></div>
+    “{oracleDrop?.text || quote}”
+  </div>
 
-    {/* BRAND */}
-    <div className="relative z-10 text-white text-5xl font-black italic tracking-tight mb-9 drop-shadow-[0_0_22px_rgba(255,255,255,0.18)]">
-      BASED<span className="text-blue-600">.</span>ORACLE
+  {/* BADGES */}
+  <div className="relative z-10 flex gap-4 mt-6 mb-6 ml-16">
+    <div className="px-6 py-2.5 rounded-full border border-blue-400/40 bg-blue-500/20 text-blue-100 text-[18px] uppercase tracking-[0.22em] font-black shadow-[0_0_25px_rgba(59,130,246,0.45)]">
+      {oracleDrop?.category}
     </div>
 
-    {/* TRANSMISSION */}
-    <div className="relative z-10 mb-7">
-      <div className="absolute inset-0 bg-purple-500/30 blur-3xl rounded-full"></div>
+    <div className="px-6 py-2.5 rounded-full border border-white/15 bg-black/25 text-white/80 text-[18px] uppercase tracking-[0.22em] font-black">
+      {oracleDrop?.source}
+    </div>
+
+    <div className="px-6 py-2.5 rounded-full border border-purple-400/50 bg-purple-500/25 text-purple-100 text-[18px] uppercase tracking-[0.22em] font-black shadow-[0_0_28px_rgba(168,85,247,0.65)]">
+      {oracleDrop?.rarity}
+    </div>
+  </div>
+
+  {/* LUCKY NUMBER */}
+  <div className="relative z-10 mt-2 ml-20 flex flex-col items-center">
+    <div className="text-[15px] uppercase tracking-[0.45em] text-blue-100 font-black mb-3 drop-shadow-[0_0_18px_rgba(96,165,250,0.45)]">
+      ✦ YOUR LUCKY NUMBER TODAY ✦
+    </div>
+
+    <div className="relative flex items-center justify-center">
+      <div className="absolute inset-0 bg-blue-500/20 blur-2xl rounded-full scale-90"></div>
 
       <div
         className="
-          relative overflow-hidden
-          px-8 py-3
-          rounded-full
-          border border-purple-400/50
-          bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-blue-500/20
-          text-blue-100
-          text-[20px]
-          uppercase
-          tracking-[0.45em]
+          relative
+          text-[58px]
+          leading-none
+          text-blue-200
           font-black
-          italic
-          shadow-[0_0_45px_rgba(168,85,247,0.75)]
+          tracking-[0.02em]
+          drop-shadow-[0_0_28px_rgba(96,165,250,0.9)]
         "
       >
-        ✦ ORACLE TRANSMISSION ✦
+        {luckyNumber}
       </div>
-    </div>
-
-    {/* QUOTE */}
-    <div className="relative z-10 -mt-[10px] text-white text-[54px] font-black italic leading-[1.05] tracking-tight max-w-4xl drop-shadow-[0_0_25px_rgba(255,255,255,0.18)]">
-      “{oracleDrop?.text || quote}”
-    </div>
-
-    {/* BADGES */}
-    <div className="relative z-10 flex gap-4 mt-8">
-      <div className="px-7 py-3 rounded-full border border-blue-400/40 bg-blue-500/15 text-blue-200 text-xl uppercase tracking-[0.25em] font-black shadow-[0_0_25px_rgba(59,130,246,0.45)]">
-        {oracleDrop?.category}
-      </div>
-
-      <div className="px-7 py-3 rounded-full border border-white/15 bg-white/[0.06] text-white/70 text-xl uppercase tracking-[0.25em] font-black">
-        {oracleDrop?.source}
-      </div>
-
-      <div className="px-7 py-3 rounded-full border border-purple-400/50 bg-purple-500/20 text-purple-200 text-xl uppercase tracking-[0.25em] font-black shadow-[0_0_28px_rgba(168,85,247,0.65)]">
-        {oracleDrop?.rarity}
-      </div>
-    </div>
-
-    {/* LUCKY NUMBER */}
-    <div className="relative z-10 mt-9 flex flex-col items-center">
-      <div className="text-[16px] uppercase tracking-[0.45em] text-blue-200 font-black mb-4 drop-shadow-[0_0_18px_rgba(96,165,250,0.35)]">
-        ✦ YOUR LUCKY NUMBER TODAY ✦
-      </div>
-
-      <div className="relative">
-        <div className="absolute inset-0 bg-blue-500/35 blur-3xl rounded-full"></div>
-
-        <div
-          className="
-            relative
-            w-[170px] h-[78px]
-            flex items-center justify-center
-            rounded-[28px]
-            border border-blue-500/35
-            bg-blue-500/10
-            text-[64px]
-            text-blue-300
-            font-black
-            tracking-[0.08em]
-            shadow-[0_0_45px_rgba(59,130,246,0.45)]
-          "
-        >
-          {luckyNumber}
-        </div>
-      </div>
-    </div>
-
-    {/* FOOTER */}
-    <div className="relative z-10 mt-auto text-white/18 text-2xl tracking-[0.6em] uppercase font-black drop-shadow-[0_0_18px_rgba(255,255,255,0.08)]">
-      MINI.BASEDORACLE.SPACE
     </div>
   </div>
+
+  {/* FOOTER */}
+  <div className="absolute z-10 right-10 bottom-10 text-blue-300/80 text-[16px] tracking-[0.28em] uppercase font-black drop-shadow-[0_0_20px_rgba(59,130,246,0.65)]">
+    MINI.BASEDORACLE.SPACE
+  </div>
 </div>
-
-
+</div>
         </div>
          </div>
 
