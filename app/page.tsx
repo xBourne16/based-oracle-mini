@@ -339,7 +339,7 @@ const provider =
   if (days >= 14) return "ASCENDED";
   if (days >= 7) return "PROPHET";
   if (days >= 3) return "DISCIPLE";
-  return "SEEKER";
+  return "INITIATE";
 };
 
  const disconnectWallet = () => {
@@ -848,7 +848,7 @@ setOracleHistory(updatedHistory);
 
     <div className="mt-8 px-7 py-3 rounded-full border border-blue-500/30 bg-blue-500/10 backdrop-blur-xl shadow-[0_0_30px_rgba(37,99,235,0.2)]">
       <span className="text-[13px] font-black text-blue-400 tracking-[0.25em] uppercase">
-        ✦ {streak} Day — {getStreakBadge(streak)}
+        ✦ {Math.max(streak, 1)} DAY — {getStreakBadge(streak)}
       </span>
     </div>
 
