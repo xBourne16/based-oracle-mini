@@ -750,12 +750,31 @@ setOracleHistory(updatedHistory);
 </div>
 
                 {/* ACTIONS */}
+<button
+  onClick={() => setIsDropdownOpen(false)}
+  className="
+    absolute top-4 right-4
+    w-8 h-8 rounded-full
+    border border-white/10
+    bg-white/[0.04]
+    hover:bg-red-500/10
+    hover:border-red-500/40
+    transition-all duration-300
+    text-white/50 hover:text-red-400
+    text-sm font-bold
+  "
+>
+  ✕
+</button>
+
                 <div className="flex flex-col gap-2">
                   <button
                     onClick={() => {
                       navigator.clipboard.writeText(address);
                       setIsDropdownOpen(false);
                     }}
+
+                    
                     className="w-full px-4 py-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/5 transition-all text-[10px] uppercase tracking-[0.2em] text-white/70 hover:text-white text-center"
                   >
                     Copy Address
