@@ -998,25 +998,25 @@ setOracleHistory(updatedHistory);
       Oracle Transmission
     </div>
 
-    <div className="text-white text-7xl font-black italic leading-tight max-w-5xl">
+    <div     className="text-white text-7xl font-black italic leading-tight tracking-tight max-w-4xl">
       “{oracleDrop?.text || quote}”
     </div>
 
     <div className="flex gap-4 mt-10">
-      <div className="px-6 py-3 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-300 text-xl uppercase tracking-[0.25em] font-black">
+      <div className="px-8 py-3 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-300 text-2xl uppercase tracking-[0.25em] font-black">
         {oracleDrop?.category}
       </div>
 
-      <div className="px-6 py-3 rounded-full border border-white/10 bg-white/[0.04] text-white/60 text-xl uppercase tracking-[0.25em] font-black">
+      <div className="px-8 py-3 rounded-full border border-white/10 bg-white/[0.04] text-white/60 text-2xl uppercase tracking-[0.25em] font-black">
         {oracleDrop?.source}
       </div>
 
-      <div className="px-6 py-3 rounded-full border border-yellow-500/30 bg-yellow-500/10 text-yellow-300 text-xl uppercase tracking-[0.25em] font-black">
+      <div className="px-8 py-3 rounded-full border border-yellow-500/30 bg-yellow-500/10 text-yellow-300 text-2xl uppercase tracking-[0.25em] font-black">
         {oracleDrop?.rarity}
       </div>
     </div>
 
-    <div className="mt-14 text-5xl text-blue-400 font-black">
+    <div className="mt-14 text-5xl text-blue-400 font-bold">
       Lucky Number: {luckyNumber}
     </div>
 
