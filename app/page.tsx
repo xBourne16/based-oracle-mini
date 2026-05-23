@@ -989,7 +989,7 @@ setOracleHistory(updatedHistory);
             </div>
           </div>
 
-<div className="hidden">
+<div className="fixed -left-[99999px] top-0">
   <div
     ref={shareCardRef}
     className="w-[1200px] h-[630px] bg-[#020204] flex flex-col justify-center items-center text-center px-24"
