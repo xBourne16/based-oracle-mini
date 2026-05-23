@@ -73,17 +73,28 @@ const { switchChainAsync } =
   const [cooldown, setCooldown] =
     useState<number>(0);
 
-  // DAILY LUCKY NUMBER
-  const [luckyNumber, setLuckyNumber] =
-    useState<number | null>(null);
-    const [shareUrl, setShareUrl] =
+// DAILY LUCKY NUMBER
+const [luckyNumber, setLuckyNumber] =
+  useState<number | null>(null);
+
+const [displayLuckyNumber, setDisplayLuckyNumber] =
+  useState<number | null>(null);
+
+const [isLuckyRolling, setIsLuckyRolling] =
+  useState(false);
+
+const [shareUrl, setShareUrl] =
   useState("");
-  const [siteOrigin, setSiteOrigin] =
+
+const [siteOrigin, setSiteOrigin] =
   useState("");
-  useEffect(() => {
+
+// SHARE URL LOAD
+useEffect(() => {
   if (!address) return;
 
-  const today = new Date().toISOString().split("T")[0];
+  const today =
+    new Date().toISOString().split("T")[0];
 
   const savedShare = localStorage.getItem(
     `oracle_share_${address}_${today}`
@@ -93,16 +104,19 @@ const { switchChainAsync } =
     setShareUrl(savedShare);
   }
 }, [address]);
-  const [streak, setStreak] =
+
+const [streak, setStreak] =
   useState<number>(0);
-  const [oracleHistory, setOracleHistory] = useState<
-  {
-    quote: string;
-    luckyNumber: number;
-    txHash: string;
-    date: string;
-  }[]
->([]);
+
+const [oracleHistory, setOracleHistory] =
+  useState<
+    {
+      quote: string;
+      luckyNumber: number;
+      txHash: string;
+      date: string;
+    }[]
+  >([]);
 
   // CONTRACT ADDRESS
   const CONTRACT_ADDRESS =
@@ -593,7 +607,24 @@ setOracleDrop(dailyDrop);
           address
         );
 
-      setLuckyNumber(number);
+      setIsLuckyRolling(true);
+
+let rollCount = 0;
+
+const rollInterval = setInterval(() => {
+  setDisplayLuckyNumber(
+    Math.floor(Math.random() * 999) + 1
+  );
+
+  rollCount++;
+
+  if (rollCount >= 18) {
+    clearInterval(rollInterval);
+    setDisplayLuckyNumber(number);
+    setLuckyNumber(number);
+    setIsLuckyRolling(false);
+  }
+}, 50);
       // UPDATE STREAK
 const todayKey =
   new Date().toISOString().split("T")[0];
@@ -1012,20 +1043,26 @@ setOracleHistory(updatedHistory);
   </div>
   </div>
 )}
-            {quote &&
-              luckyNumber && (
-                <div className="mt-6 flex flex-col items-center relative z-[60]">
-                  <span className="text-[10px] uppercase tracking-[0.4em] text-white/30 mb-3 italic">
-                    Your Lucky Number Today
-                  </span>
+           {quote &&
+  luckyNumber && (
+    <div className="mt-6 flex flex-col items-center relative z-[60]">
+      <span className="text-[10px] uppercase tracking-[0.4em] text-white/30 mb-3 italic">
+        Your Lucky Number Today
+      </span>
 
-                  <div className="px-8 py-3 rounded-full border border-blue-500/30 bg-blue-500/10 backdrop-blur-xl shadow-[0_0_30px_rgba(37,99,235,0.2)]">
-                    <span className="text-3xl md:text-4xl font-black text-blue-400 tracking-[0.15em]">
-                      {luckyNumber}
-                    </span>
-                  </div>
-                </div>
-              )}
+      <div className="px-8 py-3 rounded-full border border-blue-500/30 bg-blue-500/10 backdrop-blur-xl shadow-[0_0_30px_rgba(37,99,235,0.2)]">
+        <span
+          className={`text-3xl md:text-4xl font-black text-blue-400 tracking-[0.15em] transition-all duration-300 ${
+            isLuckyRolling
+              ? "scale-125 blur-[1px] opacity-70"
+              : "scale-100 blur-0 opacity-100 drop-shadow-[0_0_18px_rgba(96,165,250,0.8)]"
+          }`}
+        >
+          {displayLuckyNumber ?? luckyNumber}
+        </span>
+      </div>
+    </div>
+)}
 
           {/* COOL TIMER */}
           {cooldown > 0 && (
