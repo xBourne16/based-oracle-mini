@@ -313,6 +313,54 @@ const provider =
   );
 };
 
+const getUnusedOracleDrop = (
+  address: string,
+  drops: typeof oracleDrops
+) => {
+  const usedKey = `oracle_used_drops_${address}`;
+
+  const usedIndexes: number[] = JSON.parse(
+    localStorage.getItem(usedKey) || "[]"
+  );
+
+  const availableDrops = drops
+    .map((drop, index) => ({
+      drop,
+      index,
+    }))
+    .filter(
+      (item) =>
+        !usedIndexes.includes(item.index)
+    );
+
+  const pool =
+    availableDrops.length > 0
+      ? availableDrops
+      : drops.map((drop, index) => ({
+          drop,
+          index,
+        }));
+
+  const selected =
+    pool[
+      Math.floor(
+        Math.random() * pool.length
+      )
+    ];
+
+  const nextUsed =
+    availableDrops.length > 0
+      ? [...usedIndexes, selected.index]
+      : [selected.index];
+
+  localStorage.setItem(
+    usedKey,
+    JSON.stringify(nextUsed)
+  );
+
+  return selected.drop;
+};
+
   // DAILY LUCKY NUMBER
   const generateLuckyNumber = (
     address: string
@@ -474,12 +522,10 @@ const safeDrops =
     : oracleDrops;
 
 const prophecyQuote =
-  safeDrops[
-    getUniqueQuoteIndex(
-      address,
-      todaySeed
-    ) % safeDrops.length
-  ];
+  getUnusedOracleDrop(
+    address,
+    safeDrops
+  );
   setQuote(prophecyQuote.text);
   setOracleDrop(prophecyQuote);
 
