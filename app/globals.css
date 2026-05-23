@@ -29,3 +29,12 @@ a {
   pointer-events: auto !important;
   touch-action: manipulation;
 }
+@keyframes shine {
+  0% {
+    transform: translateX(-120%);
+  }
+
+  100% {
+    transform: translateX(120%);
+  }
+}

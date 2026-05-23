@@ -51,8 +51,8 @@ const { switchChainAsync } =
   const [txHash, setTxHash] =
     useState<string | null>(null);
 
-  const [greeting, setGreeting] =
-    useState("GM");
+ const [greeting, setGreeting] =
+  useState("The Great Awakening");
 
   const [isMuted, setIsMuted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -849,14 +849,35 @@ setOracleHistory(updatedHistory);
 
 <div className="flex items-start justify-between gap-4 mb-10">
   <div>
-    <div className="text-[11px] text-blue-500 tracking-[0.5em] font-black uppercase italic">
-      ◈ GM
+
+    <div className="flex items-center gap-2">
+      <div className="w-2 h-2 rounded-full bg-blue-400 shadow-[0_0_14px_rgba(96,165,250,1)] animate-pulse"></div>
+
+<div className="text-[16px] text-blue-200 tracking-[0.22em] font-black italic animate-pulse capitalize">
+  ◈ {greeting}
+</div>
     </div>
 
-    <div className="mt-3 text-[13px] text-white/40 font-mono uppercase tracking-[0.3em]">
-      Scanning Souls...
-    </div>
-  </div>
+<div className="mt-3 flex items-center gap-2 relative">
+  <div className="absolute inset-0 bg-blue-500/10 blur-xl rounded-full"></div>
+
+  <div className="relative w-2 h-2 rounded-full bg-blue-400 animate-pulse shadow-[0_0_14px_rgba(59,130,246,0.95)]"></div>
+
+  <span
+    className="
+      relative
+      text-[15px]
+      text-white/55
+      font-mono
+      uppercase
+      tracking-[0.35em]
+      animate-pulse
+    "
+  >
+    SCANNING SOULS...
+  </span>
+</div>
+</div>
 
 <div className="relative z-[999999999] pointer-events-auto isolate">
   <button
@@ -881,40 +902,113 @@ setOracleHistory(updatedHistory);
 
 {/* ORACLE TITLE */}
 {quote && oracleDrop && (
- <div className="mt-10 mb-6 flex flex-col items-center gap-3">
-    <span className="text-[10px] uppercase tracking-[0.45em] text-blue-400 font-black italic">
-      Oracle Transmission
-    </span>
+  <div className="mt-10 mb-6 flex flex-col items-center gap-4 relative z-[40]">
 
-    <div className="flex flex-wrap items-center justify-center gap-2">
-      <span className="px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-[9px] text-blue-300 uppercase tracking-[0.25em] font-black">
-      {oracleDrop.source}
+    {/* ORACLE TRANSMISSION */}
+    <div className="relative">
+      <div className="absolute inset-0 bg-purple-500/30 blur-2xl rounded-full animate-pulse"></div>
+
+      <div
+        className="
+          relative overflow-hidden
+          px-7 py-2.5
+          rounded-full
+          border border-purple-400/50
+          bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-blue-500/20
+          text-[12px]
+          uppercase
+          tracking-[0.5em]
+          text-blue-100
+          font-black
+          italic
+          shadow-[0_0_35px_rgba(168,85,247,0.75)]
+        "
+      >
+        <div className="absolute inset-0 opacity-40 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-[shine_3s_linear_infinite]" />
+
+        <span className="relative z-10">
+          ✦ ORACLE TRANSMISSION ✦
+        </span>
+      </div>
+    </div>
+
+    {/* TAGS */}
+    <div className="flex flex-wrap items-center justify-center gap-3">
+
+      {/* SOURCE */}
+      <span
+        className="
+          px-4 py-1.5
+          rounded-full
+          bg-blue-500/15
+          border border-blue-400/40
+          text-[10.5px]
+          text-blue-200
+          uppercase
+          tracking-[0.22em]
+          font-black
+          shadow-[0_0_20px_rgba(59,130,246,0.55)]
+          backdrop-blur-xl
+        "
+      >
+        {oracleDrop.source}
       </span>
 
-      <span className="px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 text-[9px] text-white/50 uppercase tracking-[0.25em] font-black">
+      {/* CATEGORY */}
+      <span
+        className="
+          px-4 py-1.5
+          rounded-full
+          bg-white/[0.06]
+          border border-white/15
+          text-[10px]
+          text-white/70
+          uppercase
+          tracking-[0.22em]
+          font-black
+          backdrop-blur-xl
+        "
+      >
         {oracleDrop.category}
       </span>
 
-    <span
-  className={`
-    px-3 py-1 rounded-full text-[9px]
-    uppercase tracking-[0.25em]
-    font-black border transition-all duration-500
-    ${
-      oracleDrop?.rarity === "COMMON"
-        ? "bg-white/5 text-white/40 border-white/10"
-        : oracleDrop?.rarity === "RARE"
-        ? "bg-blue-500/10 text-blue-300 border-blue-500/30 shadow-[0_0_20px_rgba(59,130,246,0.35)]"
-        : oracleDrop?.rarity === "EPIC"
-        ? "bg-purple-500/10 text-purple-300 border-purple-500/30 shadow-[0_0_25px_rgba(168,85,247,0.4)]"
-        : oracleDrop?.rarity === "LEGENDARY"
-        ? "bg-yellow-500/10 text-yellow-300 border-yellow-500/30 shadow-[0_0_30px_rgba(250,204,21,0.45)]"
-        : "bg-red-500/10 text-red-300 border-red-500/30 shadow-[0_0_35px_rgba(239,68,68,0.5)] animate-pulse"
-    }
-  `}
->
-  {oracleDrop.rarity}
-</span>
+      {/* RARITY */}
+      <span
+        className={`
+          relative overflow-hidden
+          px-4 py-1.5
+          rounded-full
+          text-[10.5px]
+          uppercase
+          tracking-[0.3em]
+          font-black
+          border
+          transition-all duration-500
+          backdrop-blur-xl
+
+          ${
+            oracleDrop?.rarity === "COMMON"
+              ? "bg-white/[0.04] text-white/50 border-white/10 shadow-[0_0_12px_rgba(255,255,255,0.08)]"
+
+              : oracleDrop?.rarity === "RARE"
+              ? "bg-blue-500/15 text-blue-200 border-blue-400/40 shadow-[0_0_28px_rgba(59,130,246,0.45)]"
+
+              : oracleDrop?.rarity === "EPIC"
+              ? "bg-purple-500/15 text-purple-200 border-purple-400/50 shadow-[0_0_35px_rgba(168,85,247,0.6)] animate-pulse"
+
+              : oracleDrop?.rarity === "LEGENDARY"
+              ? "bg-yellow-500/15 text-yellow-200 border-yellow-400/50 shadow-[0_0_40px_rgba(250,204,21,0.7)] animate-pulse"
+
+              : "bg-red-500/15 text-red-200 border-red-400/50 shadow-[0_0_45px_rgba(239,68,68,0.8)] animate-pulse"
+          }
+        `}
+      >
+        <div className="absolute inset-0 opacity-40 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-[shine_3s_linear_infinite]" />
+
+        <span className="relative z-10">
+          ✦ {oracleDrop.rarity} ✦
+        </span>
+      </span>
 
     </div>
   </div>
@@ -1144,7 +1238,7 @@ setOracleHistory(updatedHistory);
             </div>
           )}
 
-          <div className="mt-2 flex flex-col items-center gap-5 relative z-[60] w-full">
+          <div className="mt-6 flex flex-col items-center gap-5 relative z-[60] w-full">
             <button
               onClick={handleAction}
               disabled={isAnimating || cooldown > 0}
@@ -1165,7 +1259,7 @@ setOracleHistory(updatedHistory);
               </span>
             </button>
 
-            <div className="mt-3 mb-14 w-full flex justify-center animate-float">
+            <div className="mt-1 mb-14 w-full flex justify-center animate-float">
               <div className="inline-flex items-center justify-center gap-1 bg-white/[0.05] px-5 py-3.5 rounded-full border border-white/10 backdrop-blur-xl shadow-xl">
                 <span className="text-[11px] text-blue-500 font-black tracking-widest uppercase italic leading-none">
                   You&apos;re now based
@@ -1186,37 +1280,100 @@ setOracleHistory(updatedHistory);
 <div className="fixed -left-[99999px] top-0">
   <div
     ref={shareCardRef}
-    className="w-[1200px] h-[630px] bg-[#020204] flex flex-col justify-center items-center text-center px-24"
+    className="
+      w-[1200px] h-[630px]
+      bg-[#020204]
+      relative overflow-hidden
+      flex flex-col items-center text-center
+      px-24 py-14
+    "
   >
-    <div className="text-blue-500 text-[22px] uppercase tracking-[0.4em] font-black mb-6">
-      Oracle Transmission
+    {/* BACKGROUND GLOW */}
+    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(37,99,235,0.18),transparent_55%)]"></div>
+    <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[700px] h-[700px] bg-blue-600/10 blur-[120px] rounded-full"></div>
+    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(168,85,247,0.10),transparent_45%)]"></div>
+
+    {/* BRAND */}
+    <div className="relative z-10 text-white text-5xl font-black italic tracking-tight mb-9 drop-shadow-[0_0_22px_rgba(255,255,255,0.18)]">
+      BASED<span className="text-blue-600">.</span>ORACLE
     </div>
 
-    <div     className="text-white text-7xl font-black italic leading-tight tracking-tight max-w-4xl">
+    {/* TRANSMISSION */}
+    <div className="relative z-10 mb-7">
+      <div className="absolute inset-0 bg-purple-500/30 blur-3xl rounded-full"></div>
+
+      <div
+        className="
+          relative overflow-hidden
+          px-8 py-3
+          rounded-full
+          border border-purple-400/50
+          bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-blue-500/20
+          text-blue-100
+          text-[20px]
+          uppercase
+          tracking-[0.45em]
+          font-black
+          italic
+          shadow-[0_0_45px_rgba(168,85,247,0.75)]
+        "
+      >
+        ✦ ORACLE TRANSMISSION ✦
+      </div>
+    </div>
+
+    {/* QUOTE */}
+    <div className="relative z-10 -mt-[10px] text-white text-[54px] font-black italic leading-[1.05] tracking-tight max-w-4xl drop-shadow-[0_0_25px_rgba(255,255,255,0.18)]">
       “{oracleDrop?.text || quote}”
     </div>
 
-    <div className="flex gap-4 mt-10">
-      <div className="px-8 py-3 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-300 text-2xl uppercase tracking-[0.25em] font-black">
+    {/* BADGES */}
+    <div className="relative z-10 flex gap-4 mt-8">
+      <div className="px-7 py-3 rounded-full border border-blue-400/40 bg-blue-500/15 text-blue-200 text-xl uppercase tracking-[0.25em] font-black shadow-[0_0_25px_rgba(59,130,246,0.45)]">
         {oracleDrop?.category}
       </div>
 
-      <div className="px-8 py-3 rounded-full border border-white/10 bg-white/[0.04] text-white/60 text-2xl uppercase tracking-[0.25em] font-black">
+      <div className="px-7 py-3 rounded-full border border-white/15 bg-white/[0.06] text-white/70 text-xl uppercase tracking-[0.25em] font-black">
         {oracleDrop?.source}
       </div>
 
-      <div className="px-8 py-3 rounded-full border border-yellow-500/30 bg-yellow-500/10 text-yellow-300 text-2xl uppercase tracking-[0.25em] font-black">
+      <div className="px-7 py-3 rounded-full border border-purple-400/50 bg-purple-500/20 text-purple-200 text-xl uppercase tracking-[0.25em] font-black shadow-[0_0_28px_rgba(168,85,247,0.65)]">
         {oracleDrop?.rarity}
       </div>
     </div>
 
-   <div className="mt-14 text-5xl text-blue-400 font-semibold flex gap-4">
-  <span>Lucky Number:</span>
-  <span>{luckyNumber}</span>
-</div>
+    {/* LUCKY NUMBER */}
+    <div className="relative z-10 mt-9 flex flex-col items-center">
+      <div className="text-[16px] uppercase tracking-[0.45em] text-blue-200 font-black mb-4 drop-shadow-[0_0_18px_rgba(96,165,250,0.35)]">
+        ✦ YOUR LUCKY NUMBER TODAY ✦
+      </div>
 
-    <div className="mt-16 text-white/30 text-2xl tracking-[0.4em] uppercase">
-      mini.basedoracle.space
+      <div className="relative">
+        <div className="absolute inset-0 bg-blue-500/35 blur-3xl rounded-full"></div>
+
+        <div
+          className="
+            relative
+            w-[170px] h-[78px]
+            flex items-center justify-center
+            rounded-[28px]
+            border border-blue-500/35
+            bg-blue-500/10
+            text-[64px]
+            text-blue-300
+            font-black
+            tracking-[0.08em]
+            shadow-[0_0_45px_rgba(59,130,246,0.45)]
+          "
+        >
+          {luckyNumber}
+        </div>
+      </div>
+    </div>
+
+    {/* FOOTER */}
+    <div className="relative z-10 mt-auto text-white/18 text-2xl tracking-[0.6em] uppercase font-black drop-shadow-[0_0_18px_rgba(255,255,255,0.08)]">
+      MINI.BASEDORACLE.SPACE
     </div>
   </div>
 </div>
