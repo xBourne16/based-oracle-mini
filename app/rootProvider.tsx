@@ -1,7 +1,7 @@
 "use client";
 
 import "@rainbow-me/rainbowkit/styles.css";
-import { OnchainKitProvider } from "@coinbase/onchainkit";
+
 
 import {
   RainbowKitProvider,
@@ -51,26 +51,20 @@ export function RootProvider({
   if (!mounted) {
     return null;
   }
-
 return (
-  <OnchainKitProvider
-    apiKey={process.env.NEXT_PUBLIC_ONCHAINKIT_API_KEY}
-    chain={base}
-  >
-    <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>
-        {isFarcaster ? (
-          children
-        ) : (
-          <RainbowKitProvider
-            theme={darkTheme()}
-            modalSize="compact"
-          >
-            {children}
-          </RainbowKitProvider>
-        )}
-      </QueryClientProvider>
-    </WagmiProvider>
-  </OnchainKitProvider>
+  <WagmiProvider config={config}>
+    <QueryClientProvider client={queryClient}>
+      {isFarcaster ? (
+        children
+      ) : (
+        <RainbowKitProvider
+          theme={darkTheme()}
+          modalSize="compact"
+        >
+          {children}
+        </RainbowKitProvider>
+      )}
+    </QueryClientProvider>
+  </WagmiProvider>
 );
-}
+ }
