@@ -15,7 +15,7 @@ import {
 
 import { WagmiProvider } from "wagmi";
 import { base } from "wagmi/chains";
-import { useState } from "react";          // ← Bunu ekle
+import { useEffect, useState } from "react";
 
 const projectId = "31299aa6a25a6b4fec5d2af2ed4a91bd";
 
@@ -32,6 +32,27 @@ export function RootProvider({
   children: React.ReactNode;
 }) {
   const [queryClient] = useState(() => new QueryClient());
+  const [isFarcaster, setIsFarcaster] = useState(false);
+
+  useEffect(() => {
+    const ua = navigator.userAgent.toLowerCase();
+
+    const insideIframe = window.self !== window.top;
+    const farcaster =
+      ua.includes("farcaster") ||
+      ua.includes("warpcast") ||
+      insideIframe;
+
+    setIsFarcaster(farcaster);
+  }, []);
+
+  if (isFarcaster) {
+    return (
+      <QueryClientProvider client={queryClient}>
+        {children}
+      </QueryClientProvider>
+    );
+  }
 
   return (
     <WagmiProvider config={config}>
