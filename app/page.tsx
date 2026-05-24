@@ -9,6 +9,7 @@ import Image from "next/image";
 import { ethers } from "ethers";
 import { oracleDrops } from "./quotes";
 import "./globals.css";
+import { useMiniKit } from "@coinbase/onchainkit/minikit";
 import {
   useAccount,
   useDisconnect,
@@ -26,6 +27,14 @@ const [oracleDrop, setOracleDrop] =
   const [glowIntensity, setGlowIntensity] = useState(
     "opacity-20 scale-100"
   );
+  
+const { setFrameReady, isFrameReady } = useMiniKit();
+
+useEffect(() => {
+  if (!isFrameReady) {
+    setFrameReady();
+  }
+}, [isFrameReady, setFrameReady]);
 
   const shareCardRef = useRef<HTMLDivElement | null>(null);
 
