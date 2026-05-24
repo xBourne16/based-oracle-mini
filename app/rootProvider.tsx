@@ -32,28 +32,24 @@ export function RootProvider({
   children: React.ReactNode;
 }) {
   const [queryClient] = useState(() => new QueryClient());
-  const [isFarcaster, setIsFarcaster] = useState(() => {
-  if (typeof window === "undefined") return false;
-
-  const ua = navigator.userAgent.toLowerCase();
-
-  return (
-    window.self !== window.top ||
-    ua.includes("farcaster") ||
-    ua.includes("warpcast")
-  );
-});
+  const [mounted, setMounted] = useState(false);
+  const [isFarcaster, setIsFarcaster] = useState(false);
 
   useEffect(() => {
-    const insideIframe = window.self !== window.top;
     const ua = navigator.userAgent.toLowerCase();
 
     setIsFarcaster(
-      insideIframe ||
+      window.self !== window.top ||
         ua.includes("farcaster") ||
         ua.includes("warpcast")
     );
+
+    setMounted(true);
   }, []);
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <WagmiProvider config={config}>
