@@ -35,34 +35,29 @@ export function RootProvider({
   const [isFarcaster, setIsFarcaster] = useState(false);
 
   useEffect(() => {
+    const insideIframe = window.self !== window.top;
     const ua = navigator.userAgent.toLowerCase();
 
-    const insideIframe = window.self !== window.top;
-    const farcaster =
-      ua.includes("farcaster") ||
-      ua.includes("warpcast") ||
-      insideIframe;
-
-    setIsFarcaster(farcaster);
-  }, []);
-
-  if (isFarcaster) {
-    return (
-      <QueryClientProvider client={queryClient}>
-        {children}
-      </QueryClientProvider>
+    setIsFarcaster(
+      insideIframe ||
+        ua.includes("farcaster") ||
+        ua.includes("warpcast")
     );
-  }
+  }, []);
 
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider
-          theme={darkTheme()}
-          modalSize="compact"
-        >
-          {children}
-        </RainbowKitProvider>
+        {isFarcaster ? (
+          children
+        ) : (
+          <RainbowKitProvider
+            theme={darkTheme()}
+            modalSize="compact"
+          >
+            {children}
+          </RainbowKitProvider>
+        )}
       </QueryClientProvider>
     </WagmiProvider>
   );
