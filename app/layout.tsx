@@ -9,6 +9,20 @@ export const viewport: Viewport = {
   userScalable: false,
 };
 
+export const metadata = {
+  title: "Based Oracle",
+  description: "Reveal your fate on Base",
+
+  other: {
+    "fc:frame": "vNext",
+    "fc:frame:image":
+      "https://mini.basedoracle.space/share-bg.png",
+    "fc:frame:button:1": "Launch Oracle",
+    "fc:frame:post_url":
+      "https://mini.basedoracle.space",
+  },
+};
+
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Based Oracle",
