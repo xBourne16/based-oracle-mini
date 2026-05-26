@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { minikitConfig } from "@/minikit.config";
 import { RootProvider } from "./rootProvider";
 
 
