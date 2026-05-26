@@ -32,9 +32,10 @@ const [oracleDrop, setOracleDrop] =
   const { address } =
   useAccount();
 
-  const { openConnectModal } =
-    useConnectModal();
+const connectModal = useConnectModal();
 
+const openConnectModal =
+  connectModal?.openConnectModal;
 
 const { disconnect } =
   useDisconnect();
