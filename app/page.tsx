@@ -58,6 +58,18 @@ const { switchChainAsync } =
   const [isMuted, setIsMuted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  const [isMiniFrame, setIsMiniFrame] = useState(false);
+
+  useEffect(() => {
+    const ua = navigator.userAgent.toLowerCase();
+
+    setIsMiniFrame(
+      window.self !== window.top ||
+        ua.includes("farcaster") ||
+        ua.includes("warpcast")
+    );
+  }, []);
+
   // DROPDOWN
   const [isDropdownOpen, setIsDropdownOpen] =
     useState(false);
@@ -726,15 +738,107 @@ setOracleHistory(updatedHistory);
       .padStart(2, "0")}S`;
   };
 
-console.log("PAGE RENDERED");
+if (isMiniFrame) {
+  return (
+    <main className="h-[100dvh] max-h-[100dvh] overflow-hidden bg-[#020204] text-white flex flex-col items-center justify-start px-4 pt-4 pb-3">
+      <div className="w-full max-w-[360px] flex flex-col items-center">
+
+        <div className="mb-3 flex items-center gap-2">
+          <Image
+            src="/base_logo.png"
+            alt="Base"
+            width={22}
+            height={22}
+            className="brightness-200"
+          />
+          <span className="text-[10px] uppercase tracking-[0.35em] text-blue-300 font-black">
+            Built on Base
+          </span>
+        </div>
+
+        <h1 className="text-[34px] leading-none font-black uppercase italic tracking-tighter text-center mb-3">
+          BASED<span className="text-blue-600">.</span>ORACLE
+        </h1>
+
+        <div className="w-full rounded-[28px] border border-white/10 bg-white/[0.04] backdrop-blur-xl p-4 shadow-2xl">
+          <div className="flex items-center justify-between gap-3 mb-4">
+            <div>
+              <div className="text-[10px] uppercase tracking-[0.25em] text-blue-300 font-black">
+                ◈ {greeting}
+              </div>
+              <div className="mt-1 text-[9px] uppercase tracking-[0.3em] text-white/35">
+                Scanning souls...
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={openWalletModal}
+              className="shrink-0 rounded-full border border-white/10 bg-white/[0.06] px-4 py-3 text-[9px] uppercase tracking-[0.2em] font-black"
+            >
+              {address
+                ? `${address.slice(0, 4)}...${address.slice(-4)}`
+                : "Wallet"}
+            </button>
+          </div>
+
+          <div className="min-h-[150px] flex flex-col items-center justify-center text-center">
+            <p className="text-[22px] leading-[1.08] italic font-semibold text-white">
+              {quote
+                ? `"${quote}"`
+                : isAnimating
+                ? "Decrypting your onchain transmission..."
+                : cooldown > 0
+                ? "The Oracle sleeps..."
+                : "Authorize the transaction to reveal your transmission."}
+            </p>
+
+            {luckyNumber && (
+              <div className="mt-4 rounded-full border border-blue-500/30 bg-blue-500/10 px-6 py-2">
+                <span className="text-2xl font-black tracking-[0.2em] text-blue-300">
+                  {luckyNumber}
+                </span>
+              </div>
+            )}
+
+            <div className="mt-4 rounded-full border border-blue-500/30 bg-blue-500/10 px-5 py-2">
+              <span className="text-[10px] font-black uppercase tracking-[0.22em] text-blue-300">
+                ✦ {Math.max(streak, 1)} DAY — {getStreakBadge(streak)}
+              </span>
+            </div>
+          </div>
+
+          {cooldown > 0 && (
+            <div className="mt-4 text-center text-[11px] uppercase tracking-[0.25em] text-blue-300 font-black">
+              {formatCooldown(cooldown)}
+            </div>
+          )}
+
+          <button
+            onClick={handleAction}
+            disabled={isAnimating || cooldown > 0}
+            className={`mt-5 w-full rounded-full px-6 py-4 text-[10px] uppercase tracking-[0.3em] font-black transition-all ${
+              cooldown > 0
+                ? "bg-blue-950/40 text-blue-300 border border-blue-500/20"
+                : "bg-white text-black active:scale-95"
+            }`}
+          >
+            {isAnimating
+              ? "Consulting..."
+              : cooldown > 0
+              ? "Oracle Sleeping"
+              : txHash
+              ? "Fate Decrypted"
+              : "Consult Fate"}
+          </button>
+        </div>
+      </div>
+    </main>
+  );
+}
 
 return (
-  <>
-    <div className="fixed top-2 left-2 z-[9999999] bg-red-600 text-white text-xs px-3 py-2 rounded-xl">
-      PAGE WORKS
-    </div>
-
-    <main className="h-[100dvh] max-h-[100dvh] overflow-hidden bg-[#020204] flex flex-col items-center justify-start pt-1 p-2 md:pt-24 md:p-4">
+  <main className="min-h-screen bg-[#020204] flex flex-col items-center justify-start pt-24 p-4">
     
 {/* NEW DROPDOWN DESIGN */}
           {address && isDropdownOpen && (
@@ -827,7 +931,7 @@ return (
 
 {/* MAIN */}
 <div
-  className={`relative z-[50] w-full max-w-6xl flex flex-col items-center origin-top transition-all pointer-events-auto ${
+  className={`relative z-[50] w-full max-w-6xl flex flex-col items-center justify-start origin-top transition-all pointer-events-auto ${
     isAnimating ? "scale-95 blur-sm" : ""
   }`}
 >
@@ -1378,6 +1482,5 @@ return (
 
       {/* FOOTER */}
     </main>
-  </>
   );
 }
