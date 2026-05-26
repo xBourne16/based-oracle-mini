@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { RootProvider } from "./rootProvider";
 
 
 export const viewport: Viewport = {
