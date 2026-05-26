@@ -492,6 +492,23 @@ const downloadShareCard = async () => {
   link.click();
 };
 
+const handleShareToFarcaster = async () => {
+  try {
+    await sdk.actions.composeCast({
+      text: `🔮 ORACLE TRANSMISSION
+
+"${quote}"
+
+✦ Lucky Number: ${luckyNumber}
+
+Reveal your fate:
+https://mini.basedoracle.space/?mini=1`,
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
   const handleAction = async () => {
     if (isAnimating) return;
 
@@ -1214,29 +1231,43 @@ return (
   <div className="absolute bottom-2 left-0 right-0 px-8 z-[80]">
     <div className="w-full flex justify-between items-center gap-5">
 
-      {/* SHARE BUTTON */}
-      <a
-        href={
-          shareUrl ||
-          `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-            `🔮 BASED ORACLE PROPHECY 🔮\n\n“${quote}”\n\n✦ Lucky Number: ${luckyNumber}\n\n✦ Oracle TX:\nhttps://basescan.org/tx/${oracleHistory[0]?.txHash}\n\nConsult your fate:\n${siteOrigin}`
-          )}`
-        }
-        target="_blank"
-        rel="noopener noreferrer"
-        className="
-          group relative flex-1 overflow-hidden
-          rounded-[24px]
-          border border-blue-500/30
-          bg-[#071120]
-          px-5 py-4
-          transition-all duration-300
-          hover:scale-[1.03]
-          hover:border-blue-400
-          hover:bg-blue-500/[0.08]
-          hover:shadow-[0_0_35px_rgba(59,130,246,0.35)]
-        "
-      >
+{/* SHARE BUTTON */}
+<button
+  onClick={() => {
+    if (isMiniFrame) {
+      handleShareToFarcaster();
+    } else {
+      window.open(
+        `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+          `🔮 BASED ORACLE PROPHECY 🔮
+
+“${quote}”
+
+✦ Lucky Number: ${luckyNumber}
+
+✦ Oracle TX:
+https://basescan.org/tx/${oracleHistory[0]?.txHash}
+
+Consult your fate:
+${siteOrigin}`
+        )}`,
+        "_blank"
+      );
+    }
+  }}
+  className="
+    group relative flex-1 overflow-hidden
+    rounded-[24px]
+    border border-blue-500/30
+    bg-[#071120]
+    px-5 py-4
+    transition-all duration-300
+    hover:scale-[1.03]
+    hover:border-blue-400
+    hover:bg-blue-500/[0.08]
+    hover:shadow-[0_0_35px_rgba(59,130,246,0.35)]
+  "
+>
         <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-blue-500/5"></div>
 
         <div className="relative flex items-center justify-between">
@@ -1285,7 +1316,7 @@ return (
             →
           </span>
         </div>
-      </a>
+      </button>
 
       {/* DOWNLOAD BUTTON */}
       <button
