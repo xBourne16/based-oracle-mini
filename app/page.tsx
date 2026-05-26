@@ -912,7 +912,7 @@ if (isMiniFrame) {
 }
 
 return (
-  <main className="relative z-10 min-h-[100dvh] overflow-y-auto bg-[#020204] flex flex-col items-center justify-start pt-6 md:pt-24 px-3 md:px-4 pb-40">
+  <main className="relative z-10 min-h-[100dvh] overflow-y-auto bg-[#020204] flex flex-col items-center justify-start pt-6 md:pt-24 px-3 md:px-4 pb-56">
     
 {/* NEW DROPDOWN DESIGN */}
           {address && isDropdownOpen && (
@@ -1228,7 +1228,7 @@ return (
 
 {/* SHARE PROPHECY */}
 {quote && (shareUrl || oracleHistory[0]?.txHash) && (
-  <div className="absolute -bottom-16 left-0 right-0 px-8 z-[80]">
+  <div className="mt-8 mb-20 flex justify-between items-center gap-5">
     <div className="w-full flex justify-between items-center gap-5">
 
 {/* SHARE BUTTON */}
