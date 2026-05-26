@@ -16,12 +16,19 @@ import {
   useSwitchChain,
 } from "wagmi";
 import html2canvas from "html2canvas";
+import { sdk } from "@farcaster/miniapp-sdk";
 
 export default function Home() {
 const [oracleDrop, setOracleDrop] =
   useState<(typeof oracleDrops)[number] | null>(null);
   const [quote, setQuote] = useState("");
   const [isAnimating, setIsAnimating] = useState(false);
+
+  useEffect(() => {
+  sdk.actions.ready().catch((err) => {
+    console.log("Farcaster ready failed:", err);
+  });
+}, []);
 
   const [glowIntensity, setGlowIntensity] = useState(
     "opacity-20 scale-100"
