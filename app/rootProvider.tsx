@@ -2,7 +2,6 @@
 
 import "@rainbow-me/rainbowkit/styles.css";
 
-
 import {
   RainbowKitProvider,
   darkTheme,
@@ -16,7 +15,7 @@ import {
 
 import { WagmiProvider } from "wagmi";
 import { base } from "wagmi/chains";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const projectId = "31299aa6a25a6b4fec5d2af2ed4a91bd";
 
@@ -33,38 +32,17 @@ export function RootProvider({
   children: React.ReactNode;
 }) {
   const [queryClient] = useState(() => new QueryClient());
-  const [mounted, setMounted] = useState(false);
-  const [isFarcaster, setIsFarcaster] = useState(false);
 
-  useEffect(() => {
-    const ua = navigator.userAgent.toLowerCase();
-
-    setIsFarcaster(
-      window.self !== window.top ||
-        ua.includes("farcaster") ||
-        ua.includes("warpcast")
-    );
-
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return null;
-  }
-return (
-  <WagmiProvider config={config}>
-    <QueryClientProvider client={queryClient}>
-      {isFarcaster ? (
-        children
-      ) : (
+  return (
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>
         <RainbowKitProvider
           theme={darkTheme()}
           modalSize="compact"
         >
           {children}
         </RainbowKitProvider>
-      )}
-    </QueryClientProvider>
-  </WagmiProvider>
-);
- }
+      </QueryClientProvider>
+    </WagmiProvider>
+  );
+}
