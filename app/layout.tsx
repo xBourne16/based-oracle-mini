@@ -50,28 +50,28 @@ twitter: {
 other: {
   "fc:miniapp": JSON.stringify({
     version: "1",
-    imageUrl: "https://mini.basedoracle.space/og-image.png",
+    imageUrl: "https://mini.basedoracle.space/share-bg.png?v=1001",
     button: {
       title: "Launch Based Oracle",
       action: {
         type: "launch_miniapp",
         name: "Based Oracle",
-        url: "https://mini.basedoracle.space",
-        splashImageUrl: "https://mini.basedoracle.space/splash.png",
+        url: "https://mini.basedoracle.space/?mini=1&v=1001",
+        splashImageUrl: "https://mini.basedoracle.space/splash.png?v=1001",
         splashBackgroundColor: "#000000",
       },
     },
   }),
   "fc:frame": JSON.stringify({
     version: "1",
-    imageUrl: "https://mini.basedoracle.space/og-image.png?v=24",
+    imageUrl: "https://mini.basedoracle.space/share-bg.png?v=1001",
     button: {
       title: "Launch Based Oracle",
       action: {
         type: "launch_miniapp",
         name: "Based Oracle",
-        url: "https://mini.basedoracle.space/?mini=1",
-        splashImageUrl: "https://mini.basedoracle.space/splash.png?v=24",
+        url: "https://mini.basedoracle.space/?mini=1&v=1001",
+        splashImageUrl: "https://mini.basedoracle.space/splash.png?v=1001",
         splashBackgroundColor: "#000000",
       },
     },
