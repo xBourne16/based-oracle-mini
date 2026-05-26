@@ -85,11 +85,8 @@ const { switchChainAsync } =
         ancestor.includes("farcaster") ||
         ancestor.includes("warpcast");
 
-      const forcedByQuery =
-        search.includes("mini=1") ||
-        search.includes("fc=1") ||
-        search.includes("farcaster=1");
-
+const forcedByQuery =
+  window.location.search.includes("mini=1");
       const smallIframe =
         isEmbedded &&
         window.innerWidth <= 760;

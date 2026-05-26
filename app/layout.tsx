@@ -68,7 +68,7 @@ other: {
       action: {
         type: "launch_miniapp",
         name: "Based Oracle",
-        url: "https://mini.basedoracle.space",
+        url: "https://mini.basedoracle.space/?mini=1",
         splashImageUrl: "https://mini.basedoracle.space/splash.png",
         splashBackgroundColor: "#000000",
       },
