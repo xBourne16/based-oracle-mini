@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { RootProvider } from "./rootProvider";
 
 
 export const viewport: Viewport = {
@@ -90,7 +91,9 @@ export default function RootLayout({
   suppressHydrationWarning={true}
   style={{ touchAction: "auto" }}
 >
-  {children}
+  <RootProvider>
+    {children}
+  </RootProvider>
 </body>
     </html>
   );
