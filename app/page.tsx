@@ -1459,6 +1459,15 @@ ${siteOrigin}`
               </span>
             </button>
 
+{quote && (
+  <button
+    onClick={handleShareToFarcaster}
+    className="mt-3 w-full rounded-full border border-purple-500/30 bg-purple-500/10 px-6 py-3 text-[10px] uppercase tracking-[0.25em] font-black text-purple-200 active:scale-95"
+  >
+    Share on Farcaster
+  </button>
+)}
+
             <div className="mt-1 mb-14 w-full flex justify-center animate-float">
               <div className="inline-flex items-center justify-center gap-1 bg-white/[0.05] px-5 py-3.5 rounded-full border border-white/10 backdrop-blur-xl shadow-xl">
                 <span className="text-[11px] text-blue-500 font-black tracking-widest uppercase italic leading-none">
