@@ -38,7 +38,7 @@ export function RootProvider({
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider
           theme={darkTheme()}
-          modalSize="compact"
+         modalSize="wide"
         >
           {children}
         </RainbowKitProvider>
