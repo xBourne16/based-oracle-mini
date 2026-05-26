@@ -91,9 +91,7 @@ export default function RootLayout({
   suppressHydrationWarning={true}
   style={{ touchAction: "auto" }}
 >
-  <RootProvider>
-    {children}
-  </RootProvider>
+  {children}
 </body>
     </html>
   );
