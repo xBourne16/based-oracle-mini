@@ -20,31 +20,33 @@ export async function generateMetadata(): Promise<Metadata> {
       icon: "/favicon.ico",
     },
 
-    openGraph: {
-      title: "Based Oracle",
-      description:
-        "Decrypt your fate on Base. Oracle-powered onchain prophecy experience.",
-      url: "https://mini.basedoracle.space",
-      siteName: "Based Oracle",
-      images: [
-        {
-          url: "/share-bg.png",
-          width: 1200,
-          height: 630,
-          alt: "Based Oracle",
-        },
-      ],
-      locale: "en_US",
-      type: "website",
+openGraph: {
+  title: "Based Oracle",
+  description:
+    "Decrypt your fate on Base. Oracle-powered onchain prophecy experience.",
+  url: "https://mini.basedoracle.space",
+  siteName: "Based Oracle",
+  images: [
+    {
+      url: "https://mini.basedoracle.space/share-bg.png",
+      width: 1200,
+      height: 630,
+      alt: "Based Oracle",
     },
+  ],
+  locale: "en_US",
+  type: "website",
+},
 
-    twitter: {
-      card: "summary_large_image",
-      title: "Based Oracle",
-      description:
-        "Decrypt your fate on Base. Oracle-powered onchain prophecy experience.",
-      images: ["/share-bg.png"],
-    },
+twitter: {
+  card: "summary_large_image",
+  title: "Based Oracle",
+  description:
+    "Decrypt your fate on Base. Oracle-powered onchain prophecy experience.",
+  images: [
+    "https://mini.basedoracle.space/share-bg.png",
+  ],
+},
 other: {
   "fc:miniapp": JSON.stringify({
     version: "1",
