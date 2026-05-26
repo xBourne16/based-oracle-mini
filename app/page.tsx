@@ -725,10 +725,12 @@ setOracleHistory(updatedHistory);
       .padStart(2, "0")}S`;
   };
 
+console.log("PAGE RENDERED");
+
 return (
   <>
-    <div className="fixed top-2 left-2 z-[999999999] bg-red-600 text-white text-xs px-3 py-2 rounded-xl">
-      DEBUG: APP RENDERED
+    <div className="fixed top-2 left-2 z-[9999999] bg-red-600 text-white text-xs px-3 py-2 rounded-xl">
+      PAGE WORKS
     </div>
 
     <main className="min-h-[100dvh] overflow-y-auto bg-[#020204] flex flex-col items-center justify-start pt-6 md:pt-24 p-3 md:p-4">
