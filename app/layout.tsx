@@ -28,7 +28,7 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: "Based Oracle",
       images: [
         {
-          url: "/og-image.png",
+          url: "/share-bg.png",
           width: 1200,
           height: 630,
           alt: "Based Oracle",
@@ -43,7 +43,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: "Based Oracle",
       description:
         "Decrypt your fate on Base. Oracle-powered onchain prophecy experience.",
-      images: ["/og-image.png"],
+      images: ["/share-bg.png"],
     },
 other: {
   "fc:miniapp": JSON.stringify({
