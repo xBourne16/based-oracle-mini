@@ -827,11 +827,11 @@ return (
 
 {/* MAIN */}
 <div
-  className={`relative z-[50] w-full max-w-6xl flex flex-col items-center xl:scale-90 origin-top transition-all lg:pr-32 pointer-events-auto ${
+  className={`relative z-[50] w-full max-w-6xl flex flex-col items-center origin-top transition-all pointer-events-auto ${
     isAnimating ? "scale-95 blur-sm" : ""
   }`}
 >
-        <h1 className="text-[36px] sm:text-7xl md:text-[115px] font-black text-white leading-none tracking-tighter uppercase italic mt-2 md:mt-16 mb-4 md:mb-16 drop-shadow-2xl select-none">
+        <h1 className="text-[34px] sm:text-7xl md:text-[115px] font-black text-white leading-none tracking-tighter uppercase italic mt-0 md:mt-16 mb-3 md:mb-16 drop-shadow-2xl select-none">
           BASED
           <span className="text-blue-600">
             .
