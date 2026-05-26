@@ -46,13 +46,27 @@ export async function generateMetadata(): Promise<Metadata> {
       images: ["/og-image.png"],
     },
 other: {
-  "fc:frame": JSON.stringify({
-    version: "next",
+  "fc:miniapp": JSON.stringify({
+    version: "1",
     imageUrl: "https://mini.basedoracle.space/og-image.png",
     button: {
       title: "Launch Based Oracle",
       action: {
-        type: "launch_frame",
+        type: "launch_miniapp",
+        name: "Based Oracle",
+        url: "https://mini.basedoracle.space",
+        splashImageUrl: "https://mini.basedoracle.space/splash.png",
+        splashBackgroundColor: "#000000",
+      },
+    },
+  }),
+  "fc:frame": JSON.stringify({
+    version: "1",
+    imageUrl: "https://mini.basedoracle.space/og-image.png",
+    button: {
+      title: "Launch Based Oracle",
+      action: {
+        type: "launch_miniapp",
         name: "Based Oracle",
         url: "https://mini.basedoracle.space",
         splashImageUrl: "https://mini.basedoracle.space/splash.png",
