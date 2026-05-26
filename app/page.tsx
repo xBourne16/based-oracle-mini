@@ -734,7 +734,7 @@ return (
       PAGE WORKS
     </div>
 
-    <main className="min-h-[100dvh] overflow-y-auto bg-[#020204] flex flex-col items-center justify-start pt-6 md:pt-24 p-3 md:p-4">
+    <main className="h-[100dvh] max-h-[100dvh] overflow-hidden bg-[#020204] flex flex-col items-center justify-start pt-1 p-2 md:pt-24 md:p-4">
     
 {/* NEW DROPDOWN DESIGN */}
           {address && isDropdownOpen && (
@@ -831,7 +831,7 @@ return (
     isAnimating ? "scale-95 blur-sm" : ""
   }`}
 >
-        <h1 className="text-[34px] sm:text-7xl md:text-[115px] font-black text-white leading-none tracking-tighter uppercase italic mt-0 md:mt-16 mb-3 md:mb-16 drop-shadow-2xl select-none">
+        <h1 className="text-[34px] sm:text-7xl md:text-[115px] font-black text-white leading-none tracking-tighter uppercase italic mt-0 md:mt-16 mb-1 md:mb-16 drop-shadow-2xl select-none">
           BASED
           <span className="text-blue-600">
             .
@@ -840,7 +840,7 @@ return (
         </h1>
 
 <div
-  className={`relative w-full max-w-[660px] bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[50px] p-5 md:p-12 pb-16 md:pb-36 min-h-[460px] md:min-h-[620px] shadow-2xl md:-translate-x-12 transition-all duration-700 hover:-translate-y-4 hover:scale-[1.02] hover:border-blue-500/40 hover:shadow-[0_0_80px_rgba(37,99,235,0.35)] ${
+  className={`relative w-full max-w-[660px] bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-[50px] p-5 md:p-12 pb-16 md:pb-36 min-h-[390px] md:min-h-[620px] shadow-2xl md:-translate-x-12 transition-all duration-700 hover:-translate-y-4 hover:scale-[1.02] hover:border-blue-500/40 hover:shadow-[0_0_80px_rgba(37,99,235,0.35)] ${
     isAnimating
       ? "scale-95 border-blue-500/40 shadow-[0_0_50px_rgba(37,99,235,0.18)]"
       : ""
