@@ -61,13 +61,52 @@ const { switchChainAsync } =
   const [isMiniFrame, setIsMiniFrame] = useState(false);
 
   useEffect(() => {
-    const ua = navigator.userAgent.toLowerCase();
+    const detectMiniFrame = () => {
+      const ua = navigator.userAgent.toLowerCase();
+      const referrer = document.referrer.toLowerCase();
+      const search = window.location.search.toLowerCase();
 
-    setIsMiniFrame(
-      window.self !== window.top ||
+      let ancestor = "";
+
+      try {
+        ancestor = Array.from(window.location.ancestorOrigins || [])
+          .join(" ")
+          .toLowerCase();
+      } catch {
+        ancestor = "";
+      }
+
+      const isEmbedded = window.self !== window.top;
+      const looksLikeFarcaster =
         ua.includes("farcaster") ||
-        ua.includes("warpcast")
-    );
+        ua.includes("warpcast") ||
+        referrer.includes("farcaster") ||
+        referrer.includes("warpcast") ||
+        ancestor.includes("farcaster") ||
+        ancestor.includes("warpcast");
+
+      const forcedByQuery =
+        search.includes("mini=1") ||
+        search.includes("fc=1") ||
+        search.includes("farcaster=1");
+
+      const smallIframe =
+        isEmbedded &&
+        window.innerWidth <= 760;
+
+      setIsMiniFrame(
+        forcedByQuery ||
+          looksLikeFarcaster ||
+          smallIframe
+      );
+    };
+
+    detectMiniFrame();
+    window.addEventListener("resize", detectMiniFrame);
+
+    return () => {
+      window.removeEventListener("resize", detectMiniFrame);
+    };
   }, []);
 
   // DROPDOWN
@@ -740,33 +779,32 @@ setOracleHistory(updatedHistory);
 
 if (isMiniFrame) {
   return (
-    <main className="h-[100dvh] max-h-[100dvh] overflow-hidden bg-[#020204] text-white flex flex-col items-center justify-start px-4 pt-4 pb-3">
-      <div className="w-full max-w-[360px] flex flex-col items-center">
-
-        <div className="mb-3 flex items-center gap-2">
+    <main className="fixed inset-0 z-[999999] h-[100dvh] w-screen overflow-y-auto bg-[#020204] text-white px-4 pt-3 pb-5">
+      <div className="mx-auto flex w-full max-w-[390px] flex-col items-center">
+        <div className="mb-2 inline-flex items-center gap-2 rounded-full border border-blue-500/20 bg-blue-500/10 px-4 py-2">
           <Image
             src="/base_logo.png"
             alt="Base"
-            width={22}
-            height={22}
+            width={18}
+            height={18}
             className="brightness-200"
           />
-          <span className="text-[10px] uppercase tracking-[0.35em] text-blue-300 font-black">
-            Built on Base
+          <span className="text-[9px] font-black uppercase tracking-[0.32em] text-blue-200">
+            Farcaster Mini App
           </span>
         </div>
 
-        <h1 className="text-[34px] leading-none font-black uppercase italic tracking-tighter text-center mb-3">
+        <h1 className="mb-3 text-center text-[38px] font-black uppercase italic leading-none tracking-tighter text-white">
           BASED<span className="text-blue-600">.</span>ORACLE
         </h1>
 
-        <div className="w-full rounded-[28px] border border-white/10 bg-white/[0.04] backdrop-blur-xl p-4 shadow-2xl">
-          <div className="flex items-center justify-between gap-3 mb-4">
-            <div>
-              <div className="text-[10px] uppercase tracking-[0.25em] text-blue-300 font-black">
+        <section className="w-full rounded-[30px] border border-white/10 bg-white/[0.045] p-4 shadow-[0_0_45px_rgba(37,99,235,0.18)] backdrop-blur-xl">
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <div className="truncate text-[10px] font-black uppercase tracking-[0.22em] text-blue-200">
                 ◈ {greeting}
               </div>
-              <div className="mt-1 text-[9px] uppercase tracking-[0.3em] text-white/35">
+              <div className="mt-1 text-[8px] uppercase tracking-[0.28em] text-white/35">
                 Scanning souls...
               </div>
             </div>
@@ -774,7 +812,7 @@ if (isMiniFrame) {
             <button
               type="button"
               onClick={openWalletModal}
-              className="shrink-0 rounded-full border border-white/10 bg-white/[0.06] px-4 py-3 text-[9px] uppercase tracking-[0.2em] font-black"
+              className="shrink-0 rounded-full border border-white/10 bg-white/[0.07] px-4 py-3 text-[9px] font-black uppercase tracking-[0.18em] text-white active:scale-95"
             >
               {address
                 ? `${address.slice(0, 4)}...${address.slice(-4)}`
@@ -782,16 +820,27 @@ if (isMiniFrame) {
             </button>
           </div>
 
-          <div className="min-h-[150px] flex flex-col items-center justify-center text-center">
-            <p className="text-[22px] leading-[1.08] italic font-semibold text-white">
+          <div className="flex min-h-[185px] flex-col items-center justify-center text-center">
+            <p className="text-[24px] font-semibold italic leading-[1.08] text-white">
               {quote
-                ? `"${quote}"`
+                ? `“${quote}”`
                 : isAnimating
                 ? "Decrypting your onchain transmission..."
                 : cooldown > 0
                 ? "The Oracle sleeps..."
                 : "Authorize the transaction to reveal your transmission."}
             </p>
+
+            {oracleDrop && quote && (
+              <div className="mt-4 flex flex-wrap justify-center gap-2">
+                <span className="rounded-full border border-blue-400/30 bg-blue-500/10 px-3 py-1 text-[8px] font-black uppercase tracking-[0.18em] text-blue-200">
+                  {oracleDrop.category}
+                </span>
+                <span className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 text-[8px] font-black uppercase tracking-[0.18em] text-white/60">
+                  {oracleDrop.rarity}
+                </span>
+              </div>
+            )}
 
             {luckyNumber && (
               <div className="mt-4 rounded-full border border-blue-500/30 bg-blue-500/10 px-6 py-2">
@@ -809,7 +858,7 @@ if (isMiniFrame) {
           </div>
 
           {cooldown > 0 && (
-            <div className="mt-4 text-center text-[11px] uppercase tracking-[0.25em] text-blue-300 font-black">
+            <div className="mt-3 text-center text-[11px] font-black uppercase tracking-[0.25em] text-blue-300">
               {formatCooldown(cooldown)}
             </div>
           )}
@@ -817,9 +866,9 @@ if (isMiniFrame) {
           <button
             onClick={handleAction}
             disabled={isAnimating || cooldown > 0}
-            className={`mt-5 w-full rounded-full px-6 py-4 text-[10px] uppercase tracking-[0.3em] font-black transition-all ${
+            className={`mt-5 w-full rounded-full px-6 py-4 text-[10px] font-black uppercase tracking-[0.3em] transition-all ${
               cooldown > 0
-                ? "bg-blue-950/40 text-blue-300 border border-blue-500/20"
+                ? "border border-blue-500/20 bg-blue-950/40 text-blue-300"
                 : "bg-white text-black active:scale-95"
             }`}
           >
@@ -831,6 +880,10 @@ if (isMiniFrame) {
               ? "Fate Decrypted"
               : "Consult Fate"}
           </button>
+        </section>
+
+        <div className="mt-3 text-center text-[9px] font-black uppercase tracking-[0.28em] text-white/30">
+          MINI.BASEDORACLE.SPACE
         </div>
       </div>
     </main>
@@ -838,7 +891,7 @@ if (isMiniFrame) {
 }
 
 return (
-  <main className="min-h-screen bg-[#020204] flex flex-col items-center justify-start pt-24 p-4">
+  <main className="relative z-10 min-h-[100dvh] overflow-y-auto bg-[#020204] flex flex-col items-center justify-start pt-6 md:pt-24 px-3 md:px-4">
     
 {/* NEW DROPDOWN DESIGN */}
           {address && isDropdownOpen && (
