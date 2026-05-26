@@ -62,14 +62,14 @@ other: {
   }),
   "fc:frame": JSON.stringify({
     version: "1",
-    imageUrl: "https://mini.basedoracle.space/og-image.png",
+    imageUrl: "https://mini.basedoracle.space/og-image.png?v=24",
     button: {
       title: "Launch Based Oracle",
       action: {
         type: "launch_miniapp",
         name: "Based Oracle",
         url: "https://mini.basedoracle.space/?mini=1",
-        splashImageUrl: "https://mini.basedoracle.space/splash.png",
+        splashImageUrl: "https://mini.basedoracle.space/splash.png?v=24",
         splashBackgroundColor: "#000000",
       },
     },
