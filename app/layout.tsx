@@ -45,7 +45,22 @@ export async function generateMetadata(): Promise<Metadata> {
         "Decrypt your fate on Base. Oracle-powered onchain prophecy experience.",
       images: ["/og-image.png"],
     },
-
+other: {
+  "fc:frame": JSON.stringify({
+    version: "next",
+    imageUrl: "https://mini.basedoracle.space/og-image.png",
+    button: {
+      title: "Launch Based Oracle",
+      action: {
+        type: "launch_frame",
+        name: "Based Oracle",
+        url: "https://mini.basedoracle.space",
+        splashImageUrl: "https://mini.basedoracle.space/splash.png",
+        splashBackgroundColor: "#000000",
+      },
+    },
+  }),
+},
 
   };
 }
