@@ -17,8 +17,8 @@ export const minikitConfig = {
     description: "Reveal your fate with Based Oracle.",
     screenshotUrls: [`${ROOT_URL}/screenshot.png`],
 
-    iconUrl: `${ROOT_URL}/icon.png`,
-    splashImageUrl: `${ROOT_URL}/splash.png`,
+    iconUrl: `${ROOT_URL}/icon.png?v=3`,
+    splashImageUrl: `${ROOT_URL}/splash.png?v=3`,
     splashBackgroundColor: "#000000",
 
     homeUrl: ROOT_URL,
