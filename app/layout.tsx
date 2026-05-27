@@ -48,6 +48,7 @@ twitter: {
   ],
 },
 other: {
+   "base:app_id": "6a1707dee764ab01da5b1a95",
   "fc:miniapp": JSON.stringify({
     version: "1",
     imageUrl: "https://mini.basedoracle.space/share-bg.png?v=1001",
