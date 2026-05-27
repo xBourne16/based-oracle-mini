@@ -87,6 +87,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+  <head>
+    <meta
+      name="base:app_id"
+      content="6a1707dee764ab01da5b1a95"
+    />
+  </head>
       <body suppressHydrationWarning={true} style={{ touchAction: "auto" }}>
         <RootProvider>{children}</RootProvider>
       </body>
