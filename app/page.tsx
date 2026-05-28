@@ -23,7 +23,10 @@ const [oracleDrop, setOracleDrop] =
   useState<(typeof oracleDrops)[number] | null>(null);
   const [quote, setQuote] = useState("");
   const [isAnimating, setIsAnimating] = useState(false);
-
+const [isMobileAppView, setIsMobileAppView] = useState(false);
+useEffect(() => {
+  setIsMobileAppView(window.innerWidth <= 430);
+}, []);
   useEffect(() => {
   sdk.actions.ready().catch((err) => {
     console.log("Farcaster ready failed:", err);
@@ -781,7 +784,7 @@ setOracleHistory(updatedHistory);
       .padStart(2, "0")}S`;
   };
 
-if (isMiniFrame) {
+if (isMiniFrame || isMobileAppView) {
   return (
     <main className="fixed inset-0 z-[999999] h-[100dvh] w-screen overflow-y-auto bg-[#020204] text-white px-4 pt-3 pb-5">
       <div className="mx-auto flex w-full max-w-[390px] flex-col items-center">
