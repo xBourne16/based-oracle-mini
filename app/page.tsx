@@ -884,6 +884,22 @@ if (isMiniFrame) {
               ? "Fate Decrypted"
               : "Consult Fate"}
           </button>
+          <div className="mt-3 grid w-full grid-cols-2 gap-3">
+<button
+  onClick={() => alert("Share")}
+  disabled={!quote}
+  className="rounded-[18px] border border-blue-500/30 bg-[#071120] px-3 py-3 text-[9px] font-black uppercase tracking-[0.18em] text-blue-200 disabled:opacity-40 active:scale-95"
+>
+  Share Prophecy
+</button>
+
+  <button
+    onClick={() => alert("GM TX")}
+    className="rounded-[18px] border border-blue-500/30 bg-[#071120] px-3 py-3 text-[9px] font-black uppercase tracking-[0.18em] text-blue-200 active:scale-95"
+  >
+    Daily GM TX
+  </button>
+</div>
         </section>
 
         <div className="mt-3 text-center text-[9px] font-black uppercase tracking-[0.28em] text-white/30">
