@@ -1239,7 +1239,7 @@ return (
       >
         <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-blue-500/5"></div>
 
-        <div className="relative flex items-center justify-between min-h-[78px]">
+        <div className="relative flex items-center justify-between min-h-[92px]">
 
           <div className="flex items-center gap-4">
 
@@ -1307,11 +1307,11 @@ return (
 
         <div className="relative flex items-center justify-between">
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
 
             <div
               className="
-                w-8 h-8 rounded-xl
+                w-9 h-9 rounded-xl
                 bg-blue-500/10
                 border border-blue-500/20
                 flex items-center justify-center
@@ -1319,8 +1319,8 @@ return (
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="15"
-                height="15"
+                width="18"
+                height="18"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="#60a5fa"
