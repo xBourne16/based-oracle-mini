@@ -15,17 +15,9 @@ import {
 
 import { WagmiProvider } from "wagmi";
 import { base } from "wagmi/chains";
-import { useEffect, useState } from "react";
+import { useState, useMemo } from "react";
 
 const projectId = "31299aa6a25a6b4fec5d2af2ed4a91bd";
-
-const config = getDefaultConfig({
-  appName: "Based Oracle",
-  projectId,
-  chains: [base],
-  ssr: true,
-  multiInjectedProviderDiscovery: false,
-});
 
 export function RootProvider({
   children,
@@ -36,22 +28,28 @@ export function RootProvider({
     () => new QueryClient()
   );
 
-  const [mounted, setMounted] =
-    useState(false);
+  const isMobile =
+    typeof window !== "undefined" &&
+    window.innerWidth <= 768;
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const config = useMemo(
+    () =>
+      getDefaultConfig({
+        appName: "Based Oracle",
+        projectId,
+        chains: [base],
+        ssr: true,
 
-  if (!mounted) {
-    return null;
-  }
+        // Desktop → Rabby görünür
+        // Mobile/Base App → provider çakışmaları azalır
+        multiInjectedProviderDiscovery: !isMobile,
+      }),
+    [isMobile]
+  );
 
   return (
     <WagmiProvider config={config}>
-      <QueryClientProvider
-        client={queryClient}
-      >
+      <QueryClientProvider client={queryClient}>
         <RainbowKitProvider
           theme={darkTheme()}
           modalSize="wide"
