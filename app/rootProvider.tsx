@@ -24,6 +24,7 @@ const config = getDefaultConfig({
   projectId,
   chains: [base],
   ssr: true,
+  multiInjectedProviderDiscovery: false,
 });
 
 export function RootProvider({
