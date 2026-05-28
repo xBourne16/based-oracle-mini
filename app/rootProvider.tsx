@@ -15,7 +15,7 @@ import {
 
 import { WagmiProvider } from "wagmi";
 import { base } from "wagmi/chains";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const projectId = "31299aa6a25a6b4fec5d2af2ed4a91bd";
 
@@ -32,6 +32,15 @@ export function RootProvider({
   children: React.ReactNode;
 }) {
   const [queryClient] = useState(() => new QueryClient());
+  const [mounted, setMounted] = useState(false);
+
+useEffect(() => {
+  setMounted(true);
+}, []);
+
+if (!mounted) {
+  return null;
+}
 
   return (
     <WagmiProvider config={config}>
