@@ -1212,7 +1212,7 @@ return (
 {/* SHARE PROPHECY */}
 {quote && (shareUrl || oracleHistory[0]?.txHash) && (
   <div className="absolute bottom-2 left-0 right-0 px-8 z-[80]">
-    <div className="w-full flex justify-between items-center gap-3">
+    <div className="w-full flex justify-between items-center gap-5">
 
       {/* SHARE BUTTON */}
       <a
@@ -1229,7 +1229,7 @@ return (
           rounded-[24px]
           border border-blue-500/30
           bg-[#071120]
-          px-4 py-3
+          px-5 py-4
           transition-all duration-300
           hover:scale-[1.03]
           hover:border-blue-400
@@ -1271,11 +1271,11 @@ return (
             </div>
 
             <div className="flex flex-col">
-              <span className="text-white font-black text-[11px] tracking-wide uppercase">
+              <span className="text-white font-black text-[12px] tracking-wide uppercase">
                 Share Prophecy
               </span>
 
-              <span className="text-blue-200/40 text-[8px] tracking-[0.25em] uppercase">
+              <span className="text-blue-200/40 text-[9px] tracking-[0.25em] uppercase">
                 Spread The Wisdom
               </span>
             </div>
@@ -1295,7 +1295,7 @@ return (
           rounded-[24px]
           border border-blue-500/30
           bg-[#071120]
-          px-4 py-3
+          px-5 py-4
           transition-all duration-300
           hover:scale-[1.03]
           hover:border-blue-400
@@ -1307,11 +1307,11 @@ return (
 
         <div className="relative flex items-center justify-between">
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
 
             <div
               className="
-                w-9 h-9 rounded-xl
+                w-11 h-11 rounded-2xl
                 bg-blue-500/10
                 border border-blue-500/20
                 flex items-center justify-center
