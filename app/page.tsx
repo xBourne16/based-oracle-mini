@@ -1212,7 +1212,7 @@ return (
 {/* SHARE PROPHECY */}
 {quote && (shareUrl || oracleHistory[0]?.txHash) && (
   <div className="absolute bottom-2 left-0 right-0 px-8 z-[80]">
-    <div className="w-full flex justify-between items-center gap-5">
+    <div className="w-full flex justify-between items-center gap-3">
 
       {/* SHARE BUTTON */}
       <a
@@ -1226,12 +1226,12 @@ return (
         rel="noopener noreferrer"
         className="
           group relative flex-1 overflow-hidden
-          rounded-[20px]
+          rounded-[24px]
           border border-blue-500/30
           bg-[#071120]
           px-4 py-3
           transition-all duration-300
-          hover:scale-[1.02]
+          hover:scale-[1.03]
           hover:border-blue-400
           hover:bg-blue-500/[0.08]
           hover:shadow-[0_0_35px_rgba(59,130,246,0.35)]
@@ -1239,7 +1239,7 @@ return (
       >
         <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-blue-500/5"></div>
 
-        <div className="relative flex items-center justify-between min-h-[92px]">
+        <div className="relative flex items-center justify-between">
 
           <div className="flex items-center gap-4">
 
@@ -1307,7 +1307,7 @@ return (
 
         <div className="relative flex items-center justify-between">
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
 
             <div
               className="
@@ -1334,7 +1334,7 @@ return (
               </svg>
             </div>
 
-            <div className="flex flex-col leading-[1.05]">
+            <div className="flex flex-col">
               <span className="text-white font-black text-[12px] tracking-wide uppercase">
                 Download Card
               </span>
