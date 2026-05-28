@@ -1289,7 +1289,7 @@ return (
 
       {/* DOWNLOAD BUTTON */}
       <button
-        onClick={downloadShareCard}
+       onClick={() => alert("GM TX")}
         className="
           group relative flex-1 overflow-hidden
           rounded-[24px]
@@ -1336,11 +1336,11 @@ return (
 
             <div className="flex flex-col">
               <span className="text-white font-black text-[12px] tracking-wide uppercase">
-                Download Card
+                Daily GM TX
               </span>
 
               <span className="text-blue-200/40 text-[9px] tracking-[0.25em] uppercase">
-                Save Your Fate
+                Stay Active On Base
               </span>
             </div>
           </div>
