@@ -1226,12 +1226,12 @@ return (
         rel="noopener noreferrer"
         className="
           group relative flex-1 overflow-hidden
-          rounded-[24px]
+          rounded-[20px]
           border border-blue-500/30
           bg-[#071120]
           px-4 py-3
           transition-all duration-300
-          hover:scale-[1.03]
+          hover:scale-[1.02]
           hover:border-blue-400
           hover:bg-blue-500/[0.08]
           hover:shadow-[0_0_35px_rgba(59,130,246,0.35)]
@@ -1239,7 +1239,7 @@ return (
       >
         <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-blue-500/5"></div>
 
-        <div className="relative flex items-center justify-between">
+        <div className="relative flex items-center justify-between min-h-[78px]">
 
           <div className="flex items-center gap-4">
 
@@ -1311,7 +1311,7 @@ return (
 
             <div
               className="
-                w-9 h-9 rounded-xl
+                w-8 h-8 rounded-xl
                 bg-blue-500/10
                 border border-blue-500/20
                 flex items-center justify-center
@@ -1319,8 +1319,8 @@ return (
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
+                width="15"
+                height="15"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="#60a5fa"
@@ -1334,7 +1334,7 @@ return (
               </svg>
             </div>
 
-            <div className="flex flex-col">
+            <div className="flex flex-col leading-[1.05]">
               <span className="text-white font-black text-[12px] tracking-wide uppercase">
                 Download Card
               </span>
