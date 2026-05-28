@@ -1365,7 +1365,7 @@ return (
           relative
           text-[11px]
           uppercase
-          tracking-[0.55em]
+          tracking-[0.25em]
           text-blue-200
           font-black
           px-4 py-1.5
