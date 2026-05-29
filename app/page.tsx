@@ -1450,9 +1450,9 @@ return (
   <span
     className="
       relative
-      text-[11px]
+      text-[9px]
       font-black
-      tracking-[0.18em]
+      tracking-[0.15em]
       text-cyan-200
       drop-shadow-[0_0_10px_rgba(34,211,238,0.9)]
     "
