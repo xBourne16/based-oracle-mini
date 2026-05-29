@@ -23,6 +23,12 @@ const [oracleDrop, setOracleDrop] =
   useState<(typeof oracleDrops)[number] | null>(null);
   const [quote, setQuote] = useState("");
   const [isAnimating, setIsAnimating] = useState(false);
+const [gmTxHash, setGmTxHash] =
+  useState<string | null>(null);
+const [gmCooldown, setGmCooldown] =
+  useState(false);
+  const [gmTimeLeft, setGmTimeLeft] =
+  useState("");
 
   useEffect(() => {
   sdk.actions.ready().catch((err) => {
@@ -163,6 +169,12 @@ const forcedByQuery =
   // CONTRACT ADDRESS
   const CONTRACT_ADDRESS =
     "0x10d57710D44e56A76D8CC3Be57879A0131879e3b";
+    const DAILY_GM_CONTRACT =
+  "0xC92919f5C886083b6473672b1e1Cef6f97860Ec7";
+
+const DAILY_GM_ABI = [
+  "function gm() external",
+];
 
   // ABI
   const abi = [
@@ -267,6 +279,64 @@ useEffect(() => {
   );
 
   setOracleHistory(history);
+}, [address]);
+
+
+useEffect(() => {
+  if (!address) return;
+
+  const saved =
+    localStorage.getItem(
+      `daily_gm_${address}`
+    );
+
+  if (!saved) {
+    setGmCooldown(false);
+    setGmTimeLeft("");
+    return;
+  }
+
+  const updateTimer = () => {
+    const diff =
+      Date.now() - Number(saved);
+
+    const remaining =
+      86400000 - diff;
+
+    if (remaining > 0) {
+      setGmCooldown(true);
+
+      const hours = Math.floor(
+        remaining / (1000 * 60 * 60)
+      );
+
+      const minutes = Math.floor(
+        (remaining % (1000 * 60 * 60)) /
+          (1000 * 60)
+      );
+
+      setGmTimeLeft(
+        `${hours}H ${minutes}M`
+      );
+    } else {
+      setGmCooldown(false);
+      setGmTimeLeft("");
+
+      localStorage.removeItem(
+        `daily_gm_${address}`
+      );
+    }
+  };
+
+  updateTimer();
+
+  const interval = setInterval(
+    updateTimer,
+    60000
+  );
+
+  return () =>
+    clearInterval(interval);
 }, [address]);
 // BASENAME RESOLVE
 useEffect(() => {
@@ -509,6 +579,7 @@ const downloadShareCard = async () => {
     if (cooldown > 0) {
       return;
     }
+
 
     try {
       setIsAnimating(true);
@@ -754,6 +825,57 @@ setOracleHistory(updatedHistory);
       );
     }
   };
+
+  const handleDailyGM = async () => {
+    if (gmCooldown) return;
+  try {
+    if (!address) {
+      openConnectModal?.();
+      return;
+    }
+
+    if (!walletClient) {
+      openConnectModal?.();
+      return;
+    }
+
+    if (walletClient.chain.id !== 8453) {
+      await switchChainAsync({
+        chainId: 8453,
+      });
+    }
+
+    const provider =
+      new ethers.BrowserProvider(
+        walletClient.transport
+      );
+
+    const signer =
+      await provider.getSigner();
+
+    const contract =
+      new ethers.Contract(
+        DAILY_GM_CONTRACT,
+        DAILY_GM_ABI,
+        signer
+      );
+
+const tx = await contract.gm();
+
+await tx.wait();
+
+setGmCooldown(true);
+
+localStorage.setItem(
+  `daily_gm_${address}`,
+  Date.now().toString()
+);
+alert("GM TX Sent ✅");
+} catch (error) {
+  console.error(error);
+  alert("GM TX Failed");
+}
+};
 
   // TIMER FORMAT
   const formatCooldown = (
@@ -1288,9 +1410,9 @@ return (
       </a>
 
       {/* DOWNLOAD BUTTON */}
-      <button
-       onClick={() => alert("GM TX")}
-        className="
+<button
+  onClick={handleDailyGM}
+  className="
           group relative flex-1 overflow-hidden
           rounded-[24px]
           border border-blue-500/30
@@ -1309,38 +1431,47 @@ return (
 
           <div className="flex items-center gap-4">
 
-            <div
-              className="
-                w-11 h-11 rounded-2xl
-                bg-blue-500/10
-                border border-blue-500/20
-                flex items-center justify-center
-              "
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#60a5fa"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" y1="15" x2="12" y2="3"></line>
-              </svg>
-            </div>
+<div
+  className="
+    relative
+    w-11 h-11
+    rounded-2xl
+    border border-cyan-400/40
+    bg-gradient-to-br
+    from-cyan-500/20
+    via-blue-500/20
+    to-purple-500/20
+    flex items-center justify-center
+    shadow-[0_0_25px_rgba(59,130,246,0.45)]
+  "
+>
+  <div className="absolute inset-0 rounded-2xl bg-blue-500/10 blur-md"></div>
+
+  <span
+    className="
+      relative
+      text-[11px]
+      font-black
+      tracking-[0.18em]
+      text-cyan-200
+      drop-shadow-[0_0_10px_rgba(34,211,238,0.9)]
+    "
+  >
+    GM
+  </span>
+</div>
 
             <div className="flex flex-col">
               <span className="text-white font-black text-[12px] tracking-wide uppercase">
-                Daily GM TX
+                {gmCooldown
+  ? `⚡Next GM in ${gmTimeLeft}`
+  : "Daily GM TX"}
               </span>
 
               <span className="text-blue-200/40 text-[9px] tracking-[0.25em] uppercase">
-                Stay Active On Base
+               {gmCooldown
+  ? "Cooldown Active"
+  : "Stay Active On Base"}
               </span>
             </div>
           </div>
@@ -1351,6 +1482,25 @@ return (
         </div>
       </button>
     </div>
+  </div>
+)}
+
+{gmTxHash && (
+  <div className="w-full flex justify-center mt-4">
+    <a
+      href={`https://basescan.org/tx/${gmTxHash}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="
+        text-[9px]
+        uppercase
+        tracking-[0.25em]
+        text-blue-300
+        hover:text-white
+      "
+    >
+      View GM TX ↗
+    </a>
   </div>
 )}
 
