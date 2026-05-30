@@ -1025,15 +1025,15 @@ if (isMiniFrame) {
 >
   <div className="flex flex-col items-center">
     <span>
-      {gmCooldown
-        ? `NEXT GM IN ${gmTimeLeft}`
-        : "DAILY GM TX"}
+    {gmCooldown
+  ? "⚡ NEXT GM"
+  : "DAILY GM TX"}
     </span>
 
     <span className="text-[8px] text-blue-300/60 mt-1">
       {gmCooldown
-        ? "COOLDOWN ACTIVE"
-        : "STAY ACTIVE ON BASE"}
+  ? `${gmTimeLeft || "24H"} LEFT`
+  : "STAY ACTIVE ON BASE"}
     </span>
   </div>
 </button>
