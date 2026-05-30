@@ -1006,6 +1006,38 @@ if (isMiniFrame) {
               ? "Fate Decrypted"
               : "Consult Fate"}
           </button>
+<button
+  onClick={handleDailyGM}
+  disabled={gmCooldown}
+  className="
+    mt-3
+    w-full
+    rounded-full
+    px-6 py-4
+    text-[10px]
+    font-black
+    uppercase
+    tracking-[0.25em]
+    border border-blue-500/20
+    bg-blue-950/40
+    text-blue-300
+  "
+>
+  <div className="flex flex-col items-center">
+    <span>
+      {gmCooldown
+        ? `NEXT GM IN ${gmTimeLeft}`
+        : "DAILY GM TX"}
+    </span>
+
+    <span className="text-[8px] text-blue-300/60 mt-1">
+      {gmCooldown
+        ? "COOLDOWN ACTIVE"
+        : "STAY ACTIVE ON BASE"}
+    </span>
+  </div>
+</button>
+
         </section>
 
         <div className="mt-3 text-center text-[9px] font-black uppercase tracking-[0.28em] text-white/30">
