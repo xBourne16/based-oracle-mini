@@ -4,11 +4,11 @@ import { withX402 } from "x402-next";
 const handler = async (_request: NextRequest) => {
   return NextResponse.json({
     success: true,
-    message: "🔮 Premium Oracle unlocked via x402 on Base.",
-    prophecy:
-      "The chain remembers those who arrive before the crowd.",
-    network: "Base Mainnet",
     paid: true,
+    title: "🔮 Based Oracle x402 Transmission",
+    message: "This premium response was unlocked with x402 on Base.",
+    network: "Base Mainnet",
+    timestamp: new Date().toISOString(),
   });
 };
 
