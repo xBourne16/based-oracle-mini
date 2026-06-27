@@ -1,25 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
-import { withX402 } from "x402-next";
+import { createPublicClient, http } from "viem";
+import { base } from "viem/chains";
 
-const handler = async (_request: NextRequest) => {
+const publicClient = createPublicClient({
+  chain: base,
+  transport: http("https://mainnet.base.org"),
+});
+
+export async function GET(request: NextRequest) {
+  const txHash = request.headers.get("X-PAYMENT");
+
+  if (!txHash) {
+    return NextResponse.json({ error: "Payment required" }, { status: 402 });
+  }
+
+  const receipt = await publicClient.getTransactionReceipt({
+    hash: txHash as `0x${string}`,
+  });
+
+  if (!receipt || receipt.status !== "success") {
+    return NextResponse.json({ error: "Invalid payment" }, { status: 402 });
+  }
+
   return NextResponse.json({
     success: true,
     paid: true,
     title: "🔮 Based Oracle x402 Transmission",
-    message: "This premium response was unlocked with x402 on Base.",
+    message: "Bu premium içerik x402 ile açıldı.",
     network: "Base Mainnet",
     timestamp: new Date().toISOString(),
   });
-};
-
-export const GET = withX402(
-  handler,
-  "0x602628CaDb00F0c466aF885b854c37984b5A8356",
-  {
-    price: "$0.001",
-    network: "base",
-    config: {
-      description: "Based Oracle premium x402 reading",
-    },
-  }
-);
+}
