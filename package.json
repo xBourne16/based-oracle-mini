@@ -25,7 +25,8 @@
     "react-dom": "19.0.0",
     "viem": "^2.49.3",
     "wagmi": "^2.19.5",
-    "x402": "^1.2.0"
+    "x402": "^1.2.0",
+    "x402-next": "^1.2.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
