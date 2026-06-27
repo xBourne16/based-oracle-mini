@@ -14,6 +14,19 @@ const REQUIRED_AMOUNT = parseUnits("0.001", 6);
 const USDC_TRANSFER_TOPIC =
   "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
 
+const premiumMessages = [
+  "The chain does not forget. Neither should you.",
+  "Your wallet is your identity. Guard it like your soul.",
+  "The next cycle belongs to those who held when others fled.",
+  "Consensus is not agreement — it is survival.",
+  "You arrived early. That is the only edge that matters.",
+  "The oracle sees what the market cannot: your conviction.",
+  "Blocks pass. Diamonds remain.",
+  "Not your keys, not your fate.",
+  "The ones who built in silence will speak in all-time highs.",
+  "Every transaction is a prayer to the network.",
+];
+
 export async function GET(request: NextRequest) {
   const txHash = request.headers.get("X-PAYMENT");
 
@@ -30,7 +43,6 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Transaction failed" }, { status: 402 });
     }
 
-    // USDC Transfer log'unu bul
     const transferLog = receipt.logs.find((log) => {
       const isUSDC = log.address.toLowerCase() === USDC_BASE.toLowerCase();
       const isTransfer = log.topics[0] === USDC_TRANSFER_TOPIC;
@@ -44,17 +56,20 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "No valid USDC transfer found" }, { status: 402 });
     }
 
-    // Miktar kontrolü
     const transferredAmount = BigInt(transferLog.data);
     if (transferredAmount < REQUIRED_AMOUNT) {
       return NextResponse.json({ error: "Insufficient payment amount" }, { status: 402 });
     }
 
+    // TX hash'e göre her seferinde farklı mesaj seç
+    const index = parseInt(txHash.slice(-4), 16) % premiumMessages.length;
+    const message = premiumMessages[index];
+
     return NextResponse.json({
       success: true,
       paid: true,
-      title: "🔮 Based Oracle x402 Transmission",
-      message: "Bu premium içerik x402 ile açıldı.",
+      title: "🔮 Premium Oracle Transmission",
+      message,
       network: "Base Mainnet",
       timestamp: new Date().toISOString(),
     });
