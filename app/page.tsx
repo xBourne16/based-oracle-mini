@@ -17,6 +17,7 @@ import {
 } from "wagmi";
 import html2canvas from "html2canvas";
 import { sdk } from "@farcaster/miniapp-sdk";
+import { useX402Payment } from "@/app/hooks/useX402Payment";
 
 export default function Home() {
 const [oracleDrop, setOracleDrop] =
@@ -58,6 +59,9 @@ const { data: walletClient } =
 const { switchChainAsync } =
   useSwitchChain();
 
+  const { pay } = useX402Payment();
+  const [premiumContent, setPremiumContent] = useState<string | null>(null);
+  const [isPaying, setIsPaying] = useState(false);
 
     const [baseName, setBaseName] =
   useState<string | null>(null);
@@ -197,7 +201,6 @@ const DAILY_GM_ABI = [
       setGreeting("The Midnight Watch");
     }
 
-    // Ses Hazırlığı
     const audio = new Audio("/mystic-temple.mp3");
     audio.loop = true;
     audio.volume = 0.15;
@@ -211,8 +214,7 @@ const DAILY_GM_ABI = [
     };
   }, []);
 
-  // SHARE URL RESTORE
-useEffect(() => {
+  useEffect(() => {
   if (!address) return;
 
   const today =
@@ -229,14 +231,12 @@ useEffect(() => {
   }
 }, [address]);
 
-  // Ses Durumu Değiştiğinde Elementi Güncelle
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.muted = isMuted;
     }
   }, [isMuted]);
 
-  // DAILY DATA LOAD
   useEffect(() => {
   if (!address) return;
 
@@ -268,7 +268,7 @@ useEffect(() => {
   setShareUrl(savedShareUrl);
 }
   }, [address]);
-  // ORACLE HISTORY LOAD
+
 useEffect(() => {
   if (!address) return;
 
@@ -338,7 +338,7 @@ useEffect(() => {
   return () =>
     clearInterval(interval);
 }, [address]);
-// BASENAME RESOLVE
+
 useEffect(() => {
   if (!address) return;
 
@@ -368,7 +368,7 @@ useEffect(() => {
 
   fetchBasename();
 }, [address]);
-  // LIVE BLOCKCHAIN COOLDOWN TIMER
+
   useEffect(() => {
     if (!address) return;
 
@@ -487,7 +487,6 @@ const getUnusedOracleDrop = (
   return selected.drop;
 };
 
-  // DAILY LUCKY NUMBER
   const generateLuckyNumber = (
     address: string
   ) => {
@@ -565,7 +564,6 @@ const downloadShareCard = async () => {
   const handleAction = async () => {
     if (isAnimating) return;
 
-    // Ses Başlatma (Mistik hava başlasın)
     if (audioRef.current && audioRef.current.paused) {
       audioRef.current.play().catch(() => console.log("Audio play blocked"));
     }
@@ -575,40 +573,37 @@ const downloadShareCard = async () => {
       return;
     }
 
-    // BLOCKCHAIN COOLDOWN CHECK
     if (cooldown > 0) {
       return;
     }
 
-
     try {
       setIsAnimating(true);
       setQuote("");
-setLuckyNumber(null);
+      setLuckyNumber(null);
 
       setGlowIntensity(
         "opacity-60 scale-110"
       );
 
-if (!walletClient) {
-  openConnectModal?.();
-  return;
-}
+      if (!walletClient) {
+        openConnectModal?.();
+        return;
+      }
 
-if (walletClient.chain.id !== 8453) {
-  await switchChainAsync({
-    chainId: 8453,
-  });
-}
+      if (walletClient.chain.id !== 8453) {
+        await switchChainAsync({
+          chainId: 8453,
+        });
+      }
 
-const provider =
-  new ethers.BrowserProvider(
-    walletClient.transport
-  );
+      const provider =
+        new ethers.BrowserProvider(
+          walletClient.transport
+        );
 
-const signer =
-  await provider.getSigner();
- 
+      const signer =
+        await provider.getSigner();
 
       const contract =
         new ethers.Contract(
@@ -621,169 +616,147 @@ const signer =
         await contract.consult();
 
       setTxHash(tx.hash);
-    const randomEnergy = Math.floor(
-  Math.random() * 4
-);
 
-const todaySeed = new Date()
-  .toISOString()
-  .slice(0, 10);
+      const todaySeed = new Date()
+        .toISOString()
+        .slice(0, 10);
 
-const rarityWeights = {
-  COMMON: 45,
-  RARE: 30,
-  EPIC: 15,
-  LEGENDARY: 8,
-  MYTHIC: 2,
-};
+      const random =
+        Math.floor(Math.random() * 100);
 
-const random =
-  Math.floor(Math.random() * 100);
+      let selectedRarity = "COMMON";
 
-let selectedRarity = "COMMON";
+      if (random >= 98) {
+        selectedRarity = "MYTHIC";
+      } else if (random >= 90) {
+        selectedRarity = "LEGENDARY";
+      } else if (random >= 75) {
+        selectedRarity = "EPIC";
+      } else if (random >= 45) {
+        selectedRarity = "RARE";
+      }
 
-if (random >= 98) {
-  selectedRarity = "MYTHIC";
-} else if (random >= 90) {
-  selectedRarity = "LEGENDARY";
-} else if (random >= 75) {
-  selectedRarity = "EPIC";
-} else if (random >= 45) {
-  selectedRarity = "RARE";
-}
-
-const filteredDrops =
-  oracleDrops.filter(
-    (drop) =>
-      drop.rarity ===
-      selectedRarity
-  );
-
-const safeDrops =
-  filteredDrops.length > 0
-    ? filteredDrops
-    : oracleDrops;
-
-const prophecyQuote =
-  getUnusedOracleDrop(
-    address,
-    safeDrops
-  );
-  setQuote(prophecyQuote.text);
-  setOracleDrop(prophecyQuote);
-
-const prophecyNumber =
-  generateLuckyNumber(address);
-
-const tweet = encodeURIComponent(
-  `🔮 ORACLE TRANSMISSION 🔮\n\n` +
-
-  `“${prophecyQuote.text}”\n\n` +
-
-  `✦ ${prophecyQuote.category}\n` +
-  `✦ ${prophecyQuote.rarity}\n` +
-  `✦ ${prophecyQuote.source}\n\n` +
-
-  `✦ Lucky Number: ${prophecyNumber}\n\n` +
-
-  `✦ Oracle TX:\nhttps://basescan.org/tx/${tx.hash}\n\n` +
-
-  `Consult your fate:\n${siteOrigin}`
-);
-
-const finalShareUrl =
-  `https://twitter.com/intent/tweet?text=${tweet}`;
-
-setShareUrl(finalShareUrl);
-
-const today =
-  new Date()
-    .toISOString()
-    .split("T")[0];
-
-localStorage.setItem(
-  `oracle_share_${address}_${today}`,
-  finalShareUrl
-);
-
-      // DAILY QUOTE
-const dailyDrop =
-  oracleDrops[
-    getUniqueQuoteIndex(address, tx.hash)
-  ];
-
-setOracleDrop(dailyDrop);
-
-      // DAILY LUCKY NUMBER
-      const number =
-        generateLuckyNumber(
-          address
+      const filteredDrops =
+        oracleDrops.filter(
+          (drop) =>
+            drop.rarity === selectedRarity
         );
 
+      const safeDrops =
+        filteredDrops.length > 0
+          ? filteredDrops
+          : oracleDrops;
+
+      const prophecyQuote =
+        getUnusedOracleDrop(
+          address,
+          safeDrops
+        );
+
+      setQuote(prophecyQuote.text);
+      setOracleDrop(prophecyQuote);
+
+      const prophecyNumber =
+        generateLuckyNumber(address);
+
+      const tweet = encodeURIComponent(
+        `🔮 ORACLE TRANSMISSION 🔮\n\n` +
+        `"${prophecyQuote.text}"\n\n` +
+        `✦ ${prophecyQuote.category}\n` +
+        `✦ ${prophecyQuote.rarity}\n` +
+        `✦ ${prophecyQuote.source}\n\n` +
+        `✦ Lucky Number: ${prophecyNumber}\n\n` +
+        `✦ Oracle TX:\nhttps://basescan.org/tx/${tx.hash}\n\n` +
+        `Consult your fate:\n${siteOrigin}`
+      );
+
+      const finalShareUrl =
+        `https://twitter.com/intent/tweet?text=${tweet}`;
+
+      setShareUrl(finalShareUrl);
+
+      const today =
+        new Date()
+          .toISOString()
+          .split("T")[0];
+
+      localStorage.setItem(
+        `oracle_share_${address}_${today}`,
+        finalShareUrl
+      );
+
+      const dailyDrop =
+        oracleDrops[
+          getUniqueQuoteIndex(address, tx.hash)
+        ];
+
+      setOracleDrop(dailyDrop);
+
+      const number =
+        generateLuckyNumber(address);
+
       setLuckyNumber(number);
-      // UPDATE STREAK
-const todayKey =
-  new Date().toISOString().split("T")[0];
 
-const yesterdayKey =
-  new Date(Date.now() - 86400000)
-    .toISOString()
-    .split("T")[0];
+      const todayKey =
+        new Date().toISOString().split("T")[0];
 
-const lastConsult =
-  localStorage.getItem(
-    `oracle_last_consult_${address}`
-  );
+      const yesterdayKey =
+        new Date(Date.now() - 86400000)
+          .toISOString()
+          .split("T")[0];
 
-let newStreak = streak;
+      const lastConsult =
+        localStorage.getItem(
+          `oracle_last_consult_${address}`
+        );
 
-if (lastConsult === todayKey) {
-  newStreak = streak;
-} else if (lastConsult === yesterdayKey) {
-  newStreak = streak + 1;
-} else {
-  newStreak = 1;
-}
+      let newStreak = streak;
 
-localStorage.setItem(
-  `oracle_last_consult_${address}`,
-  todayKey
-);
+      if (lastConsult === todayKey) {
+        newStreak = streak;
+      } else if (lastConsult === yesterdayKey) {
+        newStreak = streak + 1;
+      } else {
+        newStreak = 1;
+      }
 
-localStorage.setItem(
-  `oracle_streak_${address}`,
-  newStreak.toString()
-);
+      localStorage.setItem(
+        `oracle_last_consult_${address}`,
+        todayKey
+      );
 
-setStreak(newStreak);
-      // SAVE HISTORY
-const historyItem = {
-  quote: prophecyQuote.text,
-  luckyNumber: number,
-  txHash: tx.hash,
-  date: new Date().toLocaleDateString(),
-};
+      localStorage.setItem(
+        `oracle_streak_${address}`,
+        newStreak.toString()
+      );
 
-const existingHistory = JSON.parse(
-  localStorage.getItem(
-    `oracle_history_${address}`
-  ) || "[]"
-);
+      setStreak(newStreak);
 
-const updatedHistory = [
-  historyItem,
-  ...existingHistory,
-].slice(0, 10);
+      const historyItem = {
+        quote: prophecyQuote.text,
+        luckyNumber: number,
+        txHash: tx.hash,
+        date: new Date().toLocaleDateString(),
+      };
 
-localStorage.setItem(
-  `oracle_history_${address}`,
-  JSON.stringify(updatedHistory)
-);
+      const existingHistory = JSON.parse(
+        localStorage.getItem(
+          `oracle_history_${address}`
+        ) || "[]"
+      );
 
-setOracleHistory(updatedHistory);
+      const updatedHistory = [
+        historyItem,
+        ...existingHistory,
+      ].slice(0, 10);
 
-      // SAVE DAILY DATA
-     
+      localStorage.setItem(
+        `oracle_history_${address}`,
+        JSON.stringify(updatedHistory)
+      );
+
+      setOracleHistory(updatedHistory);
+
       localStorage.setItem(
         `oracle_quote_${address}_${today}`,
         prophecyQuote.text
@@ -796,7 +769,6 @@ setOracleHistory(updatedHistory);
 
       await tx.wait();
 
-      // REFRESH COOLDOWN
       const remaining =
         await contract.getRemainingTime(
           address
@@ -808,12 +780,10 @@ setOracleHistory(updatedHistory);
     } catch (error: any) {
       console.error("TX Error:", error);
 
-      // USER REJECT
       if (error.code === 4001) {
         return;
       }
 
-      // SILENT FAIL
       console.log(
         "Cooldown active or tx failed."
       );
@@ -860,24 +830,45 @@ setOracleHistory(updatedHistory);
         signer
       );
 
-const tx = await contract.gm();
+    const tx = await contract.gm();
 
-await tx.wait();
+    await tx.wait();
 
-setGmCooldown(true);
+    setGmCooldown(true);
 
-localStorage.setItem(
-  `daily_gm_${address}`,
-  Date.now().toString()
-);
-alert("GM TX Sent ✅");
-} catch (error) {
-  console.error(error);
-  alert("GM TX Failed");
-}
+    localStorage.setItem(
+      `daily_gm_${address}`,
+      Date.now().toString()
+    );
+    alert("GM TX Sent ✅");
+  } catch (error) {
+    console.error(error);
+    alert("GM TX Failed");
+  }
 };
 
-  // TIMER FORMAT
+  const handlePremiumOracle = async () => {
+    if (!address) {
+      openConnectModal?.();
+      return;
+    }
+    try {
+      setIsPaying(true);
+      const txHash = await pay();
+      const res = await fetch("/api/premium-oracle", {
+        headers: { "X-PAYMENT": txHash },
+      });
+      const data = await res.json();
+      if (data.success) {
+        setPremiumContent(data.message);
+      }
+    } catch (err) {
+      console.error("Premium ödeme hatası:", err);
+    } finally {
+      setIsPaying(false);
+    }
+  };
+
   const formatCooldown = (
     ms: number
   ) => {
@@ -949,7 +940,7 @@ if (isMiniFrame) {
           <div className="flex min-h-[185px] flex-col items-center justify-center text-center">
             <p className="text-[24px] font-semibold italic leading-[1.08] text-white">
               {quote
-                ? `“${quote}”`
+                ? `"${quote}"`
                 : isAnimating
                 ? "Decrypting your onchain transmission..."
                 : cooldown > 0
@@ -1006,6 +997,21 @@ if (isMiniFrame) {
               ? "Fate Decrypted"
               : "Consult Fate"}
           </button>
+
+          <button
+            onClick={handlePremiumOracle}
+            disabled={isPaying}
+            className="mt-3 w-full rounded-full px-6 py-4 text-[10px] font-black uppercase tracking-[0.25em] border border-blue-500/20 bg-blue-950/40 text-blue-300 active:scale-95"
+          >
+            {isPaying ? "Processing..." : "⚡ Premium Oracle — $0.001"}
+          </button>
+
+          {premiumContent && (
+            <div className="mt-3 px-4 py-3 rounded-2xl border border-blue-500/30 bg-blue-500/10 text-blue-200 text-[10px] text-center">
+              {premiumContent}
+            </div>
+          )}
+
 <button
   onClick={handleDailyGM}
   disabled={gmCooldown}
@@ -1056,7 +1062,6 @@ return (
             <div className="fixed top-24 left-4 right-4 z-[999999999] rounded-3xl p-[1px] bg-gradient-to-r from-blue-500/40 via-white/10 to-blue-500/20 shadow-2xl animate-in fade-in zoom-in duration-200">
               <div className="bg-[#0a0a0c]/95 backdrop-blur-2xl rounded-3xl p-5 border border-white/10 text-left">
                 
-                {/* HEADER */}
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-white/20 flex items-center justify-center font-bold text-black text-xs">
                     {address.slice(2, 4).toUpperCase()}
@@ -1070,7 +1075,6 @@ return (
                   </div>
                 </div>
 
-                {/* STATUS / NETWORK */}
                 <div className="flex items-center justify-between mb-4 px-3 py-2 rounded-xl bg-white/[0.03] border border-white/5">
                   <span className="text-[9px] text-white/40 uppercase tracking-[0.2em]">Network</span>
                   <div className="flex items-center gap-2">
@@ -1099,7 +1103,6 @@ return (
 </span>
 </div>
 
-                {/* ACTIONS */}
 <button
   onClick={() => setIsDropdownOpen(false)}
   className="
@@ -1123,8 +1126,6 @@ return (
                       navigator.clipboard.writeText(address);
                       setIsDropdownOpen(false);
                     }}
-
-                    
                     className="w-full px-4 py-3 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/5 transition-all text-[10px] uppercase tracking-[0.2em] text-white/70 hover:text-white text-center"
                   >
                     Copy Address
@@ -1172,10 +1173,8 @@ return (
 
 <div className="flex items-start justify-between gap-4 mb-10">
   <div>
-
     <div className="flex items-center gap-2">
       <div className="w-2 h-2 rounded-full bg-blue-400 shadow-[0_0_14px_rgba(96,165,250,1)] animate-pulse"></div>
-
 <div className="text-[16px] text-blue-200 tracking-[0.22em] font-black italic animate-pulse capitalize">
   ◈ {greeting}
 </div>
@@ -1183,20 +1182,8 @@ return (
 
 <div className="mt-3 flex items-center gap-2 relative">
   <div className="absolute inset-0 bg-blue-500/10 blur-xl rounded-full"></div>
-
   <div className="relative w-2 h-2 rounded-full bg-blue-400 animate-pulse shadow-[0_0_14px_rgba(59,130,246,0.95)]"></div>
-
-  <span
-    className="
-      relative
-      text-[15px]
-      text-white/55
-      font-mono
-      uppercase
-      tracking-[0.35em]
-      animate-pulse
-    "
-  >
+  <span className="relative text-[15px] text-white/55 font-mono uppercase tracking-[0.35em] animate-pulse">
     SCANNING SOULS...
   </span>
 </div>
@@ -1209,7 +1196,6 @@ return (
     className="flex items-center gap-3 px-7 py-4 bg-white/[0.04] backdrop-blur-2xl border border-white/10 rounded-full active:scale-95"
   >
     <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-
     <span className="text-[11px] font-black text-white uppercase tracking-[0.25em]">
       {address
         ? `${address.slice(0, 6)}...${address.slice(-4)}`
@@ -1223,127 +1209,45 @@ return (
 
           <div className="min-h-[220px] flex flex-col items-center justify-center text-center">
 
-{/* ORACLE TITLE */}
 {quote && oracleDrop && (
   <div className="mt-10 mb-6 flex flex-col items-center gap-4 relative z-[40]">
-
-    {/* ORACLE TRANSMISSION */}
     <div className="relative">
       <div className="absolute inset-0 bg-purple-500/30 blur-2xl rounded-full animate-pulse"></div>
-
-      <div
-        className="
-          relative overflow-hidden
-          px-7 py-2.5
-          rounded-full
-          border border-purple-400/50
-          bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-blue-500/20
-          text-[12px]
-          uppercase
-          tracking-[0.5em]
-          text-blue-100
-          font-black
-          italic
-          shadow-[0_0_35px_rgba(168,85,247,0.75)]
-        "
-      >
+      <div className="relative overflow-hidden px-7 py-2.5 rounded-full border border-purple-400/50 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-blue-500/20 text-[12px] uppercase tracking-[0.5em] text-blue-100 font-black italic shadow-[0_0_35px_rgba(168,85,247,0.75)]">
         <div className="absolute inset-0 opacity-40 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-[shine_3s_linear_infinite]" />
-
-        <span className="relative z-10">
-          ✦ ORACLE TRANSMISSION ✦
-        </span>
+        <span className="relative z-10">✦ ORACLE TRANSMISSION ✦</span>
       </div>
     </div>
 
-    {/* TAGS */}
     <div className="flex flex-wrap items-center justify-center gap-3">
-
-      {/* SOURCE */}
-      <span
-        className="
-          px-4 py-1.5
-          rounded-full
-          bg-blue-500/15
-          border border-blue-400/40
-          text-[10.5px]
-          text-blue-200
-          uppercase
-          tracking-[0.22em]
-          font-black
-          shadow-[0_0_20px_rgba(59,130,246,0.55)]
-          backdrop-blur-xl
-        "
-      >
+      <span className="px-4 py-1.5 rounded-full bg-blue-500/15 border border-blue-400/40 text-[10.5px] text-blue-200 uppercase tracking-[0.22em] font-black shadow-[0_0_20px_rgba(59,130,246,0.55)] backdrop-blur-xl">
         {oracleDrop.source}
       </span>
-
-      {/* CATEGORY */}
-      <span
-        className="
-          px-4 py-1.5
-          rounded-full
-          bg-white/[0.06]
-          border border-white/15
-          text-[10px]
-          text-white/70
-          uppercase
-          tracking-[0.22em]
-          font-black
-          backdrop-blur-xl
-        "
-      >
+      <span className="px-4 py-1.5 rounded-full bg-white/[0.06] border border-white/15 text-[10px] text-white/70 uppercase tracking-[0.22em] font-black backdrop-blur-xl">
         {oracleDrop.category}
       </span>
-
-      {/* RARITY */}
-      <span
-        className={`
-          relative overflow-hidden
-          px-4 py-1.5
-          rounded-full
-          text-[10.5px]
-          uppercase
-          tracking-[0.3em]
-          font-black
-          border
-          transition-all duration-500
-          backdrop-blur-xl
-
-          ${
-            oracleDrop?.rarity === "COMMON"
-              ? "bg-white/[0.04] text-white/50 border-white/10 shadow-[0_0_12px_rgba(255,255,255,0.08)]"
-
-              : oracleDrop?.rarity === "RARE"
-              ? "bg-blue-500/15 text-blue-200 border-blue-400/40 shadow-[0_0_28px_rgba(59,130,246,0.45)]"
-
-              : oracleDrop?.rarity === "EPIC"
-              ? "bg-purple-500/15 text-purple-200 border-purple-400/50 shadow-[0_0_35px_rgba(168,85,247,0.6)] animate-pulse"
-
-              : oracleDrop?.rarity === "LEGENDARY"
-              ? "bg-yellow-500/15 text-yellow-200 border-yellow-400/50 shadow-[0_0_40px_rgba(250,204,21,0.7)] animate-pulse"
-
-              : "bg-red-500/15 text-red-200 border-red-400/50 shadow-[0_0_45px_rgba(239,68,68,0.8)] animate-pulse"
-          }
-        `}
-      >
+      <span className={`relative overflow-hidden px-4 py-1.5 rounded-full text-[10.5px] uppercase tracking-[0.3em] font-black border transition-all duration-500 backdrop-blur-xl ${
+        oracleDrop?.rarity === "COMMON"
+          ? "bg-white/[0.04] text-white/50 border-white/10 shadow-[0_0_12px_rgba(255,255,255,0.08)]"
+          : oracleDrop?.rarity === "RARE"
+          ? "bg-blue-500/15 text-blue-200 border-blue-400/40 shadow-[0_0_28px_rgba(59,130,246,0.45)]"
+          : oracleDrop?.rarity === "EPIC"
+          ? "bg-purple-500/15 text-purple-200 border-purple-400/50 shadow-[0_0_35px_rgba(168,85,247,0.6)] animate-pulse"
+          : oracleDrop?.rarity === "LEGENDARY"
+          ? "bg-yellow-500/15 text-yellow-200 border-yellow-400/50 shadow-[0_0_40px_rgba(250,204,21,0.7)] animate-pulse"
+          : "bg-red-500/15 text-red-200 border-red-400/50 shadow-[0_0_45px_rgba(239,68,68,0.8)] animate-pulse"
+      }`}>
         <div className="absolute inset-0 opacity-40 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-[shine_3s_linear_infinite]" />
-
-        <span className="relative z-10">
-          ✦ {oracleDrop.rarity} ✦
-        </span>
+        <span className="relative z-10">✦ {oracleDrop.rarity} ✦</span>
       </span>
-
     </div>
   </div>
 )}
 
-{/* ORACLE TEXT */}
 <p
   key={quote || isAnimating ? "active" : "empty"}
   className={`mt-4 text-2xl sm:text-3xl md:text-[44px] text-white italic text-center leading-[1.1] font-medium transition-all duration-700 ${
-    quote
-      ? "opacity-100 translate-y-0"
-      : "opacity-80 translate-y-2"
+    quote ? "opacity-100 translate-y-0" : "opacity-80 translate-y-2"
   }`}
 >
   {quote
@@ -1363,59 +1267,20 @@ return (
 
 </div>
 
-{/* SHARE PROPHECY */}
 {quote && (shareUrl || oracleHistory[0]?.txHash) && (
   <div className="absolute bottom-2 left-0 right-0 px-8 z-[80]">
     <div className="w-full flex justify-between items-center gap-5">
-
-      {/* SHARE BUTTON */}
       <a
-        href={
-          shareUrl ||
-          `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-            `🔮 BASED ORACLE PROPHECY 🔮\n\n“${quote}”\n\n✦ Lucky Number: ${luckyNumber}\n\n✦ Oracle TX:\nhttps://basescan.org/tx/${oracleHistory[0]?.txHash}\n\nConsult your fate:\n${siteOrigin}`
-          )}`
-        }
+        href={shareUrl || `https://twitter.com/intent/tweet?text=${encodeURIComponent(`🔮 BASED ORACLE PROPHECY 🔮\n\n"${quote}"\n\n✦ Lucky Number: ${luckyNumber}\n\n✦ Oracle TX:\nhttps://basescan.org/tx/${oracleHistory[0]?.txHash}\n\nConsult your fate:\n${siteOrigin}`)}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="
-          group relative flex-1 overflow-hidden
-          rounded-[24px]
-          border border-blue-500/30
-          bg-[#071120]
-          px-5 py-4
-          transition-all duration-300
-          hover:scale-[1.03]
-          hover:border-blue-400
-          hover:bg-blue-500/[0.08]
-          hover:shadow-[0_0_35px_rgba(59,130,246,0.35)]
-        "
+        className="group relative flex-1 overflow-hidden rounded-[24px] border border-blue-500/30 bg-[#071120] px-5 py-4 transition-all duration-300 hover:scale-[1.03] hover:border-blue-400 hover:bg-blue-500/[0.08] hover:shadow-[0_0_35px_rgba(59,130,246,0.35)]"
       >
         <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-blue-500/5"></div>
-
         <div className="relative flex items-center justify-between">
-
           <div className="flex items-center gap-4">
-
-            <div
-              className="
-                w-11 h-11 rounded-2xl
-                bg-blue-500/10
-                border border-blue-500/20
-                flex items-center justify-center
-              "
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#60a5fa"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
+            <div className="w-11 h-11 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="18" cy="5" r="3"></circle>
                 <circle cx="6" cy="12" r="3"></circle>
                 <circle cx="18" cy="19" r="3"></circle>
@@ -1423,94 +1288,36 @@ return (
                 <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
               </svg>
             </div>
-
             <div className="flex flex-col">
-              <span className="text-white font-black text-[12px] tracking-wide uppercase">
-                Share Prophecy
-              </span>
-
-              <span className="text-blue-200/40 text-[9px] tracking-[0.25em] uppercase">
-                Spread The Wisdom
-              </span>
+              <span className="text-white font-black text-[12px] tracking-wide uppercase">Share Prophecy</span>
+              <span className="text-blue-200/40 text-[9px] tracking-[0.25em] uppercase">Spread The Wisdom</span>
             </div>
           </div>
-
-          <span className="text-blue-400 text-lg group-hover:translate-x-1 transition-transform">
-            →
-          </span>
+          <span className="text-blue-400 text-lg group-hover:translate-x-1 transition-transform">→</span>
         </div>
       </a>
 
-      {/* DOWNLOAD BUTTON */}
-<button
-  onClick={handleDailyGM}
-  className="
-          group relative flex-1 overflow-hidden
-          rounded-[24px]
-          border border-blue-500/30
-          bg-[#071120]
-          px-5 py-4
-          transition-all duration-300
-          hover:scale-[1.03]
-          hover:border-blue-400
-          hover:bg-blue-500/[0.08]
-          hover:shadow-[0_0_35px_rgba(59,130,246,0.35)]
-        "
+      <button
+        onClick={handleDailyGM}
+        className="group relative flex-1 overflow-hidden rounded-[24px] border border-blue-500/30 bg-[#071120] px-5 py-4 transition-all duration-300 hover:scale-[1.03] hover:border-blue-400 hover:bg-blue-500/[0.08] hover:shadow-[0_0_35px_rgba(59,130,246,0.35)]"
       >
         <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-blue-500/5"></div>
-
         <div className="relative flex items-center justify-between">
-
           <div className="flex items-center gap-4">
-
-<div
-  className="
-    relative
-    w-11 h-11
-    rounded-2xl
-    border border-cyan-400/40
-    bg-gradient-to-br
-    from-cyan-500/20
-    via-blue-500/20
-    to-purple-500/20
-    flex items-center justify-center
-    shadow-[0_0_25px_rgba(59,130,246,0.45)]
-  "
->
-  <div className="absolute inset-0 rounded-2xl bg-blue-500/10 blur-md"></div>
-
-  <span
-    className="
-      relative
-      text-[9px]
-      font-black
-      tracking-[0.15em]
-      text-cyan-200
-      drop-shadow-[0_0_10px_rgba(34,211,238,0.9)]
-    "
-  >
-    GM
-  </span>
-</div>
-
+            <div className="relative w-11 h-11 rounded-2xl border border-cyan-400/40 bg-gradient-to-br from-cyan-500/20 via-blue-500/20 to-purple-500/20 flex items-center justify-center shadow-[0_0_25px_rgba(59,130,246,0.45)]">
+              <div className="absolute inset-0 rounded-2xl bg-blue-500/10 blur-md"></div>
+              <span className="relative text-[9px] font-black tracking-[0.15em] text-cyan-200 drop-shadow-[0_0_10px_rgba(34,211,238,0.9)]">GM</span>
+            </div>
             <div className="flex flex-col">
               <span className="text-white font-black text-[12px] tracking-wide uppercase">
-                {gmCooldown
-  ? `⚡Next GM in ${gmTimeLeft}`
-  : "Daily GM TX"}
+                {gmCooldown ? `⚡Next GM in ${gmTimeLeft}` : "Daily GM TX"}
               </span>
-
               <span className="text-blue-200/40 text-[9px] tracking-[0.25em] uppercase">
-               {gmCooldown
-  ? "Cooldown Active"
-  : "Stay Active On Base"}
+                {gmCooldown ? "Cooldown Active" : "Stay Active On Base"}
               </span>
             </div>
           </div>
-
-          <span className="text-blue-400 text-lg group-hover:translate-x-1 transition-transform">
-            →
-          </span>
+          <span className="text-blue-400 text-lg group-hover:translate-x-1 transition-transform">→</span>
         </div>
       </button>
     </div>
@@ -1519,18 +1326,7 @@ return (
 
 {gmTxHash && (
   <div className="w-full flex justify-center mt-4">
-    <a
-      href={`https://basescan.org/tx/${gmTxHash}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="
-        text-[9px]
-        uppercase
-        tracking-[0.25em]
-        text-blue-300
-        hover:text-white
-      "
-    >
+    <a href={`https://basescan.org/tx/${gmTxHash}`} target="_blank" rel="noopener noreferrer" className="text-[9px] uppercase tracking-[0.25em] text-blue-300 hover:text-white">
       View GM TX ↗
     </a>
   </div>
@@ -1538,51 +1334,30 @@ return (
 
 {quote && luckyNumber && (
   <div className="mt-6 flex flex-col items-center relative z-[60]">
-    
     <div className="relative mb-4">
       <div className="absolute inset-0 bg-blue-500/20 blur-2xl rounded-full animate-pulse"></div>
-
-      <span
-        className="
-          relative
-          text-[11px]
-          uppercase
-          tracking-[0.25em]
-          text-blue-200
-          font-black
-          px-4 py-1.5
-          rounded-full
-          border border-blue-400/30
-          bg-blue-500/10
-          shadow-[0_0_30px_rgba(59,130,246,0.55)]
-          animate-[pulse_1.8s_ease-in-out_infinite]
-        "
-      >
+      <span className="relative text-[11px] uppercase tracking-[0.25em] text-blue-200 font-black px-4 py-1.5 rounded-full border border-blue-400/30 bg-blue-500/10 shadow-[0_0_30px_rgba(59,130,246,0.55)] animate-[pulse_1.8s_ease-in-out_infinite]">
         ✦ YOUR LUCKY NUMBER TODAY ✦
       </span>
     </div>
+    <div className="px-8 py-3 rounded-full border border-blue-500/30 bg-blue-500/10 backdrop-blur-xl shadow-[0_0_30px_rgba(37,99,235,0.2)]">
+      <span className="text-3xl md:text-4xl font-black text-blue-400 tracking-[0.15em]">
+        {luckyNumber}
+      </span>
+    </div>
+  </div>
+)}
 
-                  <div className="px-8 py-3 rounded-full border border-blue-500/30 bg-blue-500/10 backdrop-blur-xl shadow-[0_0_30px_rgba(37,99,235,0.2)]">
-                    <span className="text-3xl md:text-4xl font-black text-blue-400 tracking-[0.15em]">
-                      {luckyNumber}
-                    </span>
-                  </div>
-                </div>
-              )}
-
-          {/* COOL TIMER */}
           {cooldown > 0 && (
             <div className="flex flex-col items-center justify-center mb-10 animate-pulse">
               <div className="relative">
                 <div className="absolute inset-0 rounded-full bg-blue-500/20 blur-lg"></div>
-
                 <div className="relative px-10 py-5 rounded-full border border-blue-500/40 bg-blue-500/10 backdrop-blur-2xl shadow-[0_0_40px_rgba(37,99,235,0.35)]">
                   <span className="text-blue-400 font-black tracking-[0.35em] uppercase text-[13px] md:text-[16px]">
                     {formatCooldown(cooldown)}
                   </span>
                 </div>
               </div>
-
               <span className="mt-4 text-[10px] uppercase tracking-[0.4em] text-white/30 italic">
                 Oracle Cooldown Active
               </span>
@@ -1610,19 +1385,27 @@ return (
               </span>
             </button>
 
+            <button
+              onClick={handlePremiumOracle}
+              disabled={isPaying}
+              className="px-14 py-6 font-black rounded-full text-[10px] uppercase tracking-[0.3em] border border-blue-500/40 bg-blue-500/10 text-blue-300 hover:bg-blue-500/20 hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(37,99,235,0.2)]"
+            >
+              {isPaying ? "Processing..." : "⚡ Premium Oracle — $0.001"}
+            </button>
+
+            {premiumContent && (
+              <div className="px-6 py-4 rounded-2xl border border-blue-500/30 bg-blue-500/10 text-blue-200 text-sm text-center max-w-md">
+                {premiumContent}
+              </div>
+            )}
+
             <div className="mt-1 mb-14 w-full flex justify-center animate-float">
               <div className="inline-flex items-center justify-center gap-1 bg-white/[0.05] px-5 py-3.5 rounded-full border border-white/10 backdrop-blur-xl shadow-xl">
                 <span className="text-[11px] text-blue-500 font-black tracking-widest uppercase italic leading-none">
                   You&apos;re now based
                 </span>
-
                 <div className="relative w-5 h-4 flex items-center">
-                  <Image
-                    src="/base_logo.png"
-                    alt="Base Logo"
-                    fill
-                    className="object-contain brightness-200"
-                  />
+                  <Image src="/base_logo.png" alt="Base Logo" fill className="object-contain brightness-200" />
                 </div>
               </div>
             </div>
@@ -1631,95 +1414,32 @@ return (
 <div className="fixed -left-[99999px] top-0">
 <div
   ref={shareCardRef}
-  className="
-    w-[1200px] h-[630px]
-    relative overflow-hidden
-    flex flex-col items-start text-left
-    px-20 py-10
-    bg-cover bg-center
-  "
-  style={{
-    backgroundImage: "url('/share-bg.png')",
-  }}
+  className="w-[1200px] h-[630px] relative overflow-hidden flex flex-col items-start text-left px-20 py-10 bg-cover bg-center"
+  style={{ backgroundImage: "url('/share-bg.png')" }}
 >
-  {/* DARK OVERLAY */}
   <div className="absolute inset-0 bg-black/35"></div>
-
-  {/* LEFT READABILITY GRADIENT */}
   <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/40 to-transparent"></div>
-
-  {/* QUOTE */}
-  <div
-    className="
-      relative z-10 mt-20
-      ml-8
-      max-w-[500px]
-      px-8 py-4
-      rounded-[30px]
-      bg-black/10
-      backdrop-blur-[1px]
-      text-white
-      text-[38px]
-      font-black
-      italic
-      leading-[1.02]
-      tracking-tight
-      drop-shadow-[0_0_30px_rgba(255,255,255,0.25)]
-    "
-  >
-    “{oracleDrop?.text || quote}”
+  <div className="relative z-10 mt-20 ml-8 max-w-[500px] px-8 py-4 rounded-[30px] bg-black/10 backdrop-blur-[1px] text-white text-[38px] font-black italic leading-[1.02] tracking-tight drop-shadow-[0_0_30px_rgba(255,255,255,0.25)]">
+    "{oracleDrop?.text || quote}"
   </div>
-
-  {/* BADGES */}
   <div className="relative z-10 flex gap-4 mt-6 mb-6 ml-16">
-    <div className="px-6 py-2.5 rounded-full border border-blue-400/40 bg-blue-500/20 text-blue-100 text-[18px] uppercase tracking-[0.22em] font-black shadow-[0_0_25px_rgba(59,130,246,0.45)]">
-      {oracleDrop?.category}
-    </div>
-
-    <div className="px-6 py-2.5 rounded-full border border-white/15 bg-black/25 text-white/80 text-[18px] uppercase tracking-[0.22em] font-black">
-      {oracleDrop?.source}
-    </div>
-
-    <div className="px-6 py-2.5 rounded-full border border-purple-400/50 bg-purple-500/25 text-purple-100 text-[18px] uppercase tracking-[0.22em] font-black shadow-[0_0_28px_rgba(168,85,247,0.65)]">
-      {oracleDrop?.rarity}
-    </div>
+    <div className="px-6 py-2.5 rounded-full border border-blue-400/40 bg-blue-500/20 text-blue-100 text-[18px] uppercase tracking-[0.22em] font-black shadow-[0_0_25px_rgba(59,130,246,0.45)]">{oracleDrop?.category}</div>
+    <div className="px-6 py-2.5 rounded-full border border-white/15 bg-black/25 text-white/80 text-[18px] uppercase tracking-[0.22em] font-black">{oracleDrop?.source}</div>
+    <div className="px-6 py-2.5 rounded-full border border-purple-400/50 bg-purple-500/25 text-purple-100 text-[18px] uppercase tracking-[0.22em] font-black shadow-[0_0_28px_rgba(168,85,247,0.65)]">{oracleDrop?.rarity}</div>
   </div>
-
-  {/* LUCKY NUMBER */}
   <div className="relative z-10 mt-2 ml-20 flex flex-col items-center">
-    <div className="text-[15px] uppercase tracking-[0.45em] text-blue-100 font-black mb-3 drop-shadow-[0_0_18px_rgba(96,165,250,0.45)]">
-      ✦ YOUR LUCKY NUMBER TODAY ✦
-    </div>
-
+    <div className="text-[15px] uppercase tracking-[0.45em] text-blue-100 font-black mb-3 drop-shadow-[0_0_18px_rgba(96,165,250,0.45)]">✦ YOUR LUCKY NUMBER TODAY ✦</div>
     <div className="relative flex items-center justify-center">
       <div className="absolute inset-0 bg-blue-500/20 blur-2xl rounded-full scale-90"></div>
-
-      <div
-        className="
-          relative
-          text-[58px]
-          leading-none
-          text-blue-200
-          font-black
-          tracking-[0.02em]
-          drop-shadow-[0_0_28px_rgba(96,165,250,0.9)]
-        "
-      >
-        {luckyNumber}
-      </div>
+      <div className="relative text-[58px] leading-none text-blue-200 font-black tracking-[0.02em] drop-shadow-[0_0_28px_rgba(96,165,250,0.9)]">{luckyNumber}</div>
     </div>
   </div>
-
-  {/* FOOTER */}
-  <div className="absolute z-10 right-10 bottom-10 text-blue-300/80 text-[16px] tracking-[0.28em] uppercase font-black drop-shadow-[0_0_20px_rgba(59,130,246,0.65)]">
-    MINI.BASEDORACLE.SPACE
-  </div>
+  <div className="absolute z-10 right-10 bottom-10 text-blue-300/80 text-[16px] tracking-[0.28em] uppercase font-black drop-shadow-[0_0_20px_rgba(59,130,246,0.65)]">MINI.BASEDORACLE.SPACE</div>
 </div>
 </div>
         </div>
          </div>
 
-      {/* FOOTER */}
     </main>
   );
 }
