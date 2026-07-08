@@ -180,6 +180,9 @@ const DAILY_GM_ABI = [
   "function gm() external",
 ];
 
+const BUILDER_CODE_DATA_SUFFIX =
+  "0x62635f66757579706c6e6c0b0080218021802180218021802180218021";
+
   // ABI
   const abi = [
     "function consult() public",
@@ -612,8 +615,15 @@ const downloadShareCard = async () => {
           signer
         );
 
-      const tx =
-        await contract.consult();
+      const consultData =
+        contract.interface.encodeFunctionData(
+          "consult"
+        );
+
+      const tx = await signer.sendTransaction({
+        to: CONTRACT_ADDRESS,
+        data: `${consultData}${BUILDER_CODE_DATA_SUFFIX.slice(2)}`,
+      });
 
       setTxHash(tx.hash);
 
@@ -830,7 +840,15 @@ const downloadShareCard = async () => {
         signer
       );
 
-    const tx = await contract.gm();
+    const gmData =
+      contract.interface.encodeFunctionData(
+        "gm"
+      );
+
+    const tx = await signer.sendTransaction({
+      to: DAILY_GM_CONTRACT,
+      data: `${gmData}${BUILDER_CODE_DATA_SUFFIX.slice(2)}`,
+    });
 
     await tx.wait();
 
