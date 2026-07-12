@@ -11,10 +11,11 @@ import "./globals.css";
 import {
   useAccount,
   useDisconnect,
-  useWalletClient,
+  usePublicClient,
+  useSendTransaction,
   useSwitchChain,
 } from "wagmi";
-import html2canvas from "html2canvas";
+import { encodeFunctionData } from "viem";
 import { useX402Payment } from "@/app/hooks/useX402Payment";
 
 export default function Home() {
@@ -35,7 +36,7 @@ const [gmCooldown, setGmCooldown] =
 
   const shareCardRef = useRef<HTMLDivElement | null>(null);
 
-  const { address } =
+  const { address, chainId } =
   useAccount();
 
 const connectModal = useConnectModal();
@@ -45,8 +46,12 @@ const openConnectModal =
 
 const { disconnect } =
   useDisconnect();
-const { data: walletClient } =
-  useWalletClient();
+const publicClient = usePublicClient({
+  chainId: 8453,
+});
+
+const { sendTransactionAsync } =
+  useSendTransaction();
 
 const { switchChainAsync } =
   useSwitchChain();
@@ -561,6 +566,9 @@ const getStreakGlow = (days: number) => {
 const downloadShareCard = async () => {
   if (!shareCardRef.current) return;
 
+  const { default: html2canvas } =
+    await import("html2canvas");
+
   const canvas = await html2canvas(
     shareCardRef.current,
     {
@@ -602,46 +610,38 @@ const downloadShareCard = async () => {
         "opacity-60 scale-110"
       );
 
-      if (!walletClient) {
-        openConnectModal?.();
-        return;
-      }
-
-      if (walletClient.chain.id !== 8453) {
+      if (chainId !== 8453) {
         await switchChainAsync({
           chainId: 8453,
         });
       }
 
-      const provider =
-        new ethers.BrowserProvider(
-          walletClient.transport
-        );
-
-      const signer =
-        await provider.getSigner();
-
-      const contract =
-        new ethers.Contract(
-          CONTRACT_ADDRESS,
-          abi,
-          signer
-        );
-
       const consultData =
-        contract.interface.encodeFunctionData(
-          "consult"
-        );
+        encodeFunctionData({
+          abi: [{
+            name: "consult",
+            type: "function",
+            stateMutability: "nonpayable",
+            inputs: [],
+            outputs: [],
+          }],
+          functionName: "consult",
+        });
 
-      const tx = await signer.sendTransaction({
+      const hash = await sendTransactionAsync({
         to: CONTRACT_ADDRESS,
         data: `${consultData}${BUILDER_CODE_DATA_SUFFIX.slice(2)}`,
+        chainId: 8453,
       });
 
-      setTxHash(tx.hash);
+      setTxHash(hash);
 
       // Never reveal or persist a prophecy until Base confirms the consult.
-      await tx.wait();
+      if (!publicClient) {
+        throw new Error("Base public client is unavailable");
+      }
+
+      await publicClient.waitForTransactionReceipt({ hash });
 
       const todaySeed = new Date()
         .toISOString()
@@ -692,7 +692,7 @@ const downloadShareCard = async () => {
         `✦ ${prophecyQuote.rarity}\n` +
         `✦ ${prophecyQuote.source}\n\n` +
         `✦ Lucky Number: ${prophecyNumber}\n\n` +
-        `✦ Oracle TX:\nhttps://basescan.org/tx/${tx.hash}\n\n` +
+        `✦ Oracle TX:\nhttps://basescan.org/tx/${hash}\n\n` +
         `Consult your fate:\n${siteOrigin}`
       );
 
@@ -713,7 +713,7 @@ const downloadShareCard = async () => {
 
       const dailyDrop =
         oracleDrops[
-          getUniqueQuoteIndex(address, tx.hash)
+          getUniqueQuoteIndex(address, hash)
         ];
 
       setOracleDrop(dailyDrop);
@@ -761,7 +761,7 @@ const downloadShareCard = async () => {
       const historyItem = {
         quote: prophecyQuote.text,
         luckyNumber: number,
-        txHash: tx.hash,
+        txHash: hash,
         date: new Date().toLocaleDateString(),
       };
 
@@ -804,9 +804,21 @@ const downloadShareCard = async () => {
       );
 
       const remaining =
-        await contract.getRemainingTime(
-          address
-        );
+        await publicClient.readContract({
+          address: CONTRACT_ADDRESS,
+          abi: [{
+            name: "getRemainingTime",
+            type: "function",
+            stateMutability: "view",
+            inputs: [{
+              name: "user",
+              type: "address",
+            }],
+            outputs: [{ type: "uint256" }],
+          }],
+          functionName: "getRemainingTime",
+          args: [address],
+        });
 
       setCooldown(
         Number(remaining) * 1000
@@ -840,43 +852,37 @@ const downloadShareCard = async () => {
       return;
     }
 
-    if (!walletClient) {
-      openConnectModal?.();
-      return;
-    }
-
-    if (walletClient.chain.id !== 8453) {
+    if (chainId !== 8453) {
       await switchChainAsync({
         chainId: 8453,
       });
     }
 
-    const provider =
-      new ethers.BrowserProvider(
-        walletClient.transport
-      );
-
-    const signer =
-      await provider.getSigner();
-
-    const contract =
-      new ethers.Contract(
-        DAILY_GM_CONTRACT,
-        DAILY_GM_ABI,
-        signer
-      );
-
     const gmData =
-      contract.interface.encodeFunctionData(
-        "gm"
-      );
+      encodeFunctionData({
+        abi: [{
+          name: "gm",
+          type: "function",
+          stateMutability: "nonpayable",
+          inputs: [],
+          outputs: [],
+        }],
+        functionName: "gm",
+      });
 
-    const tx = await signer.sendTransaction({
+    const hash = await sendTransactionAsync({
       to: DAILY_GM_CONTRACT,
       data: `${gmData}${BUILDER_CODE_DATA_SUFFIX.slice(2)}`,
+      chainId: 8453,
     });
 
-    await tx.wait();
+    setGmTxHash(hash);
+
+    if (!publicClient) {
+      throw new Error("Base public client is unavailable");
+    }
+
+    await publicClient.waitForTransactionReceipt({ hash });
 
     setGmCooldown(true);
 
