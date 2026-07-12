@@ -5,7 +5,6 @@ import "@rainbow-me/rainbowkit/styles.css";
 import {
   RainbowKitProvider,
   darkTheme,
-  getDefaultConfig,
 } from "@rainbow-me/rainbowkit";
 
 import {
@@ -13,12 +12,36 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query";
 
-import { WagmiProvider } from "wagmi";
+import {
+  WagmiProvider,
+  createConfig,
+  createStorage,
+  cookieStorage,
+  http,
+} from "wagmi";
 import { base } from "wagmi/chains";
-import { useState, useMemo } from "react";
+import {
+  baseAccount,
+  injected,
+} from "wagmi/connectors";
+import { useState } from "react";
 
-const projectId =
-  "31299aa6a25a6b4fec5d2af2ed4a91bd";
+const config = createConfig({
+  chains: [base],
+  connectors: [
+    injected(),
+    baseAccount({
+      appName: "Based Oracle",
+    }),
+  ],
+  storage: createStorage({
+    storage: cookieStorage,
+  }),
+  ssr: true,
+  transports: {
+    [base.id]: http(),
+  },
+});
 
 export function RootProvider({
   children,
@@ -27,22 +50,6 @@ export function RootProvider({
 }) {
   const [queryClient] = useState(
     () => new QueryClient()
-  );
-
-  const config = useMemo(
-    () =>
-      getDefaultConfig({
-        appName: "Based Oracle",
-        projectId,
-        chains: [base],
-
-        // Base App beyaz ekran için kalsın
-        ssr: true,
-
-        // MetaMask + Rabby + Coinbase
-        multiInjectedProviderDiscovery: true,
-      }),
-    []
   );
 
   return (

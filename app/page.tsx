@@ -15,7 +15,6 @@ import {
   useSwitchChain,
 } from "wagmi";
 import html2canvas from "html2canvas";
-import { sdk } from "@farcaster/miniapp-sdk";
 import { useX402Payment } from "@/app/hooks/useX402Payment";
 
 export default function Home() {
@@ -29,12 +28,6 @@ const [gmCooldown, setGmCooldown] =
   useState(false);
   const [gmTimeLeft, setGmTimeLeft] =
   useState("");
-
-  useEffect(() => {
-  sdk.actions.ready().catch((err) => {
-    console.log("Farcaster ready failed:", err);
-  });
-}, []);
 
   const [glowIntensity, setGlowIntensity] = useState(
     "opacity-20 scale-100"
