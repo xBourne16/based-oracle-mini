@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 "use client"; 
@@ -146,19 +145,6 @@ const forcedByQuery =
   useState("");
   const [siteOrigin, setSiteOrigin] =
   useState("");
-  useEffect(() => {
-  if (!address) return;
-
-  const today = new Date().toISOString().split("T")[0];
-
-  const savedShare = localStorage.getItem(
-    `oracle_share_${address}_${today}`
-  );
-
-  if (savedShare) {
-    setShareUrl(savedShare);
-  }
-}, [address]);
   const [streak, setStreak] =
   useState<number>(0);
   const [oracleHistory, setOracleHistory] = useState<
@@ -273,15 +259,37 @@ const BUILDER_CODE_DATA_SUFFIX =
   }, [address]);
 
 useEffect(() => {
-  if (!address) return;
+  if (!address) {
+    setStreak(0);
+    setOracleHistory([]);
+    return;
+  }
 
-  const history = JSON.parse(
+  const savedStreak = Number(
     localStorage.getItem(
-      `oracle_history_${address}`
-    ) || "[]"
+      `oracle_streak_${address}`
+    ) || "0"
   );
 
-  setOracleHistory(history);
+  setStreak(
+    Number.isFinite(savedStreak)
+      ? Math.max(0, savedStreak)
+      : 0
+  );
+
+  try {
+    const history = JSON.parse(
+      localStorage.getItem(
+        `oracle_history_${address}`
+      ) || "[]"
+    );
+
+    setOracleHistory(
+      Array.isArray(history) ? history : []
+    );
+  } catch {
+    setOracleHistory([]);
+  }
 }, [address]);
 
 
@@ -407,12 +415,24 @@ const provider =
 
     fetchCooldown();
 
-    const interval = setInterval(
+    const refreshInterval = setInterval(
       fetchCooldown,
+      30000
+    );
+
+    const countdownInterval = setInterval(
+      () => {
+        setCooldown((current) =>
+          Math.max(0, current - 1000)
+        );
+      },
       1000
     );
 
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(refreshInterval);
+      clearInterval(countdownInterval);
+    };
   }, [address]);
 
   const getUniqueQuoteIndex = (
@@ -627,6 +647,9 @@ const downloadShareCard = async () => {
 
       setTxHash(tx.hash);
 
+      // Never reveal or persist a prophecy until Base confirms the consult.
+      await tx.wait();
+
       const todaySeed = new Date()
         .toISOString()
         .slice(0, 10);
@@ -749,11 +772,21 @@ const downloadShareCard = async () => {
         date: new Date().toLocaleDateString(),
       };
 
-      const existingHistory = JSON.parse(
-        localStorage.getItem(
-          `oracle_history_${address}`
-        ) || "[]"
-      );
+      let existingHistory: typeof oracleHistory = [];
+
+      try {
+        const savedHistory = JSON.parse(
+          localStorage.getItem(
+            `oracle_history_${address}`
+          ) || "[]"
+        );
+
+        existingHistory = Array.isArray(savedHistory)
+          ? savedHistory
+          : [];
+      } catch {
+        existingHistory = [];
+      }
 
       const updatedHistory = [
         historyItem,
@@ -777,8 +810,6 @@ const downloadShareCard = async () => {
         number.toString()
       );
 
-      await tx.wait();
-
       const remaining =
         await contract.getRemainingTime(
           address
@@ -789,6 +820,8 @@ const downloadShareCard = async () => {
       );
     } catch (error: any) {
       console.error("TX Error:", error);
+
+      setTxHash(null);
 
       if (error.code === 4001) {
         return;
