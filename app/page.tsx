@@ -59,6 +59,11 @@ const { switchChainAsync } =
   const { pay } = useX402Payment();
   const [premiumContent, setPremiumContent] = useState<string | null>(null);
   const [isPaying, setIsPaying] = useState(false);
+  const [isCreatingAgent, setIsCreatingAgent] = useState(false);
+  const [createdAgent, setCreatedAgent] = useState<{
+    id: string;
+    hash: `0x${string}`;
+  } | null>(null);
 
     const [baseName, setBaseName] =
   useState<string | null>(null);
@@ -166,6 +171,9 @@ const DAILY_GM_ABI = [
 
 const BUILDER_CODE_DATA_SUFFIX =
   "0x0b62635f66757579706c6e6c0080218021802180218021802180218021";
+
+const ERC8004_IDENTITY_REGISTRY =
+  "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432";
 
   // ABI
   const abi = [
@@ -897,6 +905,93 @@ const downloadShareCard = async () => {
   }
 };
 
+  const handleCreateAgent = async () => {
+    if (!address) {
+      openConnectModal?.();
+      return;
+    }
+
+    const name = window.prompt(
+      "Name your Base AI Agent:",
+      "Oracle Agent"
+    )?.trim();
+
+    if (!name) return;
+
+    const description = window.prompt(
+      "Describe what your agent does:",
+      "An onchain oracle agent created on Base."
+    )?.trim();
+
+    if (!description) return;
+
+    try {
+      setIsCreatingAgent(true);
+      setCreatedAgent(null);
+
+      if (chainId !== 8453) {
+        await switchChainAsync({ chainId: 8453 });
+      }
+
+      const registration = {
+        type: "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
+        name: name.slice(0, 80),
+        description: description.slice(0, 280),
+        image: `${siteOrigin}/oracle-logo.png`,
+        services: [],
+        supportedTrust: ["reputation"],
+      };
+
+      const agentURI =
+        `data:application/json,${encodeURIComponent(
+          JSON.stringify(registration)
+        )}`;
+
+      const registerData = encodeFunctionData({
+        abi: [{
+          name: "register",
+          type: "function",
+          stateMutability: "nonpayable",
+          inputs: [{ name: "agentURI", type: "string" }],
+          outputs: [{ name: "agentId", type: "uint256" }],
+        }],
+        functionName: "register",
+        args: [agentURI],
+      });
+
+      const hash = await sendTransactionAsync({
+        to: ERC8004_IDENTITY_REGISTRY,
+        data: `${registerData}${BUILDER_CODE_DATA_SUFFIX.slice(2)}`,
+        chainId: 8453,
+      });
+
+      if (!publicClient) {
+        throw new Error("Base public client is unavailable");
+      }
+
+      const receipt =
+        await publicClient.waitForTransactionReceipt({ hash });
+
+      const registryLog = receipt.logs.find(
+        (log) =>
+          log.address.toLowerCase() ===
+            ERC8004_IDENTITY_REGISTRY.toLowerCase() &&
+          log.topics.length >= 4
+      );
+
+      const id = registryLog?.topics[3]
+        ? BigInt(registryLog.topics[3]).toString()
+        : "created";
+
+      setCreatedAgent({ id, hash });
+    } catch (error) {
+      console.error("Agent creation failed:", error);
+      alert("Agent creation failed or was cancelled.");
+    } finally {
+      setIsCreatingAgent(false);
+    }
+  };
+
   const handlePremiumOracle = async () => {
     if (!address) {
       openConnectModal?.();
@@ -1320,10 +1415,10 @@ return (
 {quote && (shareUrl || oracleHistory[0]?.txHash) && (
   <div className="absolute bottom-2 left-0 right-0 px-8 z-[80]">
     <div className="w-full flex justify-between items-center gap-5">
-      <a
-        href={shareUrl || `https://twitter.com/intent/tweet?text=${encodeURIComponent(`🔮 BASED ORACLE PROPHECY 🔮\n\n"${quote}"\n\n✦ Lucky Number: ${luckyNumber}\n\n✦ Oracle TX:\nhttps://basescan.org/tx/${oracleHistory[0]?.txHash}\n\nConsult your fate:\n${siteOrigin}`)}`}
-        target="_blank"
-        rel="noopener noreferrer"
+      <button
+        type="button"
+        onClick={handleCreateAgent}
+        disabled={isCreatingAgent}
         className="group relative flex-1 overflow-hidden rounded-[24px] border border-blue-500/30 bg-[#071120] px-5 py-4 transition-all duration-300 hover:scale-[1.03] hover:border-blue-400 hover:bg-blue-500/[0.08] hover:shadow-[0_0_35px_rgba(59,130,246,0.35)]"
       >
         <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-blue-500/5"></div>
@@ -1339,13 +1434,15 @@ return (
               </svg>
             </div>
             <div className="flex flex-col">
-              <span className="text-white font-black text-[12px] tracking-wide uppercase">Share Prophecy</span>
-              <span className="text-blue-200/40 text-[9px] tracking-[0.25em] uppercase">Spread The Wisdom</span>
+              <span className="text-white font-black text-[12px] tracking-wide uppercase">
+                {isCreatingAgent ? "Creating Agent..." : "Create Base AI Agent"}
+              </span>
+              <span className="text-blue-200/40 text-[9px] tracking-[0.25em] uppercase">ERC-8004 Identity</span>
             </div>
           </div>
           <span className="text-blue-400 text-lg group-hover:translate-x-1 transition-transform">→</span>
         </div>
-      </a>
+      </button>
 
       <button
         onClick={handleDailyGM}
@@ -1371,6 +1468,19 @@ return (
         </div>
       </button>
     </div>
+  </div>
+)}
+
+{createdAgent && (
+  <div className="w-full flex justify-center mt-4">
+    <a
+      href={`https://basescan.org/tx/${createdAgent.hash}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-[9px] uppercase tracking-[0.25em] text-cyan-300 hover:text-white"
+    >
+      Agent #{createdAgent.id} Created — View TX ↗
+    </a>
   </div>
 )}
 
