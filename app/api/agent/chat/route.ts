@@ -8,7 +8,7 @@ type ChatMessage = {
 };
 
 export async function POST(request: Request) {
-  const apiKey = process.env.OPENAI_API_KEY;
+  const apiKey = process.env.GROQ_API_KEY;
 
   if (!apiKey) {
     return NextResponse.json(
@@ -39,42 +39,47 @@ export async function POST(request: Request) {
       );
     }
 
-    const response = await fetch("https://api.openai.com/v1/responses", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: process.env.OPENAI_MODEL || "gpt-4o-mini",
-        instructions:
-          `You are Base Oracle Agent #${agentId}, an ERC-8004 agent on Base. ` +
-          "Give concise, imaginative but responsible guidance. Never promise profits, " +
-          "predict guaranteed financial outcomes, or request private keys or seed phrases. " +
-          "Clearly label entertainment-style prophecies as non-financial advice.",
-        input: messages,
-        max_output_tokens: 350,
-      }),
-    });
+    const systemPrompt =
+      `You are Base Oracle Agent #${agentId}, an ERC-8004 agent on Base. ` +
+      "Reply in the same language as the user. Give concise, imaginative but " +
+      "responsible guidance. Never promise profits, predict guaranteed financial " +
+      "outcomes, or request private keys or seed phrases. Clearly label " +
+      "entertainment-style prophecies as non-financial advice.";
+
+    const response = await fetch(
+      "https://api.groq.com/openai/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: process.env.GROQ_MODEL || "llama-3.3-70b-versatile",
+          messages: [{ role: "system", content: systemPrompt }, ...messages],
+          max_completion_tokens: 350,
+          temperature: 0.8,
+        }),
+        signal: AbortSignal.timeout(20_000),
+      }
+    );
 
     const data = await response.json();
 
     if (!response.ok) {
-      console.error("OpenAI API error:", data?.error?.message || response.status);
+      console.error("Groq API error:", data?.error?.message || response.status);
       return NextResponse.json(
-        { error: "The agent could not answer right now." },
-        { status: 502 }
+        {
+          error:
+            response.status === 429
+              ? "The free AI limit is busy. Please try again shortly."
+              : "The agent could not answer right now.",
+        },
+        { status: response.status === 429 ? 429 : 502 }
       );
     }
 
-    const reply = (data.output || [])
-      .flatMap((item: { content?: Array<{ type?: string; text?: string }> }) =>
-        item.content || []
-      )
-      .filter((item: { type?: string }) => item.type === "output_text")
-      .map((item: { text?: string }) => item.text || "")
-      .join("\n")
-      .trim();
+    const reply = String(data?.choices?.[0]?.message?.content || "").trim();
 
     return NextResponse.json({
       reply: reply || "The oracle is silent. Ask again.",
