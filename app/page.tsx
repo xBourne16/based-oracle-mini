@@ -25,6 +25,11 @@ const [oracleDrop, setOracleDrop] =
   const [isAnimating, setIsAnimating] = useState(false);
 const [gmTxHash, setGmTxHash] =
   useState<string | null>(null);
+const [isSendingGm, setIsSendingGm] = useState(false);
+const [gmResult, setGmResult] = useState<{
+  status: "success" | "error";
+  hash?: string;
+} | null>(null);
 const [gmCooldown, setGmCooldown] =
   useState(false);
   const [gmTimeLeft, setGmTimeLeft] =
@@ -60,6 +65,12 @@ const { switchChainAsync } =
   const [premiumContent, setPremiumContent] = useState<string | null>(null);
   const [isPaying, setIsPaying] = useState(false);
   const [isCreatingAgent, setIsCreatingAgent] = useState(false);
+  const [isAgentForgeOpen, setIsAgentForgeOpen] = useState(false);
+  const [agentName, setAgentName] = useState("Oracle Agent");
+  const [agentDescription, setAgentDescription] = useState(
+    "An onchain oracle agent created on Base."
+  );
+  const [agentForgeError, setAgentForgeError] = useState("");
   const [createdAgent, setCreatedAgent] = useState<{
     id: string;
     hash: `0x${string}`;
@@ -858,12 +869,15 @@ const downloadShareCard = async () => {
   };
 
   const handleDailyGM = async () => {
-    if (gmCooldown) return;
+    if (gmCooldown || isSendingGm) return;
   try {
     if (!address) {
       openConnectModal?.();
       return;
     }
+
+    setIsSendingGm(true);
+    setGmResult(null);
 
     if (chainId !== 8453) {
       await switchChainAsync({
@@ -903,35 +917,42 @@ const downloadShareCard = async () => {
       `daily_gm_${address}`,
       Date.now().toString()
     );
-    alert("GM TX Sent ✅");
+    setGmResult({ status: "success", hash });
   } catch (error) {
     console.error(error);
-    alert("GM TX Failed");
+    setGmResult({ status: "error" });
+  } finally {
+    setIsSendingGm(false);
   }
 };
 
-  const handleCreateAgent = async () => {
+  const openAgentForge = () => {
     if (!address) {
       openConnectModal?.();
       return;
     }
 
-    const name = window.prompt(
-      "Name your Base AI Agent:",
-      "Oracle Agent"
-    )?.trim();
+    setAgentForgeError("");
+    setIsAgentForgeOpen(true);
+  };
 
-    if (!name) return;
+  const handleCreateAgent = async () => {
+    const name = agentName.trim();
+    const description = agentDescription.trim();
 
-    const description = window.prompt(
-      "Describe what your agent does:",
-      "An onchain oracle agent created on Base."
-    )?.trim();
+    if (name.length < 3) {
+      setAgentForgeError("Agent name must contain at least 3 characters.");
+      return;
+    }
 
-    if (!description) return;
+    if (description.length < 12) {
+      setAgentForgeError("Describe your agent in at least 12 characters.");
+      return;
+    }
 
     try {
       setIsCreatingAgent(true);
+      setAgentForgeError("");
       setCreatedAgent(null);
 
       if (chainId !== 8453) {
@@ -989,9 +1010,10 @@ const downloadShareCard = async () => {
         : "created";
 
       setCreatedAgent({ id, hash });
+      setIsAgentForgeOpen(false);
     } catch (error) {
       console.error("Agent creation failed:", error);
-      alert("Agent creation failed or was cancelled.");
+      setAgentForgeError("The ritual was cancelled or the transaction failed.");
     } finally {
       setIsCreatingAgent(false);
     }
@@ -1208,7 +1230,7 @@ if (isMiniFrame) {
 
 <button
   onClick={handleDailyGM}
-  disabled={gmCooldown}
+  disabled={gmCooldown || isSendingGm}
   className="
     mt-3
     w-full
@@ -1225,7 +1247,9 @@ if (isMiniFrame) {
 >
   <div className="flex flex-col items-center">
     <span>
-    {gmCooldown
+    {isSendingGm
+  ? "CONFIRMING..."
+  : gmCooldown
   ? "⚡ NEXT GM"
   : "DAILY GM TX"}
     </span>
@@ -1466,7 +1490,7 @@ return (
     <div className="w-full flex justify-between items-center gap-5">
       <button
         type="button"
-        onClick={handleCreateAgent}
+        onClick={openAgentForge}
         disabled={isCreatingAgent}
         className="group relative flex-1 overflow-hidden rounded-[24px] border border-blue-500/30 bg-[#071120] px-5 py-4 transition-all duration-300 hover:scale-[1.03] hover:border-blue-400 hover:bg-blue-500/[0.08] hover:shadow-[0_0_35px_rgba(59,130,246,0.35)]"
       >
@@ -1495,6 +1519,7 @@ return (
 
       <button
         onClick={handleDailyGM}
+        disabled={gmCooldown || isSendingGm}
         className="group relative flex-1 overflow-hidden rounded-[24px] border border-blue-500/30 bg-[#071120] px-5 py-4 transition-all duration-300 hover:scale-[1.03] hover:border-blue-400 hover:bg-blue-500/[0.08] hover:shadow-[0_0_35px_rgba(59,130,246,0.35)]"
       >
         <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-blue-500/5"></div>
@@ -1506,7 +1531,11 @@ return (
             </div>
             <div className="flex flex-col">
               <span className="text-white font-black text-[12px] tracking-wide uppercase">
-                {gmCooldown ? `⚡Next GM in ${gmTimeLeft}` : "Daily GM TX"}
+                {isSendingGm
+                  ? "Confirming GM..."
+                  : gmCooldown
+                  ? `⚡Next GM in ${gmTimeLeft}`
+                  : "Daily GM TX"}
               </span>
               <span className="text-blue-200/40 text-[9px] tracking-[0.25em] uppercase">
                 {gmCooldown ? "Cooldown Active" : "Stay Active On Base"}
@@ -1516,6 +1545,214 @@ return (
           <span className="text-blue-400 text-lg group-hover:translate-x-1 transition-transform">→</span>
         </div>
       </button>
+    </div>
+  </div>
+)}
+
+{gmResult && (
+  <div
+    className="fixed inset-0 z-[10000] flex items-center justify-center bg-black/85 px-4 py-8 backdrop-blur-xl"
+    onMouseDown={(event) => {
+      if (event.target === event.currentTarget) setGmResult(null);
+    }}
+  >
+    <div className="relative w-full max-w-[430px] overflow-hidden rounded-[34px] border border-blue-400/25 bg-[#050912] px-7 py-8 text-center shadow-[0_0_90px_rgba(37,99,235,0.3)] sm:px-9">
+      <div className={`pointer-events-none absolute left-1/2 top-0 h-56 w-56 -translate-x-1/2 -translate-y-1/2 rounded-full blur-[80px] ${
+        gmResult.status === "success" ? "bg-cyan-400/20" : "bg-red-500/15"
+      }`} />
+      <div className="pointer-events-none absolute inset-0 opacity-[0.035] [background-image:linear-gradient(rgba(255,255,255,.8)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.8)_1px,transparent_1px)] [background-size:28px_28px]" />
+
+      <button
+        type="button"
+        onClick={() => setGmResult(null)}
+        aria-label="Close GM result"
+        className="absolute right-5 top-5 z-10 flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-lg text-white/40 transition hover:text-white"
+      >
+        ×
+      </button>
+
+      <div className="relative">
+        <div className={`mx-auto flex h-20 w-20 items-center justify-center rounded-[26px] border text-3xl font-black shadow-[0_0_40px_rgba(59,130,246,0.3)] ${
+          gmResult.status === "success"
+            ? "border-cyan-300/35 bg-gradient-to-br from-cyan-400/20 to-blue-600/20 text-cyan-200"
+            : "border-red-300/25 bg-red-500/10 text-red-200"
+        }`}>
+          {gmResult.status === "success" ? "GM" : "!"}
+        </div>
+
+        <div className="mt-6 text-[9px] font-black uppercase tracking-[0.34em] text-blue-300/55">
+          {gmResult.status === "success" ? "Transmission Confirmed" : "Transmission Interrupted"}
+        </div>
+        <h2 className="mt-3 text-3xl font-black uppercase italic tracking-[-0.04em] text-white">
+          {gmResult.status === "success" ? (
+            <>You Are <span className="text-blue-400">Based</span></>
+          ) : (
+            <>GM <span className="text-red-300">Failed</span></>
+          )}
+        </h2>
+        <p className="mx-auto mt-3 max-w-xs text-[11px] leading-relaxed text-white/40">
+          {gmResult.status === "success"
+            ? "Your daily signal is permanently recorded on Base. The next transmission unlocks after the cooldown."
+            : "The wallet request was cancelled or the network could not confirm your transaction."}
+        </p>
+
+        {gmResult.status === "success" && gmResult.hash && (
+          <div className="mt-6 rounded-2xl border border-white/[0.07] bg-black/30 px-4 py-3">
+            <div className="text-[7px] font-black uppercase tracking-[0.25em] text-white/25">Transaction Hash</div>
+            <div className="mt-1 font-mono text-[10px] text-cyan-200/75">
+              {gmResult.hash.slice(0, 10)}...{gmResult.hash.slice(-8)}
+            </div>
+          </div>
+        )}
+
+        <div className="mt-6 flex gap-3">
+          {gmResult.status === "success" && gmResult.hash ? (
+            <a
+              href={`https://basescan.org/tx/${gmResult.hash}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 rounded-2xl border border-blue-300/25 bg-gradient-to-r from-blue-600 to-blue-500 px-4 py-4 text-[9px] font-black uppercase tracking-[0.22em] text-white shadow-[0_15px_40px_rgba(37,99,235,0.3)] transition hover:scale-[1.02]"
+            >
+              View On Base ↗
+            </a>
+          ) : (
+            <button
+              type="button"
+              onClick={() => {
+                setGmResult(null);
+                handleDailyGM();
+              }}
+              className="flex-1 rounded-2xl border border-blue-300/25 bg-gradient-to-r from-blue-600 to-blue-500 px-4 py-4 text-[9px] font-black uppercase tracking-[0.22em] text-white"
+            >
+              Try Again
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={() => setGmResult(null)}
+            className="rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-4 text-[9px] font-black uppercase tracking-[0.2em] text-white/55 transition hover:text-white"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
+{isAgentForgeOpen && (
+  <div
+    className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/85 px-4 py-8 backdrop-blur-xl"
+    onMouseDown={(event) => {
+      if (event.target === event.currentTarget && !isCreatingAgent) {
+        setIsAgentForgeOpen(false);
+      }
+    }}
+  >
+    <div className="relative w-full max-w-[520px] overflow-hidden rounded-[34px] border border-blue-400/25 bg-[#050912] shadow-[0_0_90px_rgba(37,99,235,0.28)]">
+      <div className="pointer-events-none absolute -left-24 -top-24 h-64 w-64 rounded-full bg-blue-600/20 blur-[90px]" />
+      <div className="pointer-events-none absolute -bottom-28 -right-20 h-64 w-64 rounded-full bg-cyan-400/10 blur-[90px]" />
+      <div className="pointer-events-none absolute inset-0 opacity-[0.035] [background-image:linear-gradient(rgba(255,255,255,.8)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.8)_1px,transparent_1px)] [background-size:28px_28px]" />
+
+      <div className="relative border-b border-white/[0.07] px-6 pb-5 pt-6 sm:px-8">
+        <div className="flex items-start justify-between gap-5">
+          <div>
+            <div className="mb-3 flex items-center gap-2">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-cyan-300 shadow-[0_0_12px_rgba(103,232,249,1)]" />
+              <span className="text-[9px] font-black uppercase tracking-[0.34em] text-cyan-200/65">
+                ERC-8004 Identity Forge
+              </span>
+            </div>
+            <h2 className="text-2xl font-black uppercase italic tracking-[-0.03em] text-white sm:text-3xl">
+              Summon Your <span className="text-blue-400">Oracle</span>
+            </h2>
+            <p className="mt-2 max-w-sm text-[11px] leading-relaxed text-white/40">
+              Mint a permanent AI identity on Base. Your wallet remains the owner.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setIsAgentForgeOpen(false)}
+            disabled={isCreatingAgent}
+            aria-label="Close agent forge"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-lg text-white/45 transition hover:border-white/25 hover:text-white disabled:opacity-30"
+          >
+            ×
+          </button>
+        </div>
+      </div>
+
+      <form
+        className="relative space-y-5 px-6 py-6 sm:px-8"
+        onSubmit={(event) => {
+          event.preventDefault();
+          handleCreateAgent();
+        }}
+      >
+        <label className="block">
+          <div className="mb-2 flex items-center justify-between">
+            <span className="text-[9px] font-black uppercase tracking-[0.26em] text-white/55">Agent Name</span>
+            <span className="text-[9px] font-bold text-blue-300/45">{agentName.length}/80</span>
+          </div>
+          <input
+            value={agentName}
+            onChange={(event) => setAgentName(event.target.value)}
+            maxLength={80}
+            autoFocus
+            placeholder="Oracle Agent"
+            className="w-full rounded-2xl border border-white/10 bg-black/35 px-4 py-4 text-sm font-bold text-white outline-none transition placeholder:text-white/20 focus:border-blue-400/55 focus:bg-blue-500/[0.04] focus:shadow-[0_0_25px_rgba(59,130,246,0.12)]"
+          />
+        </label>
+
+        <label className="block">
+          <div className="mb-2 flex items-center justify-between">
+            <span className="text-[9px] font-black uppercase tracking-[0.26em] text-white/55">Agent Directive</span>
+            <span className="text-[9px] font-bold text-blue-300/45">{agentDescription.length}/280</span>
+          </div>
+          <textarea
+            value={agentDescription}
+            onChange={(event) => setAgentDescription(event.target.value)}
+            maxLength={280}
+            rows={4}
+            placeholder="Describe your agent's purpose..."
+            className="w-full resize-none rounded-2xl border border-white/10 bg-black/35 px-4 py-4 text-sm leading-relaxed text-white outline-none transition placeholder:text-white/20 focus:border-blue-400/55 focus:bg-blue-500/[0.04] focus:shadow-[0_0_25px_rgba(59,130,246,0.12)]"
+          />
+        </label>
+
+        <div className="grid grid-cols-3 gap-2">
+          {[
+            ["NETWORK", "BASE"],
+            ["STANDARD", "ERC-8004"],
+            ["OWNERSHIP", "YOUR WALLET"],
+          ].map(([label, value]) => (
+            <div key={label} className="rounded-2xl border border-white/[0.07] bg-white/[0.025] px-3 py-3 text-center">
+              <div className="text-[7px] font-black tracking-[0.2em] text-white/25">{label}</div>
+              <div className="mt-1 text-[9px] font-black tracking-wide text-blue-300">{value}</div>
+            </div>
+          ))}
+        </div>
+
+        {agentForgeError && (
+          <div className="rounded-2xl border border-red-400/20 bg-red-500/[0.07] px-4 py-3 text-center text-[10px] font-bold text-red-200/80">
+            {agentForgeError}
+          </div>
+        )}
+
+        <button
+          type="submit"
+          disabled={isCreatingAgent || !agentName.trim() || !agentDescription.trim()}
+          className="group relative w-full overflow-hidden rounded-2xl border border-blue-300/25 bg-gradient-to-r from-blue-600 to-blue-500 px-5 py-4 text-[10px] font-black uppercase tracking-[0.28em] text-white shadow-[0_15px_45px_rgba(37,99,235,0.3)] transition hover:scale-[1.015] hover:shadow-[0_18px_55px_rgba(37,99,235,0.45)] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-45"
+        >
+          <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+          <span className="relative">
+            {isCreatingAgent ? "Minting Identity..." : "✦ Create Onchain Agent"}
+          </span>
+        </button>
+
+        <p className="text-center text-[8px] font-bold uppercase tracking-[0.19em] text-white/20">
+          One wallet confirmation · Base network gas applies
+        </p>
+      </form>
     </div>
   </div>
 )}
