@@ -64,6 +64,11 @@ const { switchChainAsync } =
     id: string;
     hash: `0x${string}`;
   } | null>(null);
+  const [agentInput, setAgentInput] = useState("");
+  const [agentMessages, setAgentMessages] = useState<
+    { role: "user" | "assistant"; content: string }[]
+  >([]);
+  const [isAgentReplying, setIsAgentReplying] = useState(false);
 
     const [baseName, setBaseName] =
   useState<string | null>(null);
@@ -992,6 +997,50 @@ const downloadShareCard = async () => {
     }
   };
 
+  const handleAgentMessage = async () => {
+    const content = agentInput.trim();
+    if (!createdAgent || !content || isAgentReplying) return;
+
+    const nextMessages = [
+      ...agentMessages,
+      { role: "user" as const, content },
+    ];
+
+    setAgentMessages(nextMessages);
+    setAgentInput("");
+    setIsAgentReplying(true);
+
+    try {
+      const response = await fetch("/api/agent/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          agentId: createdAgent.id,
+          messages: nextMessages,
+        }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Agent request failed");
+
+      setAgentMessages((current) => [
+        ...current,
+        { role: "assistant", content: data.reply },
+      ]);
+    } catch (error) {
+      console.error("Agent chat failed:", error);
+      setAgentMessages((current) => [
+        ...current,
+        {
+          role: "assistant",
+          content: "The oracle connection is unavailable. Try again shortly.",
+        },
+      ]);
+    } finally {
+      setIsAgentReplying(false);
+    }
+  };
+
   const handlePremiumOracle = async () => {
     if (!address) {
       openConnectModal?.();
@@ -1472,15 +1521,56 @@ return (
 )}
 
 {createdAgent && (
-  <div className="w-full flex justify-center mt-4">
+  <div className="relative z-[90] mx-auto mt-5 w-full max-w-xl rounded-3xl border border-cyan-400/25 bg-[#071120]/95 p-4 shadow-[0_0_35px_rgba(34,211,238,0.18)]">
     <a
       href={`https://basescan.org/tx/${createdAgent.hash}`}
       target="_blank"
       rel="noopener noreferrer"
-      className="text-[9px] uppercase tracking-[0.25em] text-cyan-300 hover:text-white"
+      className="block text-center text-[9px] uppercase tracking-[0.25em] text-cyan-300 hover:text-white"
     >
-      Agent #{createdAgent.id} Created — View TX ↗
+      Agent #{createdAgent.id} Online — View Identity ↗
     </a>
+
+    <div className="mt-3 max-h-44 space-y-2 overflow-y-auto">
+      {agentMessages.length === 0 && (
+        <p className="text-center text-[10px] text-white/45">
+          Ask your onchain agent for guidance.
+        </p>
+      )}
+      {agentMessages.map((message, index) => (
+        <div
+          key={`${message.role}-${index}`}
+          className={`rounded-2xl px-3 py-2 text-[11px] leading-relaxed ${
+            message.role === "user"
+              ? "ml-8 bg-blue-500/15 text-blue-100"
+              : "mr-8 bg-white/[0.06] text-white/80"
+          }`}
+        >
+          {message.content}
+        </div>
+      ))}
+    </div>
+
+    <div className="mt-3 flex gap-2">
+      <input
+        value={agentInput}
+        onChange={(event) => setAgentInput(event.target.value)}
+        onKeyDown={(event) => {
+          if (event.key === "Enter") handleAgentMessage();
+        }}
+        maxLength={1200}
+        placeholder="Message your agent..."
+        className="min-w-0 flex-1 rounded-full border border-white/10 bg-black/35 px-4 py-3 text-[11px] text-white outline-none placeholder:text-white/25 focus:border-cyan-400/40"
+      />
+      <button
+        type="button"
+        onClick={handleAgentMessage}
+        disabled={isAgentReplying || !agentInput.trim()}
+        className="rounded-full bg-cyan-300 px-5 text-[10px] font-black uppercase text-black disabled:opacity-40"
+      >
+        {isAgentReplying ? "..." : "Ask"}
+      </button>
+    </div>
   </div>
 )}
 
