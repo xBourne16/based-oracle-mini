@@ -7,6 +7,7 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { ethers } from "ethers";
 import { oracleDrops } from "./quotes";
+import { BUILDER_CODE_DATA_SUFFIX } from "./builderCode";
 import "./globals.css";
 import {
   useAccount,
@@ -184,11 +185,6 @@ const forcedByQuery =
 const DAILY_GM_ABI = [
   "function gm() external",
 ];
-
-// ERC-8021 schema 0 suffix for Base Dashboard Builder Code bc_jpgprce5.
-// Format: UTF-8 code + one-byte code length + schema ID 00 + ERC-8021 marker.
-const BUILDER_CODE_DATA_SUFFIX =
-  "0x62635f6a706770726365350b0080218021802180218021802180218021";
 
 const ERC8004_IDENTITY_REGISTRY =
   "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432";
