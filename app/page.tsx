@@ -7,6 +7,7 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { ethers } from "ethers";
 import { oracleDrops } from "./quotes";
+import { BUILDER_CODE_DATA_SUFFIX } from "./builderCode";
 import "./globals.css";
 import {
   useAccount,
@@ -184,9 +185,6 @@ const forcedByQuery =
 const DAILY_GM_ABI = [
   "function gm() external",
 ];
-
-const BUILDER_CODE_DATA_SUFFIX =
-  "0x0b62635f66757579706c6e6c0080218021802180218021802180218021";
 
 const ERC8004_IDENTITY_REGISTRY =
   "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432";
