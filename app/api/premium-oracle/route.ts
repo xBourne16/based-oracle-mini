@@ -34,6 +34,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Payment required" }, { status: 402 });
   }
 
+  if (!/^0x[0-9a-fA-F]{64}$/.test(txHash)) {
+    return NextResponse.json({ error: "Invalid transaction hash" }, { status: 400 });
+  }
+
   try {
     const receipt = await publicClient.getTransactionReceipt({
       hash: txHash as `0x${string}`,
