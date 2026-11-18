@@ -12,7 +12,7 @@ export function useX402Payment() {
   const pay = async () => {
     if (!walletClient) throw new Error("Cüzdan bağlı değil");
     if (!publicClient) throw new Error("Base public client is unavailable");
-    if (walletClient.chain.id !== base.id) throw new Error("Please switch to Base Mainnet");
+    if (walletClient.chain?.id !== base.id) throw new Error("Please switch to Base Mainnet");
 
     const hash = await walletClient.writeContract({
       chain: base,
